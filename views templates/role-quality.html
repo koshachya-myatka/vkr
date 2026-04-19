@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Служба качества</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Служба качества</h1>
+</header>
+
+<main>
+  <div class="filter-bar">
+    <input type="text" placeholder="Поиск металла..." id="searchQuality">
+    <select id="filterStatusQuality">
+      <option value="">Все статусы</option>
+      <option value="Высокая">Высокая</option>
+      <option value="Средняя">Средняя</option>
+      <option value="Низкая">Низкая</option>
+    </select>
+    <button class="btn btn-reset" onclick="resetFilters('quality')">Сброс</button>
+  </div>
+
+  <h2>Ключевые показатели по металлам</h2>
+  <div class="dashboard-grid" id="qualityGrid">
+    <a class="dashboard-card" href="metal.html"><h3>Никель <span class="status-high">●</span></h3><p>Средняя чистота: <span class="status-high">99.8%</span></p><p>Отклонения: <span class="status-medium">0.02%</span></p><div class="dashboard-placeholder"></div></a>
+    <a class="dashboard-card" href="metal.html"><h3>Медь <span class="status-medium">●</span></h3><p>Средняя чистота: <span class="status-medium">99.6%</span></p><p>Отклонения: <span class="status-medium">0.03%</span></p><div class="dashboard-placeholder"></div></a>
+    <a class="dashboard-card" href="metal.html"><h3>Кобальт <span class="status-high">●</span></h3><p>Средняя чистота: <span class="status-high">99.7%</span></p><p>Отклонения: <span class="status-low">0.01%</span></p><div class="dashboard-placeholder"></div></a>
+    <a class="dashboard-card" href="metal.html"><h3>Палладий <span class="status-high">●</span></h3><p>Средняя чистота: <span class="status-high">99.9%</span></p><p>Отклонения: <span class="status-low">0.01%</span></p><div class="dashboard-placeholder"></div></a>
+    <a class="dashboard-card" href="metal.html"><h3>Платина <span class="status-high">●</span></h3><p>Средняя чистота: <span class="status-high">99.8%</span></p><p>Отклонения: <span class="status-medium">0.02%</span></p><div class="dashboard-placeholder"></div></a>
+    <a class="dashboard-card" href="metal.html"><h3>Родий <span class="status-medium">●</span></h3><p>Средняя чистота: <span class="status-medium">99.7%</span></p><p>Отклонения: <span class="status-medium">0.03%</span></p><div class="dashboard-placeholder"></div></a>
+    <a class="dashboard-card" href="metal.html"><h3>Иридий <span class="status-high">●</span></h3><p>Средняя чистота: <span class="status-high">99.9%</span></p><p>Отклонения: <span class="status-medium">0.02%</span></p><div class="dashboard-placeholder"></div></a>
+    <a class="dashboard-card" href="metal.html"><h3>Серебро <span class="status-high">●</span></h3><p>Средняя чистота: <span class="status-high">99.8%</span></p><p>Отклонения: <span class="status-low">0.01%</span></p><div class="dashboard-placeholder"></div></a>
+    <a class="dashboard-card" href="metal.html"><h3>Золото <span class="status-high">●</span></h3><p>Средняя чистота: <span class="status-high">99.95%</span></p><p>Отклонения: <span class="status-low">0.005%</span></p><div class="dashboard-placeholder"></div></a>
+  </div>
+</main>
+
+<script>
+function resetFilters(page){
+  if(page==='quality'){
+    document.getElementById('searchQuality').value='';
+    document.getElementById('filterStatusQuality').value='';
+  }
+}
+</script>
+</body>
+</html>

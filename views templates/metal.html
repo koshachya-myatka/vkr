@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Металл — Никель</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Никель</h1>
+  <button class="btn-subscribe"><span class="material-symbols-outlined">mail</span> Подписаться</button>
+</header>
+
+<main>
+  <div class="description-block">
+    <h3>Сфера применения:</h3>
+    <ul>
+      <li>Нержавеющие и специальные стали</li>
+      <li>Сплавы</li>
+    </ul>
+    <h3>Углеродный след:</h3>
+    <ul>
+      <li>Принцип CRADLE-TO-GATE</li>
+      <li>Стандарты: ISO 14040:2006, ISO 14044:2006, ISO 14067:2018, ISO 14064-1:2018, A Guide to Calculate Nickel’s Carbon Footprint (LME passport guidance – Nickel Institute), GHG Protocol, The Carbon Footprint of Platinum Group Metals, A Best Practice Guidance for the Calculation of Greenhouse Gas Emissions of primary produced PGMs — IPA</li>
+      <li>Отчетный год: 2024</li>
+      <li>Независимая верификация: TUV Austria</li>
+    </ul>
+  </div>
+
+  <div class="filter-bar">
+    <input type="text" placeholder="Поиск партии..." id="searchInput">
+    <select id="filterDate">
+      <option value="">Все даты</option>
+      <option value="2025-12-19">19.12.2025</option>
+      <option value="2025-12-18">18.12.2025</option>
+    </select>
+    <button class="btn btn-reset" onclick="resetFilters('metal')">Сброс</button>
+  </div>
+
+  <h2>Партии металла</h2>
+  <table class="table" id="metalTable">
+    <tr><th>Партия</th><th>Дата</th><th>Средний показатель чистоты</th></tr>
+    <tr><td><a href="batch.html">Партия №2025-10</a></td><td>19.12.2025</td><td class="status-high">99.86%</td></tr>
+    <tr><td><a href="batch.html">Партия №2025-09</a></td><td>18.12.2025</td><td class="status-medium">99.79%</td></tr>
+    <tr><td><a href="batch.html">Партия №2025-08</a></td><td>17.12.2025</td><td class="status-medium">99.82%</td></tr>
+    <tr><td><a href="batch.html">Партия №2025-07</a></td><td>16.12.2025</td><td class="status-high">99.84%</td></tr>
+    <tr><td><a href="batch.html">Партия №2025-06</a></td><td>15.12.2025</td><td class="status-high">99.85%</td></tr>
+    <tr><td><a href="batch.html">Партия №2025-05</a></td><td>14.12.2025</td><td class="status-medium">99.83%</td></tr>
+    <tr><td><a href="batch.html">Партия №2025-04</a></td><td>13.12.2025</td><td class="status-low">99.77%</td></tr>
+    <tr><td><a href="batch.html">Партия №2025-03</a></td><td>12.12.2025</td><td class="status-medium">99.81%</td></tr>
+    <tr><td><a href="batch.html">Партия №2025-02</a></td><td>11.12.2025</td><td class="status-medium">99.79%</td></tr>
+    <tr><td><a href="batch.html">Партия №2025-01</a></td><td>10.12.2025</td><td class="status-medium">99.80%</td></tr>
+  </table>
+
+  <div class="pagination">
+    <button class="active">1</button>
+    <button>2</button>
+    <button>3</button>
+  </div>
+</main>
+
+<script>
+function resetFilters(page) {
+  if(page === 'metal'){
+    document.getElementById('searchInput').value = '';
+    document.getElementById('filterDate').value = '';
+    const rows = document.querySelectorAll('#metalTable tr');
+    rows.forEach((row,i) => { if(i>0) row.style.display=''; });
+  }
+}
+</script>
+</body>
+</html>
