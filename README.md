@@ -76,7 +76,7 @@
   "status": "string"
 }
 ```
-### Примерная связка данных
+### Примерная полная связка данных
 ```
 {
   "batch": {
@@ -145,6 +145,66 @@
 ## Кафка  
 
 ## БД
+? Вьюшки для ролей: лаборатория, производство, руководство.  
+Таблицы:
+```
+TABLE dim_batch (
+    batch_id TEXT PRIMARY KEY,
+    metal_type TEXT,
+    start_time TIMESTAMP,
+    end_time TIMESTAMP,
+    process_status TEXT,
+    output_yield NUMERIC
+);
+TABLE fact_mes (
+    record_id TEXT PRIMARY KEY,
+    batch_id TEXT REFERENCES dim_batch(batch_id),
+    equipment_id TEXT,
+    operator_id TEXT,
+    temperature NUMERIC,
+    pressure NUMERIC,
+    duration_sec INT,
+    energy_consumption NUMERIC,
+    additives TEXT
+);
+TABLE fact_lims (
+    record_id TEXT PRIMARY KEY,
+    batch_id TEXT REFERENCES dim_batch(batch_id),
+    sample_id TEXT,
+    analysis_method TEXT,
+    test_date TIMESTAMP,
+    status TEXT
+);
+TABLE fact_lims_results (
+    id SERIAL PRIMARY KEY,
+    record_id TEXT REFERENCES fact_lims(record_id),
+    parameter_name TEXT,
+    value NUMERIC,
+    unit TEXT
+);
+TABLE fact_scada (
+    record_id TEXT PRIMARY KEY,
+    sensor_id TEXT,
+    equipment_id TEXT,    
+    time TIMESTAMP,
+    parameter TEXT,
+    value NUMERIC,
+    unit TEXT,
+    status TEXT
+);
+TABLE fact_batch_analytics (
+    record_id SERIAL PRIMARY KEY,
+    batch_id TEXT REFERENCES dim_batch(batch_id),
+    lims_score NUMERIC,
+    mes_score NUMERIC,
+    scada_score NUMERIC,
+    quality_score NUMERIC,
+    compliance_status TEXT,
+    alarm_count INT,
+    deviation_count INT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
 
 ## Бэкенд
 
