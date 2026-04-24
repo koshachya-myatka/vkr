@@ -1,5 +1,7 @@
 # Запуск
 # Описание системы
+Список металлов: никель, медь, кобальт, палладий, платина, родий, иридий, рутений, серебро, золото
+
 Процесс по этапам:
 1. Поступление партии (MES)
 2. Обработка (MES, SCADA)
@@ -25,8 +27,8 @@
     - equipment_id + time → MES + SCADA
 
 ### MES | Поступают все параметры для партии в JSON | Обновление каждые 1-5 мин
-Все записи - ID записи, ID партии, ID оборудования, Дата/время производства, Тип металла, Статус партии, ID оператора
-Опционально - Температура, Давление, Время обработки, Энергопотребление, Добавки, Выход годного (%)
+Все записи - ID записи, ID партии, ID оборудования, Дата/время производства, Тип металла, Статус партии, ID оператора, Выход годного (%)
+Опционально - Температура, Давление, Время обработки, Энергопотребление, Добавки
 ```
 {
   "record_id": "string",
@@ -37,12 +39,12 @@
   "metal_type": "string",
   "process_status": "string",  
   "operator_id": "string",
+  "output_yield": "float",
   "temperature": "float",
   "pressure": "float",
   "duration_sec": "int",
   "energy_consumption": "float",
-  "additives": "string",
-  "output_yield": "float"
+  "additives": "string"
 }
 ```
 ### SCADA | Поступает по 1 параметру для оборудования в JSON | Обновление каждые 1–10 сек 
@@ -72,6 +74,71 @@
   "analysis_method": "string",  
   "operator_id": "string",
   "status": "string"
+}
+```
+### Примерная связка данных
+```
+{
+  "batch": {
+    "batch_id": "MES-2026-04-21-001",
+    "metal_type": "Никель",
+    "start_time": "2026-04-21T09:00:00",
+    "end_time": "2026-04-21T11:00:00",
+    "process_status": "Готово",
+    "output_yield": 95.5
+  },
+  "lims": [
+    {
+      "sample_id": "LIM-2026-04-21-001",
+      "test_date": "2026-04-21T10:30:00",
+      "analysis_method": "Рентгенофлуоресцентный",
+      "status": "Одобрено",
+      "chemical_composition": {
+        "C": 0.05,
+        "Si": 0.10,
+        "Mn": 0.30,
+        "P": 0.010,
+        "S": 0.005,
+        "Cr": 0.05,
+        "Ni": 99.85
+      },
+      "deviations": "Нет"
+    }
+  ],
+  "mes": {
+    "equipment_id": "Печь-123",
+    "operator_id": "Иванов И.И.",
+    "temperature": 1450,
+    "pressure": 1.2,
+    "duration_sec": 7200,
+    "energy_consumption": 500,
+    "additives": "Алюминий (0.5%)",
+    "quality_certificate": "Сертификат_MES-2026-04-21.pdf"
+  },
+  "scada": [
+    {
+      "sensor_id": "SCADA-001",
+      "parameter": "Температура",
+      "time": "2026-04-21T09:00:00",
+      "value": 1450,
+      "unit": "°C",
+      "status": "normal"
+    },
+    {
+      "sensor_id": "SCADA-002",
+      "parameter": "Давление",
+      "time": "2026-04-21T09:05:00",
+      "value": 1.2,
+      "unit": "атм",
+      "status": "normal"
+    }
+  ],
+  "analytics": {
+    "compliance_status": "Соответствует",
+    "trends": {
+      "yield_trend": "+2%"
+    }
+  }
 }
 ```
 
