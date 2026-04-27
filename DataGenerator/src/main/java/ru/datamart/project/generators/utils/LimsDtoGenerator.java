@@ -26,8 +26,7 @@ public class LimsDtoGenerator {
             dto.setTestDate(LocalDateTime.now());
             String method = METHODS.get(ThreadLocalRandom.current().nextInt(METHODS.size()));
             dto.setAnalysisMethod(method);
-
-            List<LimsResultDto> results = generateResults(metalType, recordId);
+            List<LimsResultDto> results = generateResults(metalType, method, recordId);
             dto.setResults(results);
             long defects = results.stream().filter(r -> !r.getNormal()).count();
             if (defects < 2) {
@@ -40,7 +39,8 @@ public class LimsDtoGenerator {
         return list;
     }
 
-    private static List<LimsResultDto> generateResults(String metalType, String analysisRecordId) {
+    //todo дописать под методы
+    private static List<LimsResultDto> generateResults(String metalType, String method, String analysisRecordId) {
         List<LimsResultDto> list = new ArrayList<>();
         for (int i = 0; i <; i++) {
             LimsResultDto dto = new LimsResultDto();

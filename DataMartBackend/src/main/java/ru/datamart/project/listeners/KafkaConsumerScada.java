@@ -19,12 +19,13 @@ public class KafkaConsumerScada {
     private void addScadaRecord(String data) {
         try {
             ScadaDto scadaDto = objectMapper.readValue(data, ScadaDto.class);
-            Optional<ScadaRecord> scadaRecordOptional = scadaService.add(scadaDto);
-            if (scadaRecordOptional.isPresent()) {
-                log.info(scadaRecordOptional.get());
-            } else {
-                log.info("ScadaRecord не создана. Ошибка в данных DTO");
-            }
+            log.info(scadaDto.toString());
+//            Optional<ScadaRecord> scadaRecordOptional = scadaService.add(scadaDto);
+//            if (scadaRecordOptional.isPresent()) {
+//                log.info(scadaRecordOptional.get());
+//            } else {
+//                log.info("ScadaRecord не создана. Ошибка в данных DTO");
+//            }
         } catch (Exception e) {
             log.error("Произошла ошибка", e);
         }

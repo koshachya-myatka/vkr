@@ -19,12 +19,13 @@ public class KafkaConsumerLims {
     private void addLimsRecord(String data) {
         try {
             LimsDto limsDto = objectMapper.readValue(data, LimsDto.class);
-            Optional<LimsRecord> limsRecordOptional = limsService.add(limsDto);
-            if (limsRecordOptional.isPresent()) {
-                log.info(limsRecordOptional.get());
-            } else {
-                log.info("LimsRecord не создана. Ошибка в данных DTO");
-            }
+            log.info(limsDto.toString());
+//            Optional<LimsRecord> limsRecordOptional = limsService.add(limsDto);
+//            if (limsRecordOptional.isPresent()) {
+//                log.info(limsRecordOptional.get());
+//            } else {
+//                log.info("LimsRecord не создана. Ошибка в данных DTO");
+//            }
         } catch (Exception e) {
             log.error("Произошла ошибка", e);
         }
