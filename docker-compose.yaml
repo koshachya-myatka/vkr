@@ -1,0 +1,98 @@
+services:
+  data-generator:
+    build:
+      context: ./DataGenerator
+      dockerfile: Dockerfile
+    image: data-generator
+    container_name: data-generator
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+      # вот тут пропиши все топики
+      KAFKA_name_TOPIC: ${KAFKA_name_TOPIC}
+    ports:
+      - 8080:8080    
+    depends_on:
+      - kafka
+    networks:
+      - network
+
+  data-mart-backend:
+    build:
+      context: ./DataMartBackend
+      dockerfile: Dockerfile
+    image: data-mart-backend
+    container_name: data-mart-backend
+    environment:      
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+      # вот тут пропиши все топики
+      KAFKA_name_TOPIC: ${KAFKA_name_TOPIC}
+      DB_URL: ${DB_URL}
+      DB_NAME: ${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - 8081:8081
+    depends_on:
+      - postgres
+      - kafka
+    networks:
+      - network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}      
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    expose:
+      - 5432 
+    networks:
+      - network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    expose:
+      - 9092
+    healthcheck:
+      test: kafka-topics.sh --list --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} || exit 1
+      interval: 1s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      - zookeeper
+    networks:
+      - network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    expose:
+      - 2181
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  postgres-data:
