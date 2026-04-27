@@ -37,19 +37,20 @@
   "start_time": "datetime",
   "end_time": "datetime",
   "metal_type": "string",
-  "process_status": "string",  
+  "process_status": "int",  
   "operator_id": "string",
   "output_yield": "float",
   "temperature": "float",
   "pressure": "float",
   "duration_sec": "int",
   "energy_consumption": "float",
-  "additives": "string"
+  "additives": "string",
+  "status": "int" (?normal/warning/alarm)
 }
 ```
 ### SCADA | Поступает по 1 параметру для оборудования в JSON | Обновление каждые 1–10 сек 
 Все записи - ID записи, ID датчика, ID оборудования, Время, Параметр, Значение параметра, Единица измерения значения, Статус
-Параметры - Температура, Давление, Расход, Скорость, Вибрация, Электропроводность, Магнитные свойства, Газовый состав, Влажность, Напряжение/ток, Шум
+Параметры - Температура, Давление, Скорость, Вибрация, Влажность, Напряжение, Шум
 ```
 {
   "record_id": "string",
@@ -59,7 +60,7 @@
   "parameter": "string",
   "value": "float",
   "unit": "string",
-  "status": "normal/warning/alarm"
+  "status": "int" (normal/warning/alarm)
 }
 ```
 ### LIMS | Поступает по 1 анализу для партии в JSON | Обновление 1–2 раза в час
@@ -73,7 +74,15 @@
   "metal_type": "string",
   "analysis_method": "string",  
   "operator_id": "string",
-  "status": "string"
+  "status": "int" (approved/rejected),
+  "results": [
+    {
+    "parameter_name": "string",
+    "value": "float",
+    "unit": "string",
+    "normal": "bool"
+    }
+  ]
 }
 ```
 ### Примерная полная связка данных
@@ -81,28 +90,19 @@
 {
   "batch": {
     "batch_id": "MES-2026-04-21-001",
-    "metal_type": "Никель",
+    "metal_type": "Никель (Ni)",
     "start_time": "2026-04-21T09:00:00",
     "end_time": "2026-04-21T11:00:00",
-    "process_status": "Готово",
+    "process_status": 3,
     "output_yield": 95.5
   },
   "lims": [
     {
       "sample_id": "LIM-2026-04-21-001",
-      "test_date": "2026-04-21T10:30:00",
       "analysis_method": "Рентгенофлуоресцентный",
-      "status": "Одобрено",
-      "chemical_composition": {
-        "C": 0.05,
-        "Si": 0.10,
-        "Mn": 0.30,
-        "P": 0.010,
-        "S": 0.005,
-        "Cr": 0.05,
-        "Ni": 99.85
-      },
-      "deviations": "Нет"
+      "test_date": "2026-04-21T10:30:00",
+      "status": 1,
+      "results": {...}
     }
   ],
   "mes": {
@@ -113,31 +113,37 @@
     "duration_sec": 7200,
     "energy_consumption": 500,
     "additives": "Алюминий (0.5%)",
-    "quality_certificate": "Сертификат_MES-2026-04-21.pdf"
+    "status": 0
   },
   "scada": [
     {
       "sensor_id": "SCADA-001",
+      "equipment_id": "Печь-123",
+      "time": "2026-04-21T09:00:00",      
       "parameter": "Температура",
-      "time": "2026-04-21T09:00:00",
       "value": 1450,
       "unit": "°C",
-      "status": "normal"
+      "status": 0
     },
     {
       "sensor_id": "SCADA-002",
-      "parameter": "Давление",
+      "equipment_id": "Печь-123",
       "time": "2026-04-21T09:05:00",
+      "parameter": "Давление",
       "value": 1.2,
       "unit": "атм",
-      "status": "normal"
+      "status": 0
     }
   ],
   "analytics": {
-    "compliance_status": "Соответствует",
-    "trends": {
-      "yield_trend": "+2%"
-    }
+    "lims_score": 100,
+    "mes_score": 100,
+    "scada_score": 100,
+    "quality_score": 100,
+    "compliance_status": 1,
+    "alarm_count": 0,
+    "deviation_count": 0,
+    "created_at": "2026-04-21T10:30:00",
   }
 }
 ```
@@ -153,34 +159,36 @@ TABLE dim_batch (
     metal_type TEXT,
     start_time TIMESTAMP,
     end_time TIMESTAMP,
-    process_status TEXT,
-    output_yield NUMERIC
+    process_status INT,
+    output_yield DOUBLE PRECISION
 );
 TABLE fact_mes (
     record_id TEXT PRIMARY KEY,
-    batch_id TEXT REFERENCES dim_batch(batch_id),
+    batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
     equipment_id TEXT,
     operator_id TEXT,
-    temperature NUMERIC,
-    pressure NUMERIC,
+    temperature DOUBLE PRECISION,
+    pressure DOUBLE PRECISION,
     duration_sec INT,
-    energy_consumption NUMERIC,
-    additives TEXT
+    energy_consumption DOUBLE PRECISION,
+    additives TEXT,
+    status INT
 );
 TABLE fact_lims (
     record_id TEXT PRIMARY KEY,
-    batch_id TEXT REFERENCES dim_batch(batch_id),
+    batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
     sample_id TEXT,
     analysis_method TEXT,
     test_date TIMESTAMP,
-    status TEXT
+    status INT
 );
 TABLE fact_lims_results (
     id SERIAL PRIMARY KEY,
-    record_id TEXT REFERENCES fact_lims(record_id),
+    record_id TEXT NOT NULL REFERENCES fact_lims(record_id),
     parameter_name TEXT,
-    value NUMERIC,
-    unit TEXT
+    value DOUBLE PRECISION,
+    unit TEXT,
+    normal BOOLEAN DEFAULT true
 );
 TABLE fact_scada (
     record_id TEXT PRIMARY KEY,
@@ -188,17 +196,17 @@ TABLE fact_scada (
     equipment_id TEXT,    
     time TIMESTAMP,
     parameter TEXT,
-    value NUMERIC,
+    value DOUBLE PRECISION,
     unit TEXT,
-    status TEXT
+    status INT
 );
 TABLE fact_batch_analytics (
     record_id SERIAL PRIMARY KEY,
-    batch_id TEXT REFERENCES dim_batch(batch_id),
-    lims_score NUMERIC,
-    mes_score NUMERIC,
-    scada_score NUMERIC,
-    quality_score NUMERIC,
+    batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
+    lims_score DOUBLE PRECISION,
+    mes_score DOUBLE PRECISION,
+    scada_score DOUBLE PRECISION,
+    quality_score DOUBLE PRECISION,
     compliance_status TEXT,
     alarm_count INT,
     deviation_count INT,

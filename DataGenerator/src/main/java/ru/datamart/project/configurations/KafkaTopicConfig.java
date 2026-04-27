@@ -8,11 +8,25 @@ import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
 public class KafkaTopicConfig {
-    @Value("${kafka.name.topic}")
-    private String nameTopic;
+    @Value("${kafka.mes.topic}")
+    private String mesTopic;
+    @Value("${kafka.scada.topic}")
+    private String scadaTopic;
+    @Value("${kafka.lims.topic}")
+    private String limsTopic;
 
     @Bean
-    public NewTopic createNameTopic() {
-        return TopicBuilder.name(nameTopic).partitions(4).build();
+    public NewTopic createMesTopic() {
+        return TopicBuilder.name(mesTopic).partitions(4).build();
+    }
+
+    @Bean
+    public NewTopic createScadaTopic() {
+        return TopicBuilder.name(scadaTopic).partitions(4).build();
+    }
+
+    @Bean
+    public NewTopic createLimsTopic() {
+        return TopicBuilder.name(limsTopic).partitions(4).build();
     }
 }

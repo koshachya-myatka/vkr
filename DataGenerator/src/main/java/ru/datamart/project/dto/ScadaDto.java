@@ -1,0 +1,26 @@
+package ru.datamart.project.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+public class ScadaDto {
+    @JsonProperty("record_id")
+    private String recordId;
+    @JsonProperty("sensor_id")
+    private String sensorId;
+    @JsonProperty("equipment_id")
+    private String equipmentId;
+    private LocalDateTime time;
+    private String parameter;
+    private Double value;
+    private String unit;
+    //todo поменять на enum
+    private Integer status;
+}

@@ -9,14 +9,63 @@ $$;
 
 \c metal_data_mart
 
-CREATE TABLE IF NOT EXISTS comments (
+CREATE TABLE IF NOT EXISTS dim_batch (
+    batch_id TEXT PRIMARY KEY,
+    metal_type TEXT,
+    start_time TIMESTAMP,
+    end_time TIMESTAMP,
+    process_status INT,
+    output_yield DOUBLE PRECISION
+);
+CREATE TABLE IF NOT EXISTS fact_mes (
+    record_id TEXT PRIMARY KEY,
+    batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
+    equipment_id TEXT,
+    operator_id TEXT,
+    temperature DOUBLE PRECISION,
+    pressure DOUBLE PRECISION,
+    duration_sec INT,
+    energy_consumption DOUBLE PRECISION,
+    additives TEXT,
+    status INT
+);
+CREATE TABLE IF NOT EXISTS fact_lims (
+    record_id TEXT PRIMARY KEY,
+    batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
+    sample_id TEXT,
+    analysis_method TEXT,
+    test_date TIMESTAMP,
+    status INT
+);
+CREATE TABLE IF NOT EXISTS fact_lims_results (
     id SERIAL PRIMARY KEY,
-    post_id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
-    content TEXT,
-    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (post_id) REFERENCES posts (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    record_id TEXT NOT NULL REFERENCES fact_lims(record_id),
+    parameter_name TEXT,
+    value DOUBLE PRECISION,
+    unit TEXT,
+    normal BOOLEAN DEFAULT true
+);
+CREATE TABLE IF NOT EXISTS fact_scada (
+    record_id TEXT PRIMARY KEY,
+    sensor_id TEXT,
+    equipment_id TEXT,    
+    time TIMESTAMP,
+    parameter TEXT,
+    value DOUBLE PRECISION,
+    unit TEXT,
+    status INT
+);
+CREATE TABLE IF NOT EXISTS fact_batch_analytics (
+    record_id SERIAL PRIMARY KEY,
+    batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
+    lims_score DOUBLE PRECISION,
+    mes_score DOUBLE PRECISION,
+    scada_score DOUBLE PRECISION,
+    quality_score DOUBLE PRECISION,
+    compliance_status TEXT,
+    alarm_count INT,
+    deviation_count INT,
+    created_at TIMESTAMP DEFAULT NOW()
 );
 
 INSERT INTO users (name, surname) 

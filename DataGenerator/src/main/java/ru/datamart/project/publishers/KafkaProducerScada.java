@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import ru.datamart.project.dto.ScadaDto;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
@@ -12,19 +13,19 @@ import java.util.UUID;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class KafkaProducerName {
-    @Value("${kafka.name.topic}")
-    private String nameTopic;
+public class KafkaProducerScada {
+    @Value("${kafka.scada.topic}")
+    private String scadaTopic;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
-    public boolean sendMessage(NameDto nameDto) {
+    public boolean sendMessage(ScadaDto scadaDto) {
         try {
             //todo вот тут выбрать ключ, по которому будет деление по партициям
             String key = UUID.randomUUID().toString();
 
-            String nameDtoJson = objectMapper.writeValueAsString(nameDto);
-            kafkaTemplate.send(nameTopic, key, nameDtoJson);
+            String scadaDtoJson = objectMapper.writeValueAsString(scadaDto);
+            kafkaTemplate.send(scadaTopic, key, scadaDtoJson);
         } catch (Exception e) {
             log.error("Произошла ошибка при сериализации dto в json", e);
             return false;
