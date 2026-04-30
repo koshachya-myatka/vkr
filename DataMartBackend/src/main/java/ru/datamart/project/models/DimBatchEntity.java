@@ -1,9 +1,6 @@
 package ru.datamart.project.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +21,7 @@ public class DimBatchEntity {
     @Column(name = "end_time")
     private LocalDateTime endTime;
     @Column(name = "process_status")
+    @Enumerated(EnumType.ORDINAL)
     private MesProcessStatusEnum processStatus;
     @Column(name = "output_yield")
     private Double outputYield;

@@ -2,6 +2,7 @@ package ru.datamart.project.generators.utils;
 
 
 import ru.datamart.project.dto.ScadaDto;
+import ru.datamart.project.models.ScadaStatusEnum;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -63,10 +64,10 @@ public class ScadaDtoGenerator {
         };
     }
 
-    private static int evaluateStatus(String param, double value) {
+    private static ScadaStatusEnum evaluateStatus(String param, double value) {
         double[] range = RANGES.get(param);
-        if (value >= range[0] && value <= range[1]) return 0;
-        if (value <= range[1] * 1.1) return 1;
-        return 2;
+        if (value >= range[0] && value <= range[1]) return ScadaStatusEnum.NORMAL;
+        if (value <= range[1] * 1.1) return ScadaStatusEnum.WARNING;
+        return ScadaStatusEnum.ALARM;
     }
 }

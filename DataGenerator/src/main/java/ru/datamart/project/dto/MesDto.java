@@ -37,6 +37,5 @@ public class MesDto {
     private Integer durationSec;
     @JsonProperty("energy_consumption")
     private Double energyConsumption;
-    private String additives;
     private MesStatusEnum status;
 }

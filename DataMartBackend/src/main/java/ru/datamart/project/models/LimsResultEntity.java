@@ -17,7 +17,7 @@ public class LimsResultEntity {
     private LimsEntity lims;
     @Column(name = "parameter_name")
     private String parameterName;
-    private Double value;
+    private String value;
     private String unit;
     private Boolean normal;
 }

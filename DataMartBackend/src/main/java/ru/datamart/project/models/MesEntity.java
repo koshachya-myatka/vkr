@@ -25,6 +25,6 @@ public class MesEntity {
     private Integer durationSec;
     @Column(name = "energy_consumption")
     private Double energyConsumption;
-    private String additives;
+    @Enumerated(EnumType.ORDINAL)
     private MesStatusEnum status;
 }

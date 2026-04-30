@@ -44,8 +44,7 @@
   "pressure": "float",
   "duration_sec": "int",
   "energy_consumption": "float",
-  "additives": "string",
-  "status": "int" (?normal/warning/alarm)
+  "status": "int" (normal/warning/alarm)
 }
 ```
 ### SCADA | Поступает по 1 параметру для оборудования в JSON | Обновление каждые 1–10 сек 
@@ -78,7 +77,7 @@
   "results": [
     {
     "parameter_name": "string",
-    "value": "double",
+    "value": "string",
     "unit": "string",
     "normal": "bool"
     }
@@ -112,7 +111,6 @@
     "pressure": 1.2,
     "duration_sec": 7200,
     "energy_consumption": 500,
-    "additives": "Алюминий (0.5%)",
     "status": 0
   },
   "scada": [
@@ -171,7 +169,6 @@ TABLE fact_mes (
     pressure DOUBLE PRECISION,
     duration_sec INT,
     energy_consumption DOUBLE PRECISION,
-    additives TEXT,
     status INT
 );
 TABLE fact_lims (
@@ -186,7 +183,7 @@ TABLE fact_lims_results (
     id SERIAL PRIMARY KEY,
     record_id TEXT NOT NULL REFERENCES fact_lims(record_id),
     parameter_name TEXT,
-    value DOUBLE PRECISION,
+    value TEXT,
     unit TEXT,
     normal BOOLEAN DEFAULT true
 );

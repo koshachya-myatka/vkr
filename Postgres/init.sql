@@ -26,7 +26,6 @@ CREATE TABLE IF NOT EXISTS fact_mes (
     pressure DOUBLE PRECISION,
     duration_sec INT,
     energy_consumption DOUBLE PRECISION,
-    additives TEXT,
     status INT
 );
 CREATE TABLE IF NOT EXISTS fact_lims (
@@ -41,7 +40,7 @@ CREATE TABLE IF NOT EXISTS fact_lims_results (
     id SERIAL PRIMARY KEY,
     record_id TEXT NOT NULL REFERENCES fact_lims(record_id),
     parameter_name TEXT,
-    value DOUBLE PRECISION,
+    value TEXT,
     unit TEXT,
     normal BOOLEAN DEFAULT true
 );
