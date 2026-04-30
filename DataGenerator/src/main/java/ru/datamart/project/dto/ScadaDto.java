@@ -2,6 +2,7 @@ package ru.datamart.project.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import ru.datamart.project.models.ScadaStatusEnum;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +22,5 @@ public class ScadaDto {
     private String parameter;
     private Double value;
     private String unit;
-    //todo поменять на enum
-    private Integer status;
+    private ScadaStatusEnum status;
 }

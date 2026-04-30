@@ -14,15 +14,15 @@ import java.util.List;
 @ToString
 public class LimsDto {
     @JsonProperty("record_id")
-    String recordId;
+    private String recordId;
     @JsonProperty("batch_id")
-    String batchId;
+    private String batchId;
     @JsonProperty("sample_id")
-    String sampleId;
+    private String sampleId;
     @JsonProperty("analysis_method")
     String analysisMethod;
     @JsonProperty("test_date")
-    LocalDateTime testDate;
-    LimsStatusEnum status;
-    List<LimsResultDto> results;
+    private LocalDateTime testDate;
+    private LimsStatusEnum status;
+    private List<LimsResultDto> results;
 }

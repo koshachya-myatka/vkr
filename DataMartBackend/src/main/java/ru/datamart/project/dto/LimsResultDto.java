@@ -1,5 +1,6 @@
 package ru.datamart.project.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @NoArgsConstructor
@@ -8,9 +9,11 @@ import lombok.*;
 @Setter
 @ToString
 public class LimsResultDto {
-    String record_id;
-    String parameter_name;
-    Float value;
-    String unit;
-    Boolean normal;
+    @JsonProperty("record_id")
+    private String recordId;
+    @JsonProperty("parameter_name")
+    private String parameterName;
+    private Float value;
+    private String unit;
+    private Boolean normal;
 }

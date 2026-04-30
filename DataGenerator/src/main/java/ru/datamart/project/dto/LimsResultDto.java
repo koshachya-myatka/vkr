@@ -10,10 +10,10 @@ import lombok.*;
 @ToString
 public class LimsResultDto {
     @JsonProperty("record_id")
-    String recordId;
+    private String recordId;
     @JsonProperty("parameter_name")
     private String parameterName;
-    Float value;
-    String unit;
-    Boolean normal;
+    private Float value;
+    private String unit;
+    private Boolean normal;
 }

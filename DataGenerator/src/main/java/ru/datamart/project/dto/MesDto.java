@@ -2,6 +2,8 @@ package ru.datamart.project.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import ru.datamart.project.models.MesProcessStatusEnum;
+import ru.datamart.project.models.MesStatusEnum;
 
 import java.time.LocalDateTime;
 
@@ -23,9 +25,8 @@ public class MesDto {
     private LocalDateTime endTime;
     @JsonProperty("metal_type")
     private String metalType;
-    //todo поменять на enum
     @JsonProperty("process_status")
-    private Integer processStatus;
+    private MesProcessStatusEnum processStatus;
     @JsonProperty("operator_id")
     private String operatorId;
     @JsonProperty("output_yield")
@@ -37,6 +38,5 @@ public class MesDto {
     @JsonProperty("energy_consumption")
     private Double energyConsumption;
     private String additives;
-    //todo поменять на enum
-    private Integer status;
+    private MesStatusEnum status;
 }

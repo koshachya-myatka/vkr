@@ -7,8 +7,12 @@ services:
     container_name: data-generator
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
-      # вот тут пропиши все топики
-      KAFKA_name_TOPIC: ${KAFKA_name_TOPIC}
+      KAFKA_MES_TOPIC: ${KAFKA_MES_TOPIC}
+      KAFKA_MES_GROUP: ${KAFKA_MES_GROUP}
+      KAFKA_SCADA_TOPIC: ${KAFKA_SCADA_TOPIC}
+      KAFKA_SCADA_GROUP: ${KAFKA_SCADA_GROUP}
+      KAFKA_LIMS_TOPIC: ${KAFKA_LIMS_TOPIC}
+      KAFKA_LIMS_GROUP: ${KAFKA_LIMS_GROUP}
     ports:
       - 8080:8080    
     depends_on:
@@ -24,8 +28,12 @@ services:
     container_name: data-mart-backend
     environment:      
       SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
-      # вот тут пропиши все топики
-      KAFKA_name_TOPIC: ${KAFKA_name_TOPIC}
+      KAFKA_MES_TOPIC: ${KAFKA_MES_TOPIC}
+      KAFKA_MES_GROUP: ${KAFKA_MES_GROUP}
+      KAFKA_SCADA_TOPIC: ${KAFKA_SCADA_TOPIC}
+      KAFKA_SCADA_GROUP: ${KAFKA_SCADA_GROUP}
+      KAFKA_LIMS_TOPIC: ${KAFKA_LIMS_TOPIC}
+      KAFKA_LIMS_GROUP: ${KAFKA_LIMS_GROUP}
       DB_URL: ${DB_URL}
       DB_NAME: ${DB_NAME}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}

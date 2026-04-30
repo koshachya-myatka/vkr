@@ -1,0 +1,29 @@
+package ru.datamart.project.models;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "fact_scada")
+@Getter
+@Setter
+public class ScadaEntity {
+    @Id
+    @Column(name = "record_id")
+    private String recordId;
+    @Column(name = "sensor_id")
+    private String sensorId;
+    @Column(name = "equipment_id")
+    private String equipmentId;
+    private LocalDateTime time;
+    private String parameter;
+    private Double value;
+    private String unit;
+    private ScadaStatusEnum status;
+}
