@@ -24,7 +24,7 @@ public class LimsService {
     private final LimsResultRepository resultRepo;
 
     @Transactional
-    public LimsEntity save(LimsDto dto) {
+    public Optional<LimsEntity> save(LimsDto dto) {
         DimBatchEntity batch = batchRepo.findById(dto.getBatchId())
                 .orElseThrow();
 
@@ -35,21 +35,19 @@ public class LimsService {
         e.setAnalysisMethod(dto.getAnalysisMethod());
         e.setTestDate(dto.getTestDate());
         e.setStatus(dto.getStatus());
-
-        limsRepo.save(e);
+        LimsEntity newE = limsRepo.save(e);
 
         for (LimsResultDto r : dto.getResults()) {
             LimsResultEntity re = new LimsResultEntity();
             re.setLims(e);
             re.setParameterName(r.getParameterName());
-            re.setValue(r.getValue() != null ? r.getValue().doubleValue() : null);
+            re.setValue(r.getValue());
             re.setUnit(r.getUnit());
             re.setNormal(r.getNormal());
-
             resultRepo.save(re);
         }
-
-        return e;
+        log.info("СОЗДАНА ИЛИ ОБНОВЛЕНА ЗАПИСЬ LIMS");
+        return Optional.of(newE);
     }
 
     public Optional<LimsEntity> get(String id) {
@@ -58,5 +56,7 @@ public class LimsService {
 
     public void delete(String id) {
         limsRepo.deleteById(id);
+        resultRepo.deleteAllByRecordId(id);
+        log.info("УДАЛЕНА ЗАПИСЬ LIMS");
     }
 }

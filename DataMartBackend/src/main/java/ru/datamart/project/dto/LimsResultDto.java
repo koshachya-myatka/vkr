@@ -13,7 +13,7 @@ public class LimsResultDto {
     private String recordId;
     @JsonProperty("parameter_name")
     private String parameterName;
-    private Float value;
+    private Double value;
     private String unit;
     private Boolean normal;
 }

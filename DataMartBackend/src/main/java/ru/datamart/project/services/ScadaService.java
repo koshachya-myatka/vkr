@@ -15,8 +15,7 @@ import java.util.Optional;
 public class ScadaService {
     private final ScadaRepository repo;
 
-    public ScadaEntity save(ScadaDto dto) {
-
+    public Optional<ScadaEntity> save(ScadaDto dto) {
         ScadaEntity e = new ScadaEntity();
         e.setRecordId(dto.getRecordId());
         e.setSensorId(dto.getSensorId());
@@ -26,8 +25,9 @@ public class ScadaService {
         e.setValue(dto.getValue());
         e.setUnit(dto.getUnit());
         e.setStatus(dto.getStatus());
-
-        return repo.save(e);
+        ScadaEntity newE = repo.save(e);
+        log.info("СОЗДАНА ИЛИ ОБНОВЛЕНА ЗАПИСЬ SCADA");
+        return Optional.of(newE);
     }
 
     public Optional<ScadaEntity> get(String id) {
@@ -36,5 +36,6 @@ public class ScadaService {
 
     public void delete(String id) {
         repo.deleteById(id);
+        log.info("УДАЛЕНА ЗАПИСЬ SCADA");
     }
 }

@@ -19,13 +19,13 @@ public class MesService {
     private final MesRepository mesRepo;
     private final DimBatchRepository batchRepo;
 
-    public MesEntity save(MesDto dto) {
+    public Optional<MesEntity> save(MesDto dto) {
         DimBatchEntity batch = batchService.getOrCreate(dto);
-
         batch.setProcessStatus(dto.getProcessStatus());
         batch.setEndTime(dto.getEndTime());
         batch.setOutputYield(dto.getOutputYield());
         batchRepo.save(batch);
+        log.info("ОБНОВЛЕН DIM_BATCH");
 
         MesEntity e = new MesEntity();
         e.setRecordId(dto.getRecordId());
@@ -38,8 +38,9 @@ public class MesService {
         e.setEnergyConsumption(dto.getEnergyConsumption());
         e.setAdditives(dto.getAdditives());
         e.setStatus(dto.getStatus());
-
-        return mesRepo.save(e);
+        MesEntity newE = mesRepo.save(e);
+        log.info("СОЗДАНА ИЛИ ОБНОВЛЕНА ЗАПИСЬ MES");
+        return Optional.of(newE);
     }
 
     public Optional<MesEntity> get(String id) {
@@ -48,5 +49,6 @@ public class MesService {
 
     public void delete(String id) {
         mesRepo.deleteById(id);
+        log.info("УДАЛЕНА ЗАПИСЬ MES");
     }
 }

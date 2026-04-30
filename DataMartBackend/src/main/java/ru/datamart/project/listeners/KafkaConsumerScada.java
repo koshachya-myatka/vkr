@@ -5,8 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import ru.datamart.project.dto.ScadaDto;
+import ru.datamart.project.models.ScadaEntity;
 import ru.datamart.project.services.ScadaService;
 import tools.jackson.databind.ObjectMapper;
+
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -15,16 +18,16 @@ public class KafkaConsumerScada {
     private final ScadaService scadaService;
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(concurrency = "2", topics = "${kafka.scada.topic}", groupId = "${kafka.scada.group}")
+    @KafkaListener(concurrency = "10", topics = "${kafka.scada.topic}", groupId = "${kafka.scada.group}")
     private void addScadaRecord(String data) {
         try {
             ScadaDto scadaDto = objectMapper.readValue(data, ScadaDto.class);
             log.info(scadaDto.toString());
-//            Optional<ScadaRecord> scadaRecordOptional = scadaService.add(scadaDto);
-//            if (scadaRecordOptional.isPresent()) {
-//                log.info(scadaRecordOptional.get());
+//            Optional<ScadaEntity> scadaEntityOptional = scadaService.add(scadaDto);
+//            if (scadaEntityOptional.isPresent()) {
+//                log.info(scadaEntityOptional.get().toString());
 //            } else {
-//                log.info("ScadaRecord не создана. Ошибка в данных DTO");
+//                log.info("ScadaEntity не создана. Ошибка в данных DTO");
 //            }
         } catch (Exception e) {
             log.error("Произошла ошибка", e);

@@ -78,7 +78,7 @@
   "results": [
     {
     "parameter_name": "string",
-    "value": "float",
+    "value": "double",
     "unit": "string",
     "normal": "bool"
     }
