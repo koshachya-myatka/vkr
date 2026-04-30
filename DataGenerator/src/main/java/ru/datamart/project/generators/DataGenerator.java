@@ -17,6 +17,7 @@ public class DataGenerator {
     private final KafkaProducerMes producerMes;
     private final KafkaProducerScada producerScada;
     private final KafkaProducerLims producerLims;
+    //TODO ПРОВЕРИТЬ ПАРАЛЛЕЛИТ ЛИ ОН В НЕСКОЛЬКО ПОТОКОВ
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
     private final ExecutorService batchExecutor = Executors.newFixedThreadPool(5);
 

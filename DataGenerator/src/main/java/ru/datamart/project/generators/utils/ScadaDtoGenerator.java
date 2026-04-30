@@ -45,8 +45,9 @@ public class ScadaDtoGenerator {
     private static double generateValue(String param) {
         double[] range = RANGES.get(param);
         double value = ThreadLocalRandom.current().nextDouble(range[0], range[1]);
-        if (ThreadLocalRandom.current().nextDouble() < 0.2) {
-            value = range[1] + ThreadLocalRandom.current().nextDouble(1, 15);
+        if (ThreadLocalRandom.current().nextDouble() < 0.01) {
+            value = range[1] + ThreadLocalRandom.current().nextDouble(
+                    (range[1] - range[0]) * 0.01, (range[1] - range[0]) * 0.15);
         }
         return value;
     }

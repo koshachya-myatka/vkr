@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 public class MesDtoGenerator {
     public static MesDto generate(String batchId, String equipmentId, String metalType) {
         MesDto dto = new MesDto();
-        dto.setRecordId("MES" + UUID.randomUUID());
+        dto.setRecordId("MES-" + UUID.randomUUID());
         dto.setBatchId(batchId);
         dto.setEquipmentId(equipmentId);
         dto.setStartTime(LocalDateTime.now());
@@ -43,7 +43,7 @@ public class MesDtoGenerator {
         if (fix) {
             return value;
         }
-        if (rnd.nextDouble() < 0.2) {
+        if (rnd.nextDouble() < 0.05) {
             value = max + rnd.nextDouble((max - min) * 0.01, (max - min) * 0.15);
         }
         return value;

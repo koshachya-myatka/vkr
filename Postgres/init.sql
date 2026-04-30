@@ -67,8 +67,8 @@ CREATE TABLE IF NOT EXISTS fact_batch_analytics (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO users (name, surname) 
-    VALUES
-    ('Анна', 'Парамонова'),
-    ('Анастасия', 'Волкова'),
-    ('Вася', 'Гадов');
+-- INSERT INTO users (name, surname) 
+--     VALUES
+--     ('Анна', 'Парамонова'),
+--     ('Анастасия', 'Волкова'),
+--     ('Вася', 'Гадов');

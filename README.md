@@ -1,4 +1,11 @@
 # Запуск
+``` 
+docker compose up --build -d  
+docker compose down -v
+docker compose start  
+docker compose stop
+```
+
 # Описание системы
 Список металлов: никель, медь, кобальт, палладий, платина, родий, иридий, рутений, серебро, золото
 

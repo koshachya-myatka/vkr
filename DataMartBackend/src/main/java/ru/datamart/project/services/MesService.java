@@ -36,7 +36,6 @@ public class MesService {
         e.setPressure(dto.getPressure());
         e.setDurationSec(dto.getDurationSec());
         e.setEnergyConsumption(dto.getEnergyConsumption());
-        e.setAdditives(dto.getAdditives());
         e.setStatus(dto.getStatus());
         MesEntity newE = mesRepo.save(e);
         log.info("СОЗДАНА ИЛИ ОБНОВЛЕНА ЗАПИСЬ MES");
