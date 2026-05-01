@@ -22,13 +22,12 @@ public class KafkaConsumerScada {
     private void addScadaRecord(String data) {
         try {
             ScadaDto scadaDto = objectMapper.readValue(data, ScadaDto.class);
-            log.info(scadaDto.toString());
-//            Optional<ScadaEntity> scadaEntityOptional = scadaService.add(scadaDto);
-//            if (scadaEntityOptional.isPresent()) {
-//                log.info(scadaEntityOptional.get().toString());
-//            } else {
-//                log.info("ScadaEntity не создана. Ошибка в данных DTO");
-//            }
+            Optional<ScadaEntity> scadaEntityOptional = scadaService.save(scadaDto);
+            if (scadaEntityOptional.isPresent()) {
+                log.info(scadaEntityOptional.get().toString());
+            } else {
+                log.info("ScadaEntity не создана. Ошибка в данных DTO");
+            }
         } catch (Exception e) {
             log.error("Произошла ошибка", e);
         }

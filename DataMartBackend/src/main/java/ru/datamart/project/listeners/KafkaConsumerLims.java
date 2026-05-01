@@ -22,13 +22,12 @@ public class KafkaConsumerLims {
     private void addLimsRecord(String data) {
         try {
             LimsDto limsDto = objectMapper.readValue(data, LimsDto.class);
-            log.info(limsDto.toString());
-//            Optional<LimsEntity> limsEntityOptional = limsService.save(limsDto);
-//            if (limsEntityOptional.isPresent()) {
-//                log.info(limsEntityOptional.get().toString());
-//            } else {
-//                log.info("LimsEntity не создана. Ошибка в данных DTO");
-//            }
+            Optional<LimsEntity> limsEntityOptional = limsService.save(limsDto);
+            if (limsEntityOptional.isPresent()) {
+                log.info(limsEntityOptional.get().toString());
+            } else {
+                log.info("LimsEntity не создана. Ошибка в данных DTO");
+            }
         } catch (Exception e) {
             log.error("Произошла ошибка", e);
         }

@@ -22,13 +22,12 @@ public class KafkaConsumerMes {
     private void addMesRecord(String data) {
         try {
             MesDto mesDto = objectMapper.readValue(data, MesDto.class);
-            log.info(mesDto.toString());
-//            Optional<MesEntity> mesEntityOptional = mesService.save(mesDto);
-//            if (mesEntityOptional.isPresent()) {
-//                log.info(mesEntityOptional.get().toString());
-//            } else {
-//                log.info("MesEntity не создана. Ошибка в данных DTO");
-//            }
+            Optional<MesEntity> mesEntityOptional = mesService.save(mesDto);
+            if (mesEntityOptional.isPresent()) {
+                log.info(mesEntityOptional.get().toString());
+            } else {
+                log.info("MesEntity не создана. Ошибка в данных DTO");
+            }
         } catch (Exception e) {
             log.error("Произошла ошибка", e);
         }

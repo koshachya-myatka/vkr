@@ -1,4 +1,17 @@
 services:
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    image: frontend
+    container_name: frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - data-mart-backend
+    networks:
+      - network
+      
   data-generator:
     build:
       context: ./DataGenerator
@@ -78,7 +91,7 @@ services:
     expose:
       - 9092
     healthcheck:
-      test: kafka-topics.sh --list --bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS} || exit 1
+      test: kafka-topics.sh --list --bootstrap-server ${SPRING_KAFKA_BOOTSTRAP_SERVERS} || exit 1
       interval: 1s
       timeout: 10s
       retries: 10
