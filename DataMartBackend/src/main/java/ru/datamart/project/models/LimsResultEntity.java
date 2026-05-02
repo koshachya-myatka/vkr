@@ -3,11 +3,14 @@ package ru.datamart.project.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "fact_lims_results")
 @Getter
 @Setter
+
+@ToString
 public class LimsResultEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

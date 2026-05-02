@@ -3,11 +3,13 @@ package ru.datamart.project.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "fact_mes")
 @Getter
 @Setter
+@ToString
 public class MesEntity {
     @Id
     @Column(name = "record_id")

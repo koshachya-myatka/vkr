@@ -3,6 +3,7 @@ package ru.datamart.project.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "fact_scada")
 @Getter
 @Setter
+@ToString
 public class ScadaEntity {
     @Id
     @Column(name = "record_id")
