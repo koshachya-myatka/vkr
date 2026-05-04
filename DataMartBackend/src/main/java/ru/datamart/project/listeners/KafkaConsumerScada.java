@@ -18,7 +18,7 @@ public class KafkaConsumerScada {
     private final ScadaService scadaService;
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(concurrency = "10", topics = "${kafka.scada.topic}", groupId = "${kafka.scada.group}")
+    @KafkaListener(concurrency = "5", topics = "${kafka.scada.topic}", groupId = "${kafka.scada.group}")
     private void addScadaRecord(String data) {
         try {
             ScadaDto scadaDto = objectMapper.readValue(data, ScadaDto.class);

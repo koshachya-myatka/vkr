@@ -25,6 +25,6 @@ public class LimsEntity {
     private String analysisMethod;
     @Column(name = "test_date")
     private LocalDateTime testDate;
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private LimsStatusEnum status;
 }

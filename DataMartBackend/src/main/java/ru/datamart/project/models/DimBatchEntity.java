@@ -17,13 +17,14 @@ public class DimBatchEntity {
     @Column(name = "batch_id")
     private String batchId;
     @Column(name = "metal_type")
-    private String metalType;
+    @Enumerated(EnumType.STRING)
+    private MetalTypeEnum metalType;
     @Column(name = "start_time")
     private LocalDateTime startTime;
     @Column(name = "end_time")
     private LocalDateTime endTime;
     @Column(name = "process_status")
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private MesProcessStatusEnum processStatus;
     @Column(name = "output_yield")
     private Double outputYield;

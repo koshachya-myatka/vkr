@@ -30,6 +30,7 @@ public class KafkaProducerScada {
             log.error("Произошла ошибка при сериализации dto в json", e);
             return false;
         }
+        log.info("Отправил SCADA: " + scadaDto);
         return true;
     }
 }

@@ -17,7 +17,7 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic createMesTopic() {
-        return TopicBuilder.name(mesTopic).partitions(5).build();
+        return TopicBuilder.name(mesTopic).partitions(4).build();
     }
 
     @Bean
@@ -27,6 +27,6 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic createLimsTopic() {
-        return TopicBuilder.name(limsTopic).partitions(5).build();
+        return TopicBuilder.name(limsTopic).partitions(4).build();
     }
 }

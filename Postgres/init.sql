@@ -9,12 +9,20 @@ $$;
 
 \c metal_data_mart
 
+CREATE TABLE IF NOT EXISTS fact_notifications (
+    id SERIAL PRIMARY KEY,
+    message TEXT,
+    severity TEXT,
+    viewed BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT now()
+);
+
 CREATE TABLE IF NOT EXISTS dim_batch (
     batch_id TEXT PRIMARY KEY,
     metal_type TEXT,
     start_time TIMESTAMP,
     end_time TIMESTAMP,
-    process_status INT,
+    process_status TEXT,
     output_yield DOUBLE PRECISION
 );
 CREATE TABLE IF NOT EXISTS fact_mes (
@@ -26,7 +34,7 @@ CREATE TABLE IF NOT EXISTS fact_mes (
     pressure DOUBLE PRECISION,
     duration_sec INT,
     energy_consumption DOUBLE PRECISION,
-    status INT
+    status TEXT
 );
 CREATE TABLE IF NOT EXISTS fact_lims (
     record_id TEXT PRIMARY KEY,
@@ -34,7 +42,7 @@ CREATE TABLE IF NOT EXISTS fact_lims (
     sample_id TEXT,
     analysis_method TEXT,
     test_date TIMESTAMP,
-    status INT
+    status TEXT
 );
 CREATE TABLE IF NOT EXISTS fact_lims_results (
     id SERIAL PRIMARY KEY,
@@ -52,7 +60,7 @@ CREATE TABLE IF NOT EXISTS fact_scada (
     parameter TEXT,
     value DOUBLE PRECISION,
     unit TEXT,
-    status INT
+    status TEXT
 );
 CREATE TABLE IF NOT EXISTS fact_batch_analytics (
     record_id SERIAL PRIMARY KEY,

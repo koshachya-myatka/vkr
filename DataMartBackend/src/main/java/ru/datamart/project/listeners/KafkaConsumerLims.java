@@ -18,7 +18,7 @@ public class KafkaConsumerLims {
     private final LimsService limsService;
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(concurrency = "5", topics = "${kafka.lims.topic}", groupId = "${kafka.lims.group}")
+    @KafkaListener(concurrency = "2", topics = "${kafka.lims.topic}", groupId = "${kafka.lims.group}")
     private void addLimsRecord(String data) {
         try {
             LimsDto limsDto = objectMapper.readValue(data, LimsDto.class);

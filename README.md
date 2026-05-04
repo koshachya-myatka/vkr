@@ -44,14 +44,14 @@ docker compose stop
   "start_time": "datetime",
   "end_time": "datetime",
   "metal_type": "string",
-  "process_status": "int",  
+  "process_status": "string",  
   "operator_id": "string",
   "output_yield": "float",
   "temperature": "float",
   "pressure": "float",
   "duration_sec": "int",
   "energy_consumption": "float",
-  "status": "int" (normal/warning/alarm)
+  "status": "string" (normal/warning/alarm)
 }
 ```
 ### SCADA | Поступает по 1 параметру для оборудования в JSON | Обновление каждые 1–10 сек 
@@ -66,7 +66,7 @@ docker compose stop
   "parameter": "string",
   "value": "float",
   "unit": "string",
-  "status": "int" (normal/warning/alarm)
+  "status": "string" (normal/warning/alarm)
 }
 ```
 ### LIMS | Поступает по 1 анализу для партии в JSON | Обновление 1–2 раза в час
@@ -80,7 +80,7 @@ docker compose stop
   "metal_type": "string",
   "analysis_method": "string",  
   "operator_id": "string",
-  "status": "int" (approved/rejected),
+  "status": "string" (approved/rejected),
   "results": [
     {
     "parameter_name": "string",
@@ -99,7 +99,7 @@ docker compose stop
     "metal_type": "Никель (Ni)",
     "start_time": "2026-04-21T09:00:00",
     "end_time": "2026-04-21T11:00:00",
-    "process_status": 3,
+    "process_status": "ACCEPTED",
     "output_yield": 95.5
   },
   "lims": [
@@ -107,7 +107,7 @@ docker compose stop
       "sample_id": "LIM-2026-04-21-001",
       "analysis_method": "Рентгенофлуоресцентный",
       "test_date": "2026-04-21T10:30:00",
-      "status": 1,
+      "status": "APPROVED",
       "results": {...}
     }
   ],
@@ -118,7 +118,7 @@ docker compose stop
     "pressure": 1.2,
     "duration_sec": 7200,
     "energy_consumption": 500,
-    "status": 0
+    "status": "NORMAL"
   },
   "scada": [
     {
@@ -128,7 +128,7 @@ docker compose stop
       "parameter": "Температура",
       "value": 1450,
       "unit": "°C",
-      "status": 0
+      "status": "NORMAL"
     },
     {
       "sensor_id": "SCADA-002",
@@ -137,7 +137,7 @@ docker compose stop
       "parameter": "Давление",
       "value": 1.2,
       "unit": "атм",
-      "status": 0
+      "status": "NORMAL"
     }
   ],
   "analytics": {
@@ -156,6 +156,10 @@ docker compose stop
 ## Кафка  
 
 ## БД
+```
+docker exec -it vkr-postgres-1 psql -U postgres -d metal_data_mart
+```
+
 ? Вьюшки для ролей: лаборатория, производство, руководство.  
 Таблицы:
 ```
@@ -164,7 +168,7 @@ TABLE dim_batch (
     metal_type TEXT,
     start_time TIMESTAMP,
     end_time TIMESTAMP,
-    process_status INT,
+    process_status TEXT,
     output_yield DOUBLE PRECISION
 );
 TABLE fact_mes (
@@ -176,7 +180,7 @@ TABLE fact_mes (
     pressure DOUBLE PRECISION,
     duration_sec INT,
     energy_consumption DOUBLE PRECISION,
-    status INT
+    status TEXT
 );
 TABLE fact_lims (
     record_id TEXT PRIMARY KEY,
@@ -184,7 +188,7 @@ TABLE fact_lims (
     sample_id TEXT,
     analysis_method TEXT,
     test_date TIMESTAMP,
-    status INT
+    status TEXT
 );
 TABLE fact_lims_results (
     id SERIAL PRIMARY KEY,
@@ -202,7 +206,7 @@ TABLE fact_scada (
     parameter TEXT,
     value DOUBLE PRECISION,
     unit TEXT,
-    status INT
+    status TEXT
 );
 TABLE fact_batch_analytics (
     record_id SERIAL PRIMARY KEY,
@@ -221,3 +225,6 @@ TABLE fact_batch_analytics (
 ## Бэкенд
 
 ## Фронтенд
+http://localhost:5173/laboratory
+http://localhost:5173/production
+http://localhost:5173/management

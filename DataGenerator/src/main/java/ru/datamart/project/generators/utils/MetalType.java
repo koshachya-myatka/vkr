@@ -1,14 +1,15 @@
 package ru.datamart.project.generators.utils;
 
+import ru.datamart.project.models.MetalTypeEnum;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MetalType {
-    private static final List<String> METALS = List.of(
-            "Никель (Ni)", "Медь (Cu)", "Кобальт (Co)", "Серебро (Ag)",
-            "Золото (Au)", "Палладий (Pd)", "Платина (Pt)", "Родий (Rh)",
-            "Иридий (Ir)", "Рутений (Ru)"
+    private static final List<MetalTypeEnum> METALS = List.of(
+            MetalTypeEnum.NI, MetalTypeEnum.CU, MetalTypeEnum.CO, MetalTypeEnum.AG, MetalTypeEnum.AU,
+            MetalTypeEnum.PD, MetalTypeEnum.PT, MetalTypeEnum.RH, MetalTypeEnum.IR, MetalTypeEnum.RU
     );
 
     public final static List<String> METHODS = List.of(
@@ -332,6 +333,6 @@ public class MetalType {
     );
 
     public static String random() {
-        return METALS.get(ThreadLocalRandom.current().nextInt(METALS.size()));
+        return METALS.get(ThreadLocalRandom.current().nextInt(METALS.size())).toString();
     }
 }

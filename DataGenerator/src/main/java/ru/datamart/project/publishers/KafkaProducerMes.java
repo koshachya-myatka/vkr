@@ -30,6 +30,7 @@ public class KafkaProducerMes {
             log.error("Произошла ошибка при сериализации dto в json", e);
             return false;
         }
+        log.info("Отправил MES: " + mesDto);
         return true;
     }
 }

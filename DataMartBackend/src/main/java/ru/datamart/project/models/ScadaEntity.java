@@ -24,6 +24,6 @@ public class ScadaEntity {
     private String parameter;
     private Double value;
     private String unit;
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private ScadaStatusEnum status;
 }

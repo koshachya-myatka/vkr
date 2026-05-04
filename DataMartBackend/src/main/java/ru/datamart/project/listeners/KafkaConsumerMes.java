@@ -18,7 +18,7 @@ public class KafkaConsumerMes {
     private final MesService mesService;
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(concurrency = "5", topics = "${kafka.mes.topic}", groupId = "${kafka.mes.group}")
+    @KafkaListener(concurrency = "2", topics = "${kafka.mes.topic}", groupId = "${kafka.mes.group}")
     private void addMesRecord(String data) {
         try {
             MesDto mesDto = objectMapper.readValue(data, MesDto.class);
