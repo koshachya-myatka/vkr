@@ -3,9 +3,7 @@ package ru.datamart.project.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.datamart.project.dto.LastBatchDto;
-import ru.datamart.project.dto.MesDto;
-import ru.datamart.project.dto.MetalCardDto;
+import ru.datamart.project.dto.*;
 import ru.datamart.project.models.DimBatchEntity;
 import ru.datamart.project.models.MesProcessStatusEnum;
 import ru.datamart.project.models.MetalTypeEnum;
@@ -19,26 +17,12 @@ import java.util.List;
 public class BatchService {
     private final DimBatchRepository batchRepository;
 
-    public DimBatchEntity getOrCreate(MesDto dto) {
-        DimBatchEntity batch = batchRepository.findById(dto.getBatchId())
-                .orElseGet(() -> {
-                    DimBatchEntity b = new DimBatchEntity();
-                    b.setBatchId(dto.getBatchId());
-                    b.setMetalType(MetalTypeEnum.fromName(dto.getMetalType()));
-                    b.setStartTime(dto.getStartTime());
-                    b.setProcessStatus(dto.getProcessStatus());
-                    return batchRepository.save(b);
-                });
-        log.info("НАЙДЕН ИЛИ СОЗДАН DIM_BATCH");
-        return batch;
-    }
-
     public List<MetalCardDto> getMetalCards() {
         return batchRepository.getMetalCards()
                 .stream()
                 .peek(dto -> {
                     MetalTypeEnum metalType = MetalTypeEnum.valueOf(dto.getMetalType());
-                    dto.setMetalType(metalType.toString());
+                    dto.setMetalTypeName(metalType.toString());
                 })
                 .toList();
     }
@@ -53,5 +37,30 @@ public class BatchService {
                     dto.setMetalType(metalType.toString());
                 })
                 .toList();
+    }
+
+    public List<MetalBatchDto> getMetalBatches(MetalBatchFilterDto dto) {
+        return batchRepository.getMetalBatches(dto.getOffset(), dto.getMetalType(), dto.getBatchId(), dto.getStartTime(),
+                        dto.getEndTime(), dto.getProcessStatus())
+                .stream()
+                .peek(d -> {
+                    MesProcessStatusEnum status = MesProcessStatusEnum.valueOf(d.getProcessStatus());
+                    d.setStatusName(status.toString());
+                })
+                .toList();
+    }
+
+    public DimBatchEntity getOrCreate(MesDto dto) {
+        DimBatchEntity batch = batchRepository.findById(dto.getBatchId())
+                .orElseGet(() -> {
+                    DimBatchEntity b = new DimBatchEntity();
+                    b.setBatchId(dto.getBatchId());
+                    b.setMetalType(MetalTypeEnum.fromName(dto.getMetalType()));
+                    b.setStartTime(dto.getStartTime());
+                    b.setProcessStatus(dto.getProcessStatus());
+                    return batchRepository.save(b);
+                });
+        log.info("НАЙДЕН ИЛИ СОЗДАН DIM_BATCH");
+        return batch;
     }
 }

@@ -8,8 +8,14 @@ export const getNotifications = () => API.get('/notifications');
 export const markNotificationViewed = (id) => API.post(`/notifications/${id}/viewed`);
 export const deleteNotification = (id) => API.delete(`/notifications/${id}`);
 
+// ОБЩИЕ
 export const getMetalCards = () => API.get('/metal-cards');
+export const getMetalBatches = (metalType) => API.get(`/metals/${metalType}`);
 
+// ЛАБОРАТОРИЯ
 export const getLastLims = () => API.get('/laboratory/last-lims');
 
+// ПРОИЗВОДСТВО
 export const getLastBatches = () => API.get('/production/last-batches');
+
+// МЕНЕДЖМЕНТ

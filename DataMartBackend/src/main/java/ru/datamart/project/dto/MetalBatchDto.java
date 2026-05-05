@@ -9,9 +9,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class LastBatchDto {
+public class MetalBatchDto {
     private String batchId;
-    private String metalType;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String processStatus;

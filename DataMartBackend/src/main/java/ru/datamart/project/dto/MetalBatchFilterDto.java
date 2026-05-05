@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class LastBatchDto {
-    private String batchId;
+public class MetalBatchFilterDto {
     private String metalType;
+    private String batchId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String processStatus;
-    private String statusName;
+    private Integer offset;
 }

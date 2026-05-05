@@ -59,11 +59,11 @@ export default function LastProductionRecordTable() {
       <tbody>
         {data.map((b, i) => (
           <tr key={i}>
-            <td>{b.batch_id}</td>
-            <td>{b.metal_type}</td>
-            <td>{b.start_time}</td>
-            <td>{b.end_time}</td>
-            <td>{b.status_name}</td>
+            <td>{b.batchId}</td>
+            <td>{b.metalType}</td>
+            <td>{b.startTime}</td>
+            <td>{b.endTime}</td>
+            <td>{b.statusName}</td>
           </tr>
         ))}
       </tbody>

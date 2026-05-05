@@ -1,4 +1,4 @@
-import LinkButton from './LinkButton';
+import HeaderLinkButton from './HeaderLinkButton';
 import { useLocation } from 'react-router-dom';
 
 export default function Header() {
@@ -6,9 +6,9 @@ export default function Header() {
 
     return (
         <div style={{ display: 'flex', gap: '10px' }}>
-            <LinkButton title="Лаборатория" to="/laboratory" active={location.pathname.startsWith('/laboratory')} />
-            <LinkButton title="Производство" to="/production" active={location.pathname.startsWith('/production')} />
-            <LinkButton title="Руководство" to="/management" active={location.pathname.startsWith('/management')} />
+            <HeaderLinkButton text="Лаборатория" link="/laboratory" active={location.pathname.startsWith('/laboratory')} />
+            <HeaderLinkButton text="Производство" link="/production" active={location.pathname.startsWith('/production')} />
+            <HeaderLinkButton text="Руководство" link="/management" active={location.pathname.startsWith('/management')} />
         </div>
     );
 }

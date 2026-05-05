@@ -59,11 +59,11 @@ export default function LastLaboratoryRecordTable() {
             <tbody>
                 {data.map((r, i) => (
                     <tr key={i}>
-                        <td>{r.sample_id}</td>
-                        <td>{r.metal_type}</td>
-                        <td>{r.analysis_method}</td>
-                        <td>{new Date(r.test_date).toLocaleString()}</td>
-                        <td>{r.status_name}</td>
+                        <td>{r.sampleId}</td>
+                        <td>{r.metalType}</td>
+                        <td>{r.analysisMethod}</td>
+                        <td>{new Date(r.testDate).toLocaleString()}</td>
+                        <td>{r.statusName}</td>
                     </tr>
                 ))}
             </tbody>

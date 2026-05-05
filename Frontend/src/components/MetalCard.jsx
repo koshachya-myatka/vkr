@@ -1,5 +1,9 @@
+import SimpleLink from './SimpleLink';
+import { useLocation } from 'react-router-dom';
+
 export default function MetalCard({ metal }) {
     if (!metal) return null;
+    const location = useLocation();
 
     return (
         <div style={{
@@ -17,7 +21,11 @@ export default function MetalCard({ metal }) {
                 }}
             />
 
-            <h3>{metal.metalType}</h3>
+            <SimpleLink
+                text={<h3>{metal.metalTypeName}</h3>}
+                link={location.pathname + '/metals/' + metal.metalType}
+                style={{ background: 'gray' }}
+            />
 
             <p>Total: {metal.total ?? 0}</p>
             <p>Arrival: {metal.arrival ?? 0}</p>

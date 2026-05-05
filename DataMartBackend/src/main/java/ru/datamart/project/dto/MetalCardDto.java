@@ -1,14 +1,15 @@
 package ru.datamart.project.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
+@ToString
 public class MetalCardDto {
     private String metalType;
+    private String metalTypeName;
     private Long total;
     private Long arrival;
     private Long processing;
