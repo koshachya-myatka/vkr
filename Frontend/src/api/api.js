@@ -10,7 +10,7 @@ export const deleteNotification = (id) => API.delete(`/notifications/${id}`);
 
 // ОБЩИЕ
 export const getMetalCards = () => API.get('/metal-cards');
-export const getMetalBatches = (metalType) => API.get(`/metals/${metalType}`);
+export const getMetalBatches = (filter) => API.post('/metals', filter);
 
 // ЛАБОРАТОРИЯ
 export const getLastLims = () => API.get('/laboratory/last-lims');

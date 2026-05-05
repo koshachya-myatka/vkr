@@ -1,10 +1,10 @@
 services:
-  frontend:
+  data-mart-frontend:
     build:
       context: ./Frontend
       dockerfile: Dockerfile
-    image: frontend
-    container_name: frontend
+    image: data-mart-frontend
+    container_name: data-mart-frontend
     ports:
       - 5173:5173
     depends_on:

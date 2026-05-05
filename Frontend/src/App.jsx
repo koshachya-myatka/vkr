@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LaboratoryDashboard from './pages/LaboratoryDashboard'
 import ProductionDashboard from './pages/ProductionDashboard'
 import ManagementDashboard from './pages/ManagementDashboard'
-import MetalPage from './components/MetalBatchesTable';
+import MetalPage from './pages/MetalPage';
 
 function App() {
   return (

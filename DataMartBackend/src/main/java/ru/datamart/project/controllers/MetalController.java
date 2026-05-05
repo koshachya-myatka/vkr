@@ -20,7 +20,7 @@ public class MetalController {
         return batchService.getMetalCards();
     }
 
-    @GetMapping("/metals")
+    @PostMapping("/metals")
     public List<MetalBatchDto> metalBatches(@RequestBody MetalBatchFilterDto dto) {
         return batchService.getMetalBatches(dto);
     }

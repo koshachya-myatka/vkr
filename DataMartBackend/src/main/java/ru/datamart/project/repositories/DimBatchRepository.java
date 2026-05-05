@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.datamart.project.dto.LastBatchDto;
 import ru.datamart.project.dto.MetalBatchDto;
-import ru.datamart.project.dto.MetalBatchFilterDto;
 import ru.datamart.project.dto.MetalCardDto;
 import ru.datamart.project.models.DimBatchEntity;
 
@@ -53,10 +52,10 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
             FROM dim_batch as b
             WHERE 
                 b.metal_type ILIKE ?2 || '%' AND
-                b.batch_id ILIKE COALESCE(?3 || '%', '') AND
-                b.start_time >= COALESCE(?4, '1900-01-01') AND
-                b.end_time <= COALESCE(?5, CURRENT_DATE + INTERVAL '1 day') AND
-                b.process_status ILIKE COALESCE(?6, '')
+                (?3 IS NULL OR b.batch_id ILIKE ?3 || '%') AND
+                (CAST(?4 AS timestamp) IS NULL OR b.start_time >= CAST(?4 AS timestamp)) AND
+                (CAST(?5 AS timestamp) IS NULL OR (b.end_time <= CAST(?5 AS timestamp)) OR b.end_time IS NULL) AND
+                (?6 IS NULL OR b.process_status ILIKE ?6)
             ORDER BY b.start_time DESC
             LIMIT 20 OFFSET ?1;
             """, nativeQuery = true)
