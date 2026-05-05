@@ -159,8 +159,7 @@ docker compose stop
 ```
 docker exec -it vkr-postgres-1 psql -U postgres -d metal_data_mart
 ```
-
-? Вьюшки для ролей: лаборатория, производство, руководство.  
+Вьюшки для ролей: лаборатория, производство, руководство.  
 Таблицы:
 ```
 TABLE dim_batch (
@@ -225,6 +224,6 @@ TABLE fact_batch_analytics (
 ## Бэкенд
 
 ## Фронтенд
-http://localhost:5173/laboratory
-http://localhost:5173/production
-http://localhost:5173/management
+http://localhost:5173/laboratory  
+http://localhost:5173/production  
+http://localhost:5173/management  

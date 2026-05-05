@@ -7,10 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.datamart.project.dto.LastLimsDto;
 import ru.datamart.project.dto.LimsDto;
 import ru.datamart.project.dto.LimsResultDto;
-import ru.datamart.project.models.DimBatchEntity;
-import ru.datamart.project.models.LimsEntity;
-import ru.datamart.project.models.LimsResultEntity;
-import ru.datamart.project.models.LimsStatusEnum;
+import ru.datamart.project.models.*;
 import ru.datamart.project.repositories.DimBatchRepository;
 import ru.datamart.project.repositories.LimsRepository;
 import ru.datamart.project.repositories.LimsResultRepository;
@@ -29,15 +26,11 @@ public class LimsService {
     public List<LastLimsDto> getLastLims() {
         return limsRepo.getLastLimsRecords()
                 .stream()
-                .map(p -> {
-                    LimsStatusEnum status = LimsStatusEnum.valueOf(p.getStatus());
-                    return new LastLimsDto(
-                            p.getSampleId(),
-                            p.getMetalType(),
-                            p.getAnalysisMethod(),
-                            p.getTestDate(),
-                            status.toString()
-                    );
+                .peek(dto -> {
+                    LimsStatusEnum status = LimsStatusEnum.valueOf(dto.getStatus());
+                    MetalTypeEnum metalType = MetalTypeEnum.valueOf(dto.getMetalType());
+                    dto.setMetalType(metalType.toString());
+                    dto.setStatusName(status.toString());
                 })
                 .toList();
     }

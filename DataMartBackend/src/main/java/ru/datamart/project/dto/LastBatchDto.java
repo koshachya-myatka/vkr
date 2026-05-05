@@ -19,6 +19,8 @@ public class LastBatchDto {
     private LocalDateTime startTime;
     @JsonProperty("end_time")
     private LocalDateTime endTime;
+    @JsonProperty("process_status")
+    private String processStatus;
     @JsonProperty("status_name")
     private String statusName;
 }

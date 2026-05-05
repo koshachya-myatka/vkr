@@ -36,17 +36,9 @@ public class BatchService {
     public List<MetalCardDto> getMetalCards() {
         return batchRepository.getMetalCards()
                 .stream()
-                .map(p -> {
-                    MetalTypeEnum metalType = MetalTypeEnum.valueOf(p.getMetalType());
-                    return new MetalCardDto(
-                            metalType.toString(),
-                            p.getTotal(),
-                            p.getArrival(),
-                            p.getProcessing(),
-                            p.getAnalysis(),
-                            p.getAccepted(),
-                            p.getDefective()
-                    );
+                .peek(dto -> {
+                    MetalTypeEnum metalType = MetalTypeEnum.valueOf(dto.getMetalType());
+                    dto.setMetalType(metalType.toString());
                 })
                 .toList();
     }
@@ -54,15 +46,11 @@ public class BatchService {
     public List<LastBatchDto> getLastBatches() {
         return batchRepository.getLastBatches()
                 .stream()
-                .map(p -> {
-                    MesProcessStatusEnum status = MesProcessStatusEnum.valueOf(p.getProcessStatus());
-                    return new LastBatchDto(
-                            p.getBatchId(),
-                            p.getMetalType(),
-                            p.getStartTime(),
-                            p.getEndTime(),
-                            status.toString()
-                    );
+                .peek(dto -> {
+                    MesProcessStatusEnum status = MesProcessStatusEnum.valueOf(dto.getProcessStatus());
+                    MetalTypeEnum metalType = MetalTypeEnum.valueOf(dto.getMetalType());
+                    dto.setStatusName(status.toString());
+                    dto.setMetalType(metalType.toString());
                 })
                 .toList();
     }

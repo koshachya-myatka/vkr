@@ -2,8 +2,8 @@ package ru.datamart.project.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.datamart.project.dto.LastBatchProjection;
-import ru.datamart.project.dto.MetalCardProjection;
+import ru.datamart.project.dto.LastBatchDto;
+import ru.datamart.project.dto.MetalCardDto;
 import ru.datamart.project.models.DimBatchEntity;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
             WHERE b.start_time >= CURRENT_DATE AND b.start_time < CURRENT_DATE + INTERVAL '1 day'
             GROUP BY b.metal_type;
             """, nativeQuery = true)
-    List<MetalCardProjection> getMetalCards();
+    List<MetalCardDto> getMetalCards();
 
     @Query(value = """
             SELECT 
@@ -31,10 +31,11 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
                 b.metal_type as metalType, 
                 b.start_time as startTime, 
                 b.end_time as endTime, 
-                b.process_status as processStatus
+                b.process_status as processStatus,
+                '' as statusName
             FROM dim_batch as b 
             ORDER BY b.start_time DESC 
             LIMIT 10;
             """, nativeQuery = true)
-    List<LastBatchProjection> getLastBatches();
+    List<LastBatchDto> getLastBatches();
 }

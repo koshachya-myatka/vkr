@@ -19,6 +19,8 @@ public class LastLimsDto {
     String analysisMethod;
     @JsonProperty("test_date")
     private LocalDateTime testDate;
+    @JsonProperty("status")
+    private String status;
     @JsonProperty("status_name")
     private String statusName;
 }
