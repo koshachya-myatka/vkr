@@ -1,6 +1,7 @@
 package ru.datamart.project.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.datamart.project.models.Notification;
 import ru.datamart.project.services.NotificationService;
@@ -14,8 +15,8 @@ public class NotificationController {
     private final NotificationService service;
 
     @GetMapping
-    public List<Notification> getAll() {
-        return service.getActive();
+    public ResponseEntity<List<Notification>> getAll() {
+        return ResponseEntity.ok(service.getActive());
     }
 
     @PostMapping("/{id}/viewed")

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.datamart.project.dto.BatchLimsDto;
 import ru.datamart.project.dto.LastLimsDto;
 import ru.datamart.project.dto.LimsDto;
 import ru.datamart.project.dto.LimsResultDto;
@@ -30,6 +31,27 @@ public class LimsService {
                     LimsStatusEnum status = LimsStatusEnum.valueOf(dto.getStatus());
                     MetalTypeEnum metalType = MetalTypeEnum.valueOf(dto.getMetalType());
                     dto.setMetalType(metalType.toString());
+                    dto.setStatusName(status.toString());
+                })
+                .toList();
+    }
+
+    public List<BatchLimsDto> getLimsByBatchId(String batchId) {
+        return limsRepo.getLimsByBatchId(batchId)
+                .stream()
+                .peek(dto -> {
+                    LimsStatusEnum status = LimsStatusEnum.valueOf(dto.getStatus());
+                    dto.setStatusName(status.toString());
+                    dto.setResults(resultRepo.getLimsResultsByRecordId(dto.getRecordId()));
+                })
+                .toList();
+    }
+
+    public List<BatchLimsDto> getLimsWithoutResultsByBatchId(String batchId) {
+        return limsRepo.getLimsByBatchId(batchId)
+                .stream()
+                .peek(dto -> {
+                    LimsStatusEnum status = LimsStatusEnum.valueOf(dto.getStatus());
                     dto.setStatusName(status.toString());
                 })
                 .toList();

@@ -11,6 +11,7 @@ import ru.datamart.project.publishers.KafkaProducerMes;
 import ru.datamart.project.publishers.KafkaProducerScada;
 import tools.jackson.databind.ObjectMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -72,6 +73,7 @@ public class BatchProcess implements Runnable {
             // 4. Финальный статус
             boolean defect = limsDtoList.stream().anyMatch(l -> l.getStatus().equals(LimsStatusEnum.REJECTED));
             mesDto.setProcessStatus(defect ? MesProcessStatusEnum.DEFECTIVE : MesProcessStatusEnum.ACCEPTED);
+            mesDto.setEndTime(LocalDateTime.now());
             sendMesDto(mesDto);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

@@ -1,11 +1,11 @@
 package ru.datamart.project.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.datamart.project.dto.MetalBatchDto;
-import ru.datamart.project.dto.MetalBatchFilterDto;
-import ru.datamart.project.dto.MetalCardDto;
+import ru.datamart.project.dto.*;
 import ru.datamart.project.services.BatchService;
+import ru.datamart.project.services.MesService;
 
 import java.util.List;
 
@@ -14,14 +14,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MetalController {
     private final BatchService batchService;
+    private final MesService mesService;
 
     @GetMapping("/metal-cards")
-    public List<MetalCardDto> metalCards() {
-        return batchService.getMetalCards();
+    public ResponseEntity<List<MetalCardDto>> metalCards() {
+        return ResponseEntity.ok(batchService.getMetalCards());
     }
 
     @PostMapping("/metals")
-    public List<MetalBatchDto> metalBatches(@RequestBody MetalBatchFilterDto dto) {
-        return batchService.getMetalBatches(dto);
+    public ResponseEntity<List<MetalBatchDto>> metalBatches(@RequestBody MetalBatchFilterDto dto) {
+        return ResponseEntity.ok(batchService.getMetalBatches(dto));
+    }
+
+    @GetMapping("/batches/{batchId}")
+    public ResponseEntity<?> batch(@PathVariable String batchId) {
+        BatchDto dto = batchService.getBatchById(batchId);
+        if (dto != null) {
+            return ResponseEntity.ok(dto);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/mes/{batchId}")
+    public ResponseEntity<?> batchMes(@PathVariable String batchId) {
+        BatchMesDto dto = mesService.getMesByBatchId(batchId);
+        if (dto != null) {
+            return ResponseEntity.ok(dto);
+        }
+        return ResponseEntity.notFound().build();
     }
 }

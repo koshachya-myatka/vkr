@@ -10,6 +10,7 @@ import ru.datamart.project.models.MetalTypeEnum;
 import ru.datamart.project.repositories.DimBatchRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -48,6 +49,19 @@ public class BatchService {
                     d.setStatusName(status.toString());
                 })
                 .toList();
+    }
+
+    public BatchDto getBatchById(String batchId) {
+        Optional<BatchDto> optional = batchRepository.getBatchById(batchId);
+        if (optional.isEmpty()) {
+            return null;
+        }
+        BatchDto dto = optional.get();
+        MesProcessStatusEnum status = MesProcessStatusEnum.valueOf(dto.getProcessStatus());
+        MetalTypeEnum metalType = MetalTypeEnum.valueOf(dto.getMetalType());
+        dto.setStatusName(status.toString());
+        dto.setMetalTypeName(metalType.toString());
+        return dto;
     }
 
     public DimBatchEntity getOrCreate(MesDto dto) {

@@ -2,6 +2,7 @@ package ru.datamart.project.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.datamart.project.dto.BatchLimsDto;
 import ru.datamart.project.dto.LastLimsDto;
 import ru.datamart.project.models.LimsEntity;
 
@@ -21,4 +22,18 @@ public interface LimsRepository extends JpaRepository<LimsEntity, String> {
             LIMIT 10;
             """, nativeQuery = true)
     List<LastLimsDto> getLastLimsRecords();
+
+    @Query(value = """
+                SELECT 
+                    l.record_id as recordId,
+                    l.sample_id as sampleId,
+                    l.analysis_method as analysisMethod,
+                    l.test_date as testDate,
+                    l.status as status,
+                    '' as statusName,
+                    NULL as results
+                FROM fact_lims as l
+                WHERE l.batch_id = ?1;
+            """, nativeQuery = true)
+    List<BatchLimsDto> getLimsByBatchId(String batchId);
 }

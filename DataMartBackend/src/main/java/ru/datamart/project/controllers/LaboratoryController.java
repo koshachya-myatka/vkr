@@ -1,7 +1,9 @@
 package ru.datamart.project.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.datamart.project.dto.LastLimsDto;
@@ -16,7 +18,12 @@ public class LaboratoryController {
     private final LimsService limsService;
 
     @GetMapping("/last-lims")
-    public List<LastLimsDto> lastLims() {
-        return limsService.getLastLims();
+    public ResponseEntity<List<LastLimsDto>> lastLims() {
+        return ResponseEntity.ok(limsService.getLastLims());
+    }
+
+    @GetMapping("/lims/{batchId}")
+    public ResponseEntity<?> getLims(@PathVariable String batchId) {
+        return ResponseEntity.ok(limsService.getLimsByBatchId(batchId));
     }
 }

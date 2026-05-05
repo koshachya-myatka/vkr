@@ -14,6 +14,7 @@ export default function MetalPage() {
     const [offset, setOffset] = useState(0);
     const [filter, setFilter] = useState({});
     const [loading, setLoading] = useState(false);
+    const [pageNumber, setPageNumber] = useState(1);
 
     const loadData = async (customFilter = filter, customOffset = offset) => {
         setLoading(true);
@@ -45,10 +46,12 @@ export default function MetalPage() {
 
     const handleNext = () => {
         setOffset((prev) => prev + PAGE_SIZE);
+        setPageNumber(offset % PAGE_SIZE + 1);
     };
 
     const handlePrev = () => {
         setOffset((prev) => Math.max(prev - PAGE_SIZE, 0));
+        setPageNumber(offset % PAGE_SIZE + 1);
     };
 
     return (
@@ -72,7 +75,7 @@ export default function MetalPage() {
                 >
                     Prev
                 </PaginationButton>
-                <p>{offset % PAGE_SIZE + 1}</p>
+                <p>{pageNumber}</p>
                 <PaginationButton
                     onClick={handleNext}
                     disabled={data.length < PAGE_SIZE}

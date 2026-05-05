@@ -9,7 +9,6 @@ import lombok.ToString;
 @Table(name = "fact_lims_results")
 @Getter
 @Setter
-
 @ToString
 public class LimsResultEntity {
     @Id
