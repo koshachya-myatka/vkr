@@ -122,7 +122,7 @@ public class LimsDtoGenerator {
         ThreadLocalRandom rnd = ThreadLocalRandom.current();
         double value = (max > min) ? rnd.nextDouble(min, max) : min;
         boolean normal = true;
-        if (rnd.nextDouble() < 0.2) {
+        if (rnd.nextDouble() < 0.005) {
             value = max + rnd.nextDouble((max - min) * 0.01, (max - min) * 0.15);
             normal = false;
         }
@@ -145,7 +145,7 @@ public class LimsDtoGenerator {
         ThreadLocalRandom rnd = ThreadLocalRandom.current();
         double value = rnd.nextDouble(min, max);
         boolean normal = true;
-        if (rnd.nextDouble() < 0.2) {
+        if (rnd.nextDouble() < 0.005) {
             value = min - rnd.nextDouble((max - min) * 0.01, (max - min) * 0.25);
             normal = false;
         }

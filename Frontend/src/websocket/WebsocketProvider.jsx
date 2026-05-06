@@ -23,7 +23,7 @@ export const WebSocketProvider = ({ children }) => {
                     queryClient.invalidateQueries({ queryKey: ['dashboard-lab-last-lims'] });
                     break;
                 case 'scada':
-                    // queryClient.invalidateQueries({ queryKey: [''] });
+                    // queryClient.invalidateQueries({ queryKey: ['batch-page-prod-scada', batchId] });
                     break;
             }
         });

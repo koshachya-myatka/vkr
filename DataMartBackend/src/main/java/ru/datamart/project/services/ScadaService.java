@@ -3,17 +3,23 @@ package ru.datamart.project.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.datamart.project.dto.BatchScadaDto;
 import ru.datamart.project.dto.ScadaDto;
 import ru.datamart.project.models.ScadaEntity;
 import ru.datamart.project.repositories.ScadaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ScadaService {
-    private final ScadaRepository repo;
+    private final ScadaRepository scadaRepository;
+
+    public List<BatchScadaDto> getScadaByBatchId(String batchId) {
+        return scadaRepository.findScadaByBatchId(batchId);
+    }
 
     public Optional<ScadaEntity> save(ScadaDto dto) {
         ScadaEntity e = new ScadaEntity();
@@ -25,17 +31,17 @@ public class ScadaService {
         e.setValue(dto.getValue());
         e.setUnit(dto.getUnit());
         e.setStatus(dto.getStatus());
-        ScadaEntity newE = repo.save(e);
+        ScadaEntity newE = scadaRepository.save(e);
         log.info("СОЗДАНА ИЛИ ОБНОВЛЕНА ЗАПИСЬ SCADA");
         return Optional.of(newE);
     }
 
     public Optional<ScadaEntity> get(String id) {
-        return repo.findById(id);
+        return scadaRepository.findById(id);
     }
 
     public void delete(String id) {
-        repo.deleteById(id);
+        scadaRepository.deleteById(id);
         log.info("УДАЛЕНА ЗАПИСЬ SCADA");
     }
 }

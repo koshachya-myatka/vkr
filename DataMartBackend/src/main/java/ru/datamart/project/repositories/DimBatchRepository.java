@@ -2,6 +2,7 @@ package ru.datamart.project.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.datamart.project.dto.BatchDto;
 import ru.datamart.project.dto.LastBatchDto;
 import ru.datamart.project.dto.MetalBatchDto;
@@ -66,15 +67,18 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
                 '' as statusName
             FROM dim_batch as b
             WHERE 
-                b.metal_type ILIKE ?2 || '%' AND
-                (?3 IS NULL OR b.batch_id ILIKE ?3 || '%') AND
-                (CAST(?4 AS timestamp) IS NULL OR b.start_time >= CAST(?4 AS timestamp)) AND
-                (CAST(?5 AS timestamp) IS NULL OR (b.end_time <= CAST(?5 AS timestamp)) OR b.end_time IS NULL) AND
-                (?6 IS NULL OR b.process_status ILIKE ?6)
+                b.metal_type ILIKE :metalType || '%' AND
+                (:batchId IS NULL OR b.batch_id ILIKE :batchId || '%') AND
+                (CAST(:startTime AS timestamp) IS NULL OR b.start_time >= CAST(:startTime AS timestamp)) AND
+                ((b.end_time IS NULL) OR (CAST(:endTime AS timestamp) IS NULL) OR (b.end_time <= CAST(:endTime AS timestamp))) AND
+                (:processStatus IS NULL OR b.process_status ILIKE :processStatus)
             ORDER BY b.start_time DESC
-            LIMIT 20 OFFSET ?1;
+            LIMIT 20 OFFSET :offset;
             """, nativeQuery = true)
-    List<MetalBatchDto> getMetalBatches(int offset, String metalType,
-                                        String batchId, LocalDateTime startTime,
-                                        LocalDateTime endTime, String processStatus);
+    List<MetalBatchDto> getMetalBatches(@Param("offset") int offset,
+                                        @Param("metalType") String metalType,
+                                        @Param("batchId") String batchId,
+                                        @Param("startTime") LocalDateTime startTime,
+                                        @Param("endTime") LocalDateTime endTime,
+                                        @Param("processStatus") String processStatus);
 }

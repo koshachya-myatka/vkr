@@ -1,10 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { getLimsWithoutResultsByBatch } from "../api/api";
+import { getScadaByBatch } from '../api/api';
 
 export default function BatchProductionPanel({ batchData }) {
     const { data: analyses, isLoading, isError, error } = useQuery({
         queryKey: ['batch-page-prod-lims', batchData.batchId],
         queryFn: () => getLimsWithoutResultsByBatch(batchData.batchId).then(res => res.data),
+        enabled: !!batchData?.batchId
+    });
+
+    const { data: scada = [] } = useQuery({
+        queryKey: ['batch-page-prod-scada', batchData.batchId],
+        queryFn: () => getScadaByBatch(batchData.batchId).then(res => res.data),
         enabled: !!batchData?.batchId
     });
 

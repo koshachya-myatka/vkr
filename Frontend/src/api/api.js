@@ -21,5 +21,6 @@ export const getLimsByBatch = (batchId) => API.get(`/laboratory/lims/${batchId}`
 // ПРОИЗВОДСТВО
 export const getLastBatches = () => API.get('/production/last-batches');
 export const getLimsWithoutResultsByBatch = (batchId) => API.get(`/production/lims/${batchId}`);
+export const getScadaByBatch = (batchId) => API.get(`/production/scada/${batchId}`);
 
 // МЕНЕДЖМЕНТ

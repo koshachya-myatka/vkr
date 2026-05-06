@@ -43,7 +43,7 @@ public class MesDtoGenerator {
         if (fix) {
             return value;
         }
-        if (rnd.nextDouble() < 0.05) {
+        if (rnd.nextDouble() < 0.01) {
             value = max + rnd.nextDouble((max - min) * 0.01, (max - min) * 0.15);
         }
         return value;

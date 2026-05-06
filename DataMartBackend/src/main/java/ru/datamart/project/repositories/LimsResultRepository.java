@@ -2,14 +2,15 @@ package ru.datamart.project.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.datamart.project.dto.BatchLimsResultDto;
 import ru.datamart.project.models.LimsResultEntity;
 
 import java.util.List;
 
 public interface LimsResultRepository extends JpaRepository<LimsResultEntity, Long> {
-    @Query(value = "DELETE * FROM fact_lims_results as res WHERE res.record_id=?1;", nativeQuery = true)
-    void deleteAllByRecordId(String id);
+    @Query(value = "DELETE * FROM fact_lims_results as res WHERE res.record_id=:id;", nativeQuery = true)
+    void deleteAllByRecordId(@Param("id") String id);
 
     @Query(value = """
             SELECT 
@@ -18,7 +19,7 @@ public interface LimsResultRepository extends JpaRepository<LimsResultEntity, Lo
                 res.unit,
                 res.normal
             FROM fact_lims_results as res 
-            WHERE res.record_id=?1;
+            WHERE res.record_id=:recordId;
             """, nativeQuery = true)
-    List<BatchLimsResultDto> getLimsResultsByRecordId(String recordId);
+    List<BatchLimsResultDto> getLimsResultsByRecordId(@Param("recordId") String recordId);
 }

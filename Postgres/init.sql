@@ -77,6 +77,68 @@ CREATE TABLE IF NOT EXISTS fact_batch_analytics (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+CREATE INDEX IF NOT EXISTS idx_notifications_viewed
+ON fact_notifications(viewed);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_created_at
+ON fact_notifications(created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_viewed_created
+ON fact_notifications(viewed, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_batch_time_range
+ON dim_batch(start_time, end_time);
+
+CREATE INDEX IF NOT EXISTS idx_batch_status
+ON dim_batch(process_status);
+
+CREATE INDEX IF NOT EXISTS idx_mes_batch
+ON fact_mes(batch_id);
+
+CREATE INDEX IF NOT EXISTS idx_mes_equipment
+ON fact_mes(equipment_id);
+
+CREATE INDEX IF NOT EXISTS idx_mes_batch_equipment
+ON fact_mes(batch_id, equipment_id);
+
+CREATE INDEX IF NOT EXISTS idx_lims_batch
+ON fact_lims(batch_id);
+
+CREATE INDEX IF NOT EXISTS idx_lims_test_date
+ON fact_lims(test_date DESC);
+
+CREATE INDEX IF NOT EXISTS idx_lims_batch_test_date
+ON fact_lims(batch_id, test_date DESC);
+
+CREATE INDEX IF NOT EXISTS idx_lims_results_record
+ON fact_lims_results(record_id);
+
+CREATE INDEX IF NOT EXISTS idx_lims_results_param
+ON fact_lims_results(parameter_name);
+
+CREATE INDEX IF NOT EXISTS idx_scada_equipment_time
+ON fact_scada(equipment_id, time DESC);
+
+CREATE INDEX IF NOT EXISTS idx_scada_parameter_time
+ON fact_scada(parameter, time DESC);
+
+CREATE INDEX IF NOT EXISTS idx_scada_equipment_param_time
+ON fact_scada(equipment_id, parameter, time DESC);
+
+CREATE INDEX IF NOT EXISTS idx_scada_time
+ON fact_scada(time DESC);
+
+CREATE INDEX IF NOT EXISTS idx_batch_analytics_batch
+ON fact_batch_analytics(batch_id);
+
+CREATE INDEX IF NOT EXISTS idx_batch_analytics_created
+ON fact_batch_analytics(created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_batch_analytics_batch_created
+ON fact_batch_analytics(batch_id, created_at DESC);
+
+
+
 -- INSERT INTO users (name, surname) 
 --     VALUES
 --     ('Анна', 'Парамонова'),

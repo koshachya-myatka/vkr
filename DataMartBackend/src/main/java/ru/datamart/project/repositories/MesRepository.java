@@ -2,6 +2,7 @@ package ru.datamart.project.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.datamart.project.dto.BatchMesDto;
 import ru.datamart.project.models.MesEntity;
 
@@ -19,7 +20,7 @@ public interface MesRepository extends JpaRepository<MesEntity, String> {
                 m.status,
                 '' as statusName
                 FROM fact_mes as m
-                WHERE m.batch_id = ?1;
+                WHERE m.batch_id = :batchId;
             """, nativeQuery = true)
-    Optional<BatchMesDto> getMesByBatchId(String batchId);
+    Optional<BatchMesDto> getMesByBatchId(@Param("batchId") String batchId);
 }
