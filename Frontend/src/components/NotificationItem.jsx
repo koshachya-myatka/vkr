@@ -6,8 +6,17 @@ export default function NotificationItem({ item, onDelete }) {
 
     return (
         <div style={{ background: color, padding: '10px', marginBottom: '5px' }}>
-            {item.message}
-            <button onClick={() => onDelete(item.id)}>X</button>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>{item.createdAt}</td>
+                        <td>{item.signalSource}</td>
+                        <td>{item.message}</td>
+                        <td>{item.equipmentId}</td>
+                        <td><button onClick={() => onDelete(item.id)}>X</button></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }

@@ -3,25 +3,26 @@ package ru.datamart.project.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import ru.datamart.project.dto.MesDto;
-import ru.datamart.project.models.Notification;
+import ru.datamart.project.dto.SimpleWsMessageDto;
 
 @Service
 @RequiredArgsConstructor
 public class WebSocketService {
     private final SimpMessagingTemplate messagingTemplate;
 
-    public void sendNotificationUpdate(Notification notification) {
-        messagingTemplate.convertAndSend(
-                "/topic/notifications",
-                notification
-        );
+    public void sendNotificationsUpdate(SimpleWsMessageDto message) {
+        messagingTemplate.convertAndSend("/topic/notifications", message);
     }
 
-    public void sendMesUpdate(MesDto dto) {
-        messagingTemplate.convertAndSend(
-                "/topic/mes",
-                dto
-        );
+    public void sendMesUpdate(SimpleWsMessageDto message) {
+        messagingTemplate.convertAndSend("/topic/mes", message);
+    }
+
+    public void sendLimsUpdate(SimpleWsMessageDto message) {
+        messagingTemplate.convertAndSend("/topic/lims", message);
+    }
+
+    public void sendScadaUpdate(SimpleWsMessageDto message) {
+        messagingTemplate.convertAndSend("/topic/scada", message);
     }
 }

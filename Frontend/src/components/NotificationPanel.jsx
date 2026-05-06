@@ -1,22 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getNotifications, markNotificationViewed } from '../api/api';
 import NotificationItem from './NotificationItem';
 
 export default function NotificationPanel() {
-    const [items, setItems] = useState([]);
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        load();
-    }, []);
-
-    const load = async () => {
-        const res = await getNotifications();
-        setItems(res.data);
-    };
+    const { data: items = [] } = useQuery({
+        queryKey: ['notifications'],
+        queryFn: () => getNotifications().then(res => res.data),
+    });
 
     const remove = async (id) => {
-        await markNotificationViewed(id);
-        setItems(prev => prev.filter(i => i.id !== id));
+        queryClient.setQueryData(['notifications'], (old = []) =>
+            old.filter(i => i.id !== id)
+        );
+        try {
+            await markNotificationViewed(id);
+        } catch (e) {
+            queryClient.invalidateQueries({ queryKey: ['notifications'] });
+        }
     };
 
     return (

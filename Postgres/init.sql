@@ -12,6 +12,8 @@ $$;
 CREATE TABLE IF NOT EXISTS fact_notifications (
     id SERIAL PRIMARY KEY,
     message TEXT,
+    equipment_id TEXT, 
+    signal_source TEXT,   
     severity TEXT,
     viewed BOOLEAN DEFAULT false,
     created_at TIMESTAMP DEFAULT now()
