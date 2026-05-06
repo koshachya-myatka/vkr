@@ -9,7 +9,7 @@ export default function MetalGrid() {
     });
 
     if (isLoading) return <div>Загрузка...</div>;
-    if (isError || !metals.length) return <div>Ошибка: {error.message}</div>;
+    if (isError || !metals.length) return <div>Ошибка: {error?.message}</div>;
 
     return (
         <div style={{
@@ -17,7 +17,7 @@ export default function MetalGrid() {
             gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '10px'
         }}>
-            {metals.map(m => (
+            {metals && metals.map(m => (
                 <MetalCard key={m.metalType} metal={m} />
             ))}
         </div>

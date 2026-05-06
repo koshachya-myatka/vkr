@@ -9,7 +9,7 @@ export default function BatchProductionPanel({ batchData }) {
     });
 
     if (isLoading) return <div>Загрузка...</div>;
-    if (isError) return <div>Ошибка: {error.message}</div>;
+    if (isError) return <div>Ошибка: {error?.message}</div>;
 
     return (
         <div>
@@ -17,9 +17,9 @@ export default function BatchProductionPanel({ batchData }) {
             <table border="1" cellPadding="10" width="100%">
                 <thead>
                     <tr>
-                        <th>Sample ID</th>
+                        <th>ID пробы</th>
                         <th>Метод</th>
-                        <th>Дата</th>
+                        <th>Дата анализа</th>
                         <th>Статус</th>
                     </tr>
                 </thead>

@@ -6,6 +6,7 @@ import LastProductionRecordTable from "../components/LastProductionRecordTable";
 export default function ProductionDashboard() {
   return (
     <div>
+      <title>Главная - Производство</title>
       <Header />
       <NotificationPanel />
       <MetalGrid />

@@ -56,6 +56,8 @@ export default function MetalPage() {
 
     return (
         <div>
+            <title>Металл - {id}</title>
+
             <Header />
             
             <h2>Metal: {id}</h2>

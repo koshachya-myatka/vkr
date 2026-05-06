@@ -8,21 +8,21 @@ export default function LastProductionRecordTable() {
   });
 
   if (isLoading) return <div>Загрузка...</div>;
-  if (isError || !data.length) return <div>Ошибка: {error.message}</div>;
+  if (isError || !data.length) return <div>Ошибка: {error?.message}</div>;
 
   return (
     <table border="1" width="100%">
       <thead>
         <tr>
-          <th>Batch</th>
-          <th>Metal</th>
-          <th>Start</th>
-          <th>End</th>
-          <th>Status</th>
+          <th>Партия</th>
+          <th>Тип металла</th>
+          <th>Поступление</th>
+          <th>Окончание анализов</th>
+          <th>Статус</th>
         </tr>
       </thead>
       <tbody>
-        {data.map((b, i) => (
+        {data && data.map((b, i) => (
           <tr key={i}>
             <td>{b.batchId}</td>
             <td>{b.metalType}</td>

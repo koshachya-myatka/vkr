@@ -9,7 +9,7 @@ export default function BatchLaboratoryPanel({ batchData }) {
     });
 
     if (isLoading) return <div>Загрузка...</div>;
-    if (isError) return <div>Ошибка: {error.message}</div>;
+    if (isError) return <div>Ошибка: {error?.message}</div>;
 
     return (
         <div>
@@ -23,7 +23,7 @@ export default function BatchLaboratoryPanel({ batchData }) {
                         <table border="1">
                             <tbody>
                                 <tr>
-                                    <td>Sample ID</td>
+                                    <td>ID пробы</td>
                                     <td>{analyses.sampleId}</td>
                                 </tr>
                                 <tr>
@@ -31,7 +31,7 @@ export default function BatchLaboratoryPanel({ batchData }) {
                                     <td>{analyses.analysisMethod}</td>
                                 </tr>
                                 <tr>
-                                    <td>Дата</td>
+                                    <td>Дата анализа</td>
                                     <td>{analyses.testDate}</td>
                                 </tr>
                                 <tr>
@@ -48,7 +48,7 @@ export default function BatchLaboratoryPanel({ batchData }) {
                                 <tr>
                                     <th>Параметр</th>
                                     <th>Значение</th>
-                                    <th>Ед.</th>
+                                    <th>Ед. изм.</th>
                                     <th>Норма</th>
                                 </tr>
                             </thead>

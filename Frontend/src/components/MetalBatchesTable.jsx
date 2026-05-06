@@ -12,14 +12,14 @@ export default function MetalBatchesTable({ data }) {
         <table border="1" cellPadding="10" width="100%">
             <thead>
                 <tr>
-                    <th>Batch ID</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Status</th>
+                    <th>ID пробы</th>
+                    <th>Поступление</th>
+                    <th>Окончание анализов</th>
+                    <th>Статус</th>
                 </tr>
             </thead>
             <tbody>
-                {data.map((row) => (
+                {data && data.map((row) => (
                     <tr key={row.batchId}>
                         <td>{row.batchId}</td>
                         <td>{row.startTime}</td>

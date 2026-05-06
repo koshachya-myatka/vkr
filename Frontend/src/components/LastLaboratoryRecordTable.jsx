@@ -8,21 +8,21 @@ export default function LastLaboratoryRecordTable() {
     });
 
     if (isLoading) return <div>Загрузка...</div>;
-    if (isError || !data.length) return <div>Ошибка: {error.message}</div>;
+    if (isError || !data.length) return <div>Ошибка: {error?.message}</div>;
 
     return (
         <table border="1" width="100%">
             <thead>
                 <tr>
-                    <th>Sample</th>
-                    <th>Metal</th>
-                    <th>Method</th>
-                    <th>Date</th>
-                    <th>Status</th>
+                    <th>Проба</th>
+                    <th>Тип металла</th>
+                    <th>Метод</th>
+                    <th>Дата</th>
+                    <th>Статус</th>
                 </tr>
             </thead>
             <tbody>
-                {data.map((r, i) => (
+                {data && data.map((r, i) => (
                     <tr key={i}>
                         <td>{r.sampleId}</td>
                         <td>{r.metalType}</td>

@@ -39,6 +39,8 @@ export default function BatchPage() {
 
     return (
         <div>
+            <title>Партия - {id}</title>
+
             <Header />
 
             <BatchDataPanel batchData={batchData} />

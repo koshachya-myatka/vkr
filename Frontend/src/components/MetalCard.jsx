@@ -27,12 +27,12 @@ export default function MetalCard({ metal }) {
                 style={{ background: 'gray' }}
             />
 
-            <p>Total: {metal.total ?? 0}</p>
-            <p>Arrival: {metal.arrival ?? 0}</p>
-            <p>Processing: {metal.processing ?? 0}</p>
-            <p>Analysis: {metal.analysis ?? 0}</p>
-            <p>Accepted: {metal.accepted ?? 0}</p>
-            <p>Defective: {metal.defective ?? 0}</p>
+            <p>Всего партий: {metal.total ?? 0}</p>
+            <p>Поступило: {metal.arrival ?? 0}</p>
+            <p>Обработка: {metal.processing ?? 0}</p>
+            <p>На анализах: {metal.analysis ?? 0}</p>
+            <p>Одобрено: {metal.accepted ?? 0}</p>
+            <p>Брак: {metal.defective ?? 0}</p>
         </div>
     );
 }
