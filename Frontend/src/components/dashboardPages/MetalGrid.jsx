@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getMetalCards } from '../api/api';
+import { getMetalCards } from "../../api/api";
 import MetalCard from './MetalCard';
 
 export default function MetalGrid() {

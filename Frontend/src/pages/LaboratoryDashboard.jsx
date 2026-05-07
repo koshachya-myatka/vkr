@@ -1,7 +1,7 @@
-import Header from "../components/Header";
-import NotificationPanel from "../components/NotificationPanel";
-import MetalGrid from "../components/MetalGrid";
-import LastLaboratoryRecordTable from "../components/LastLaboratoryRecordTable";
+import Header from "../components/general/Header";
+import NotificationPanel from "../components/general/NotificationPanel";
+import MetalGrid from "../components/dashboardPages/MetalGrid";
+import LastLaboratoryRecordTable from "../components/dashboardPages/LastLaboratoryRecordTable";
 
 export default function LaboratoryDashboard() {
     return (

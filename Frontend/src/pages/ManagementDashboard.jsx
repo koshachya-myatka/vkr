@@ -1,7 +1,7 @@
-import Header from "../components/Header";
-import NotificationPanel from "../components/NotificationPanel";
-import MetalGrid from "../components/MetalGrid";
-import LastMetalStatisticsGrid from "../components/LastMetalStatisticsGrid";
+import Header from "../components/general/Header";
+import NotificationPanel from "../components/general/NotificationPanel";
+import MetalGrid from "../components/dashboardPages/MetalGrid";
+import LastMetalStatisticsGrid from "../components/dashboardPages/LastMetalStatisticsGrid";
 
 export default function ManagementDashboard() {
     return (

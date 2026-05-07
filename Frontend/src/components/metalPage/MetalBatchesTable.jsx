@@ -1,4 +1,4 @@
-import SimpleLink from "./SimpleLink";
+import SimpleLink from "../general/SimpleLink";
 import { useLocation } from 'react-router-dom';
 
 export default function MetalBatchesTable({ data }) {

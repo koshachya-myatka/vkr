@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import MetalStatisticsCard from "./MetalStatisticsCard";
-import { getMetalStatisticsCards } from "../api/api";
+import { getMetalStatisticsCards } from "../../api/api";
 
 export default function LastMetalStatisticsGrid() {
     const { data: data, isLoading, isError, error } = useQuery({

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import Header from "../components/Header";
-import SearchPanel from "../components/SearchPanel";
-import MetalBatchesTable from "../components/MetalBatchesTable";
-import PaginationButton from "../components/PaginationButton";
+import Header from "../components/general/Header";
+import SearchPanel from "../components/metalPage/SearchPanel";
+import MetalBatchesTable from "../components/metalPage/MetalBatchesTable";
+import PaginationButton from "../components/general/PaginationButton";
 import { getMetalBatches } from "../api/api";
 
 const PAGE_SIZE = 20;

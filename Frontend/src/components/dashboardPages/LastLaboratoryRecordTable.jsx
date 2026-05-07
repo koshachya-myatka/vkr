@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getLastLims } from '../api/api';
+import { getLastLims } from "../../api/api";
 
 export default function LastLaboratoryRecordTable() {
     const { data: data, isLoading, isError, error } = useQuery({

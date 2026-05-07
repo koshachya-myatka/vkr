@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getBatch, getMesByBatch } from "../api/api";
+import { getBatch, getMesByBatch } from "../../api/api";
 
 export default function BatchDataPanel({ batchData }) {
     const { data: mes, isLoading, isError, error } = useQuery({

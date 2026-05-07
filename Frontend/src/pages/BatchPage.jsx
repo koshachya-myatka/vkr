@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useLocation } from "react-router-dom";
-import Header from "../components/Header";
-import BatchDataPanel from "../components/BatchDataPanel";
-import BatchLaboratoryPanel from "../components/BatchLaboratoryPanel";
-import BatchProductionPanel from "../components/BatchProductionPanel";
-import BatchManagementPanel from "../components/BatchManagementPanel";
+import Header from "../components/general/Header";
+import BatchDataPanel from "../components/batchPage/BatchDataPanel";
+import BatchLaboratoryPanel from "../components/batchPage/BatchLaboratoryPanel";
+import BatchProductionPanel from "../components/batchPage/BatchProductionPanel";
+import BatchManagementPanel from "../components/batchPage/BatchManagementPanel";
 
 import { getBatch } from "../api/api";
 

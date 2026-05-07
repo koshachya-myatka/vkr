@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getLastBatches } from "../api/api";
+import { getLastBatches } from "../../api/api";
 
 export default function LastProductionRecordTable() {
   const { data: data, isLoading, isError, error } = useQuery({

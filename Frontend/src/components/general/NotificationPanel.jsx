@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getNotifications, markNotificationViewed } from '../api/api';
+import { getNotifications, markNotificationViewed } from '../../api/api';
 import NotificationItem from './NotificationItem';
 
 export default function NotificationPanel() {
