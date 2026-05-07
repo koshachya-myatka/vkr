@@ -1,4 +1,4 @@
-export default function LimsTableBriefItem({ analyses }) {
+export default function LimsTableBrief({ analyses }) {
     return (
         <div>
             <table border="1" cellPadding="10" width="100%">

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.datamart.project.dto.*;
 import ru.datamart.project.services.BatchService;
+import ru.datamart.project.services.LimsService;
 import ru.datamart.project.services.MesService;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 public class MetalController {
     private final BatchService batchService;
     private final MesService mesService;
+    private final LimsService limsService;
 
     @GetMapping("/metal-cards")
     public ResponseEntity<List<MetalCardDto>> metalCards() {
@@ -42,5 +44,10 @@ public class MetalController {
             return ResponseEntity.ok(dto);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/lims/{batchId}")
+    public ResponseEntity<?> getLimsWithoutResults(@PathVariable String batchId) {
+        return ResponseEntity.ok(limsService.getLimsWithoutResultsByBatchId(batchId));
     }
 }

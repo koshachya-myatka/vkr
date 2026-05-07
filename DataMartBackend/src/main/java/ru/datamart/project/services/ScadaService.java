@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.datamart.project.dto.BatchScadaDto;
 import ru.datamart.project.dto.ScadaDto;
+import ru.datamart.project.models.LimsStatusEnum;
 import ru.datamart.project.models.ScadaEntity;
+import ru.datamart.project.models.ScadaStatusEnum;
 import ru.datamart.project.repositories.ScadaRepository;
 
 import java.util.List;
@@ -18,7 +20,12 @@ public class ScadaService {
     private final ScadaRepository scadaRepository;
 
     public List<BatchScadaDto> getScadaByBatchId(String batchId) {
-        return scadaRepository.findScadaByBatchId(batchId);
+        return scadaRepository.findScadaByBatchId(batchId).stream()
+                .peek(dto -> {
+                    ScadaStatusEnum status = ScadaStatusEnum.valueOf(dto.getStatus());
+                    dto.setStatusName(status.toString());
+                })
+                .toList();
     }
 
     public Optional<ScadaEntity> save(ScadaDto dto) {

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import LimsTableBriefItem from './LimsTableBriefItem';
+import LimsTableBrief from './LimsTableBrief';
 import { getLimsWithoutResultsByBatch } from "../../api/api";
 
 export default function BatchManagementPanel({ batchData }) {
@@ -15,7 +15,7 @@ export default function BatchManagementPanel({ batchData }) {
     return (
         <div>
             <h2>Лабораторные анализы</h2>
-            <LimsTableBriefItem analyses={analyses} />
+            <LimsTableBrief analyses={analyses} />
 
             
         </div>

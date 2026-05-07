@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.datamart.project.dto.BatchScadaDto;
 import ru.datamart.project.dto.LastBatchDto;
 import ru.datamart.project.services.BatchService;
-import ru.datamart.project.services.LimsService;
 import ru.datamart.project.services.ScadaService;
 
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductionController {
     private final BatchService batchService;
-    private final LimsService limsService;
     private final ScadaService scadaService;
 
     @GetMapping("/last-batches")
@@ -27,13 +25,10 @@ public class ProductionController {
         return ResponseEntity.ok(batchService.getLastBatches());
     }
 
-    @GetMapping("/lims/{batchId}")
-    public ResponseEntity<?> getLims(@PathVariable String batchId) {
-        return ResponseEntity.ok(limsService.getLimsWithoutResultsByBatchId(batchId));
-    }
-
     @GetMapping("/scada/{batchId}")
     public List<BatchScadaDto> getScada(@PathVariable String batchId) {
         return scadaService.getScadaByBatchId(batchId);
     }
+
+
 }

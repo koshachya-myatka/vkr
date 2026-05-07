@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ScadaRepository extends JpaRepository<ScadaEntity, String> {
     @Query(value = """
-            SELECT DISTINCT ON (s.parameter)
+            SELECT
                 s.sensor_id as sensorId,
                 s.equipment_id as equipmentId,
                 s.time

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import LimsTableBriefItem from './LimsTableBriefItem';
+import LimsTableBrief from './LimsTableBrief';
+import ScadaParameterGraph from './ScadaParameterGraph';
 import { getLimsWithoutResultsByBatch } from "../../api/api";
 import { getScadaByBatch } from '../../api/api';
 
@@ -22,9 +23,13 @@ export default function BatchProductionPanel({ batchData }) {
     return (
         <div>
             <h2>Лабораторные анализы</h2>
-            <LimsTableBriefItem analyses={analyses} />
+            <LimsTableBrief analyses={analyses} />
 
             <h2>Данные SCADA</h2>
+            {scada &&
+                (scada.map((parameter) => (
+                    <ScadaParameterGraph parameter={parameter} />
+                )))}
         </div>
     );
 }
