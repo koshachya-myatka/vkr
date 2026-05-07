@@ -73,6 +73,9 @@ public class BatchProcess implements Runnable {
             // 4. Финальный статус
             boolean defect = limsDtoList.stream().anyMatch(l -> l.getStatus().equals(LimsStatusEnum.REJECTED));
             mesDto.setProcessStatus(defect ? MesProcessStatusEnum.DEFECTIVE : MesProcessStatusEnum.ACCEPTED);
+            ThreadLocalRandom rnd = ThreadLocalRandom.current();
+            Double outputYield = defect ? rnd.nextDouble(90, 98) : rnd.nextDouble(98, 100);
+            mesDto.setOutputYield(outputYield);
             mesDto.setEndTime(LocalDateTime.now());
             sendMesDto(mesDto);
         } catch (InterruptedException e) {

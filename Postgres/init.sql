@@ -137,7 +137,8 @@ ON fact_batch_analytics(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_batch_analytics_batch_created
 ON fact_batch_analytics(batch_id, created_at DESC);
 
-
+CREATE INDEX IF NOT EXISTS idx_dim_batch_dashboard_stats
+ON dim_batch (process_status, end_time, metal_type);
 
 -- INSERT INTO users (name, surname) 
 --     VALUES

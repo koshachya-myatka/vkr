@@ -18,6 +18,7 @@ export default function BatchDataPanel({ batchData }) {
             <table border="1">
                 <thead>
                     <tr>
+                        <th>ID партии</th>
                         <th>Тип металла</th>
                         <th>Поступление</th>
                         <th>Окончание анализов</th>
@@ -25,7 +26,9 @@ export default function BatchDataPanel({ batchData }) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>{batchData.metalTypeName}</td>
+                    <tr>
+                        <td>{batchData.batchId}</td>
+                        <td>{batchData.metalTypeName}</td>
                         <td>{batchData.startTime}</td>
                         <td>{batchData.endTime}</td>
                         <td>{batchData.statusName}</td></tr>

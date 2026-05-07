@@ -1,5 +1,7 @@
 import Header from "../components/Header";
 import NotificationPanel from "../components/NotificationPanel";
+import MetalGrid from "../components/MetalGrid";
+import LastMetalStatisticsGrid from "../components/LastMetalStatisticsGrid";
 
 export default function ManagementDashboard() {
     return (
@@ -9,6 +11,10 @@ export default function ManagementDashboard() {
             <Header />
 
             <NotificationPanel />
+            
+            <MetalGrid />
+
+            <LastMetalStatisticsGrid />
         </div>
     )
 }

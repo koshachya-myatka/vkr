@@ -18,6 +18,16 @@ import java.util.Optional;
 public class BatchService {
     private final DimBatchRepository batchRepository;
 
+    public List<MetalStatisticsCardDto> getMetalStatisticsCards() {
+        return batchRepository.getMetalStatistics()
+                .stream()
+                .peek(dto -> {
+                    MetalTypeEnum metalType = MetalTypeEnum.valueOf(dto.getMetalType());
+                    dto.setMetalTypeName(metalType.toString());
+                })
+                .toList();
+    }
+
     public List<MetalCardDto> getMetalCards() {
         return batchRepository.getMetalCards()
                 .stream()

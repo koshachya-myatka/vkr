@@ -3,10 +3,7 @@ package ru.datamart.project.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.datamart.project.dto.BatchDto;
-import ru.datamart.project.dto.LastBatchDto;
-import ru.datamart.project.dto.MetalBatchDto;
-import ru.datamart.project.dto.MetalCardDto;
+import ru.datamart.project.dto.*;
 import ru.datamart.project.models.DimBatchEntity;
 
 import java.time.LocalDateTime;
@@ -81,4 +78,23 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
                                         @Param("startTime") LocalDateTime startTime,
                                         @Param("endTime") LocalDateTime endTime,
                                         @Param("processStatus") String processStatus);
+
+    @Query(value = """
+            SELECT
+                metal_type as metalType,
+                '' as metalTypeName,
+                COUNT(*) as batchesCount,
+                CAST(AVG(output_yield) as DOUBLE PRECISION) as averageOutputYield,
+                CAST(
+                    (
+                      (COUNT(*) FILTER (WHERE process_status = 'DEFECTIVE') * 100.0) / NULLIF(COUNT(*), 0)
+                    )  as DOUBLE PRECISION
+                ) as defectivePercent
+            FROM dim_batch
+            WHERE process_status IN ('ACCEPTED', 'DEFECTIVE')
+              AND end_time >= NOW() - INTERVAL '7 days'
+            GROUP BY metal_type
+            ORDER BY metal_type;
+            """, nativeQuery = true)
+    List<MetalStatisticsCardDto> getMetalStatistics();
 }

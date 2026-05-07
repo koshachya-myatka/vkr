@@ -12,6 +12,7 @@ export const WebSocketProvider = ({ children }) => {
                     queryClient.invalidateQueries({ queryKey: ['notifications'] });
                     break;
                 case 'mes':
+                    queryClient.invalidateQueries({ queryKey: ['dashboard-manag-last-statistics'] });
                     queryClient.invalidateQueries({ queryKey: ['batch-page-batchData'] });
                     queryClient.invalidateQueries({ queryKey: ['dashboard-prod-last-batches'] });
                     queryClient.invalidateQueries({ queryKey: ['batch-page-mes'] });
