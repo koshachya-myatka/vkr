@@ -139,9 +139,3 @@ ON fact_batch_analytics(batch_id, created_at DESC);
 
 CREATE INDEX IF NOT EXISTS idx_dim_batch_dashboard_stats
 ON dim_batch (process_status, end_time, metal_type);
-
--- INSERT INTO users (name, surname) 
---     VALUES
---     ('Анна', 'Парамонова'),
---     ('Анастасия', 'Волкова'),
---     ('Вася', 'Гадов');

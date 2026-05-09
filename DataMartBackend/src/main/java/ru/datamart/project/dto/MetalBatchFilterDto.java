@@ -16,4 +16,5 @@ public class MetalBatchFilterDto {
     private LocalDateTime endTime;
     private String processStatus;
     private Integer offset;
+    private String equipmentId;
 }

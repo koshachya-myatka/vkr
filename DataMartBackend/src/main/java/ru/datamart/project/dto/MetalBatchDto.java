@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 public class MetalBatchDto {
     private String batchId;
+    private String equipmentId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String processStatus;

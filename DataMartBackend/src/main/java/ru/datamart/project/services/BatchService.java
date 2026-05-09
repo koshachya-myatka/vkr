@@ -52,7 +52,7 @@ public class BatchService {
 
     public List<MetalBatchDto> getMetalBatches(MetalBatchFilterDto dto) {
         return batchRepository.getMetalBatches(dto.getOffset(), dto.getMetalType(), dto.getBatchId(), dto.getStartTime(),
-                        dto.getEndTime(), dto.getProcessStatus())
+                        dto.getEndTime(), dto.getProcessStatus(), dto.getEquipmentId())
                 .stream()
                 .peek(d -> {
                     MesProcessStatusEnum status = MesProcessStatusEnum.valueOf(d.getProcessStatus());

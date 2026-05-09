@@ -4,13 +4,15 @@ const statuses = ["ARRIVAL", "PROCESSING", "ANALYSIS", "ACCEPTED", "DEFECTIVE"];
 
 export default function SearchPanel({ onSearch }) {
     const [batchId, setBatchId] = useState("");
+    const [equipmentId, setEquipmentId] = useState("");
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
-    const [processStatus, setProcessStatus] = useState("");
+    const [processStatus, setProcessStatus] = useState("");   
 
     const handleSubmit = () => {
         onSearch({
             batchId: batchId || null,
+            equipmentId: equipmentId || null,
             startTime: startTime || null,
             endTime: endTime || null,
             processStatus: processStatus || null,
@@ -19,11 +21,13 @@ export default function SearchPanel({ onSearch }) {
 
     const resetFilter = () => {
         setBatchId("");
+        setEquipmentId("");
         setStartTime("");
         setEndTime("");
         setProcessStatus("");
         onSearch({
             batchId: null,
+            equipmentId: null,
             startTime: null,
             endTime: null,
             processStatus: null,
@@ -35,9 +39,15 @@ export default function SearchPanel({ onSearch }) {
             <button onClick={resetFilter}>Сброс</button>
             
             <input
-                placeholder="Batch ID"
+                placeholder="ID партии"
                 value={batchId}
                 onChange={(e) => setBatchId(e.target.value)}
+            />
+
+            <input
+                placeholder="ID оборудования"
+                value={equipmentId}
+                onChange={(e) => setEquipmentId(e.target.value)}
             />
 
             <input
@@ -56,7 +66,7 @@ export default function SearchPanel({ onSearch }) {
                 value={processStatus}
                 onChange={(e) => setProcessStatus(e.target.value)}
             >
-                <option value="">All statuses</option>
+                <option value="">Все статусы</option>
                 {statuses.map((s) => (
                     <option key={s} value={s}>
                         {s}
@@ -64,7 +74,7 @@ export default function SearchPanel({ onSearch }) {
                 ))}
             </select>
 
-            <button onClick={handleSubmit}>Search</button>
+            <button onClick={handleSubmit}>НАЙТИ</button>
         </div>
     );
 }

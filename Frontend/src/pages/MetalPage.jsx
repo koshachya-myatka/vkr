@@ -22,6 +22,7 @@ export default function MetalPage() {
             const dto = {
                 metalType: id,
                 batchId: customFilter.batchId ?? null,
+                equipmentId: customFilter.equipmentId ?? null,
                 startTime: customFilter.startTime ?? null,
                 endTime: customFilter.endTime ?? null,
                 processStatus: customFilter.processStatus ?? null,

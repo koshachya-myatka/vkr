@@ -13,6 +13,7 @@ export default function MetalBatchesTable({ data }) {
             <thead>
                 <tr>
                     <th>ID пробы</th>
+                    <th>ID оборудования</th>
                     <th>Поступление</th>
                     <th>Окончание анализов</th>
                     <th>Статус</th>
@@ -22,6 +23,7 @@ export default function MetalBatchesTable({ data }) {
                 {data && data.map((row) => (
                     <tr key={row.batchId}>
                         <td>{row.batchId}</td>
+                        <td>{row.equipmentId}</td>
                         <td>{row.startTime}</td>
                         <td>{row.endTime}</td>
                         <td>{row.statusName}</td>
