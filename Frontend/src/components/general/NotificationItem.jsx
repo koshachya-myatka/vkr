@@ -1,22 +1,29 @@
 export default function NotificationItem({ item, onDelete }) {
-    const color = {
-        WARNING: 'orange',
-        ALARM: 'red'
+    const severityClass = {
+        WARNING: 'notification-warning',
+        ALARM: 'notification-danger'
     }[item.severity];
 
     return (
-        <div style={{ background: color, padding: '10px', marginBottom: '5px' }}>
-            <table>
-                <tbody>
-                    <tr>
-                        <td>{item.createdAt}</td>
-                        <td>{item.signalSource}</td>
-                        <td>{item.message}</td>
-                        <td>{item.equipmentId}</td>
-                        <td><button onClick={() => onDelete(item.id)}>X</button></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div className={`notification ${severityClass}`}>
+            <div className="flex-between gap-md">
+                <div className="flex-column gap-sm">
+                    <strong>{item.signalSource}</strong>
+                    <small>
+                        {new Date(item.createdAt).toLocaleString()}
+                    </small>
+                    <p>{item.message}</p>
+                    <small>
+                        Оборудование: {item.equipmentId}
+                    </small>
+                </div>
+                <button
+                    className="btn btn-danger"
+                    onClick={() => onDelete(item.id)}
+                >
+                    ✕
+                </button>
+            </div>
         </div>
     );
 }

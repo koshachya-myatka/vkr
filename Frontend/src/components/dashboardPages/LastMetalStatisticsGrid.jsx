@@ -12,11 +12,7 @@ export default function LastMetalStatisticsGrid() {
     if (isError || !data.length) return <div>Ошибка: {error?.message}</div>;
 
     return (
-        <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '10px'
-        }}>
+        <div className="grid-cards">
             {data?.map((item) => (
                 <MetalStatisticsCard
                     key={item.metalType}

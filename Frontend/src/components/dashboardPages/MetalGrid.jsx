@@ -12,11 +12,7 @@ export default function MetalGrid() {
     if (isError || !metals.length) return <div>Ошибка: {error?.message}</div>;
 
     return (
-        <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '10px'
-        }}>
+        <div className="grid-cards">
             {metals && metals.map(m => (
                 <MetalCard key={m.metalType} metal={m} />
             ))}

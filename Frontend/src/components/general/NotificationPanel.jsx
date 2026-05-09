@@ -22,7 +22,7 @@ export default function NotificationPanel() {
     };
 
     return (
-        <div>
+        <div className="page-section">
             {items.map(i => (
                 <NotificationItem key={i.id} item={i} onDelete={remove} />
             ))}

@@ -38,18 +38,49 @@ export default function BatchPage() {
     }
 
     return (
-        <div>
+        <>
             <title>Партия - {id}</title>
 
             <Header />
 
-            <BatchDataPanel batchData={batchData} />
+            <main className="page-container">
+                <div className="page-section">
+                    <h1>Партия #{id}</h1>
+                    <p>
+                        Детальная информация о партии.
+                    </p>
+                </div>
 
-            {isLaboratory && <BatchLaboratoryPanel batchData={batchData} />}
+                <div className="page-section">
+                    <BatchDataPanel
+                        batchData={batchData}
+                    />
+                </div>
 
-            {isProduction && <BatchProductionPanel batchData={batchData} />}
+                {isLaboratory && (
+                    <div className="page-section">
+                        <BatchLaboratoryPanel
+                            batchData={batchData}
+                        />
+                    </div>
+                )}
 
-            {isManagement && <BatchManagementPanel batchData={batchData} />}
-        </div>
+                {isProduction && (
+                    <div className="page-section">
+                        <BatchProductionPanel
+                            batchData={batchData}
+                        />
+                    </div>
+                )}
+
+                {isManagement && (
+                    <div className="page-section">
+                        <BatchManagementPanel
+                            batchData={batchData}
+                        />
+                    </div>
+                )}
+            </main>
+        </>
     )
 }

@@ -11,27 +11,29 @@ export default function LastProductionRecordTable() {
   if (isError || !data.length) return <div>Ошибка: {error?.message}</div>;
 
   return (
-    <table border="1" width="100%">
-      <thead>
-        <tr>
-          <th>Партия</th>
-          <th>Тип металла</th>
-          <th>Поступление</th>
-          <th>Окончание анализов</th>
-          <th>Статус</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data && data.map((b, i) => (
-          <tr key={i}>
-            <td>{b.batchId}</td>
-            <td>{b.metalType}</td>
-            <td>{b.startTime}</td>
-            <td>{b.endTime}</td>
-            <td>{b.statusName}</td>
+    <div className="table-wrapper">
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Партия</th>
+            <th>Тип металла</th>
+            <th>Поступление</th>
+            <th>Окончание анализов</th>
+            <th>Статус</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {data && data.map((b, i) => (
+            <tr key={i}>
+              <td>{b.batchId}</td>
+              <td>{b.metalType}</td>
+              <td>{b.startTime}</td>
+              <td>{b.endTime}</td>
+              <td><span className="badge badge-info">{b.statusName}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

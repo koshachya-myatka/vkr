@@ -5,16 +5,34 @@ import LastMetalStatisticsGrid from "../components/dashboardPages/LastMetalStati
 
 export default function ManagementDashboard() {
     return (
-        <div>
+        <>
             <title>Главная - Руководство</title>
 
             <Header />
 
-            <NotificationPanel />
-            
-            <MetalGrid />
+            <main className="page-container">
+                <div className="page-section">
+                    <NotificationPanel />
+                </div>
 
-            <LastMetalStatisticsGrid />
-        </div>
+                <div className="page-section">
+                    <h1>Руководство</h1>
+                    <p>
+                        Сводная аналитика производства,
+                        эффективности и качества продукции.
+                    </p>
+                </div>
+
+                <div className="page-section">
+                    <MetalGrid />
+                </div>
+
+                <div className="page-section">
+                    <h2>Статистика по металлам</h2>
+                    <LastMetalStatisticsGrid />
+                </div>
+
+            </main>
+        </>
     )
 }

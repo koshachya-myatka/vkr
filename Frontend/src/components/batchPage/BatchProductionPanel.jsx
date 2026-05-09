@@ -21,15 +21,49 @@ export default function BatchProductionPanel({ batchData }) {
     if (isError) return <div>Ошибка: {error?.message}</div>;
 
     return (
-        <div>
-            <h2>Лабораторные анализы</h2>
-            <LimsTableBrief analyses={analyses} />
+        <div className="flex-column gap-lg">
+            <div className="card">
+                <div className="flex-between">
+                    <h2>
+                        Лабораторные анализы
+                    </h2>
+                    <span className="badge badge-info">
+                        LIMS
+                    </span>
+                </div>
+                <div className="divider" />
+                <LimsTableBrief analyses={analyses} />
+            </div>
 
-            <h2>Данные SCADA</h2>
-            {scada &&
-                (scada.map((parameter) => (
-                    <ScadaParameterGraph parameter={parameter} />
-                )))}
+            <div className="card">
+                <div className="flex-between">
+                    <h2>SCADA данные</h2>
+                    <span className="badge badge-success">
+                        Онлайн мониторинг
+                    </span>
+                </div>
+
+                <div className="divider" />
+                {scada.length > 0 ? (
+                    <div className="flex-column gap-lg">
+                        {scada.map((parameter) => (
+                            <div
+                                key={parameter.parameterName}
+                                className="card card-hover"
+                            >
+                                <ScadaParameterGraph
+                                    parameter={parameter}
+                                />
+                            </div>
+                        ))}
+
+                    </div>
+                ) : (
+                    <div className="card">
+                        Нет SCADA данных
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

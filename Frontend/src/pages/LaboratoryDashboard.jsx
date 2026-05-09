@@ -4,17 +4,33 @@ import MetalGrid from "../components/dashboardPages/MetalGrid";
 import LastLaboratoryRecordTable from "../components/dashboardPages/LastLaboratoryRecordTable";
 
 export default function LaboratoryDashboard() {
-    return (
-        <div>
+    return (        
+        <>
             <title>Главная - Лаборатория</title>
 
             <Header />
 
-            <NotificationPanel />
+            <main className="page-container">
+                <div className="page-section">
+                    <NotificationPanel />
+                </div>
+                <div className="page-section">
+                    <h1>Лаборатория</h1>
+                    <p>
+                        Мониторинг анализа металлов,
+                        контроль проб и статусов партий.
+                    </p>
+                </div>
 
-            <MetalGrid />
+                <div className="page-section">
+                    <MetalGrid />
+                </div>
 
-            <LastLaboratoryRecordTable />
-        </div>
+                <div className="page-section">
+                    <h2>Последние анализы</h2>
+                    <LastLaboratoryRecordTable />
+                </div>
+            </main>
+        </>
     );
 }

@@ -7,7 +7,7 @@ export default function SearchPanel({ onSearch }) {
     const [equipmentId, setEquipmentId] = useState("");
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
-    const [processStatus, setProcessStatus] = useState("");   
+    const [processStatus, setProcessStatus] = useState("");
 
     const handleSubmit = () => {
         onSearch({
@@ -31,50 +31,80 @@ export default function SearchPanel({ onSearch }) {
             startTime: null,
             endTime: null,
             processStatus: null,
-        });        
+        });
     };
 
     return (
-        <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-            <button onClick={resetFilter}>Сброс</button>
-            
-            <input
-                placeholder="ID партии"
-                value={batchId}
-                onChange={(e) => setBatchId(e.target.value)}
-            />
+        <div className="card">
+            <div className="flex gap-md">
+                <button
+                    className="btn"
+                    onClick={resetFilter}
+                >
+                    Сброс
+                </button>
 
-            <input
-                placeholder="ID оборудования"
-                value={equipmentId}
-                onChange={(e) => setEquipmentId(e.target.value)}
-            />
+                <input
+                    className="input"
+                    placeholder="ID партии"
+                    value={batchId}
+                    onChange={(e) =>
+                        setBatchId(e.target.value)
+                    }
+                />
 
-            <input
-                type="datetime-local"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-            />
+                <input
+                    className="input"
+                    placeholder="ID оборудования"
+                    value={equipmentId}
+                    onChange={(e) =>
+                        setEquipmentId(e.target.value)
+                    }
+                />
 
-            <input
-                type="datetime-local"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-            />
+                <input
+                    className="input"
+                    type="datetime-local"
+                    value={startTime}
+                    onChange={(e) =>
+                        setStartTime(e.target.value)
+                    }
+                />
 
-            <select
-                value={processStatus}
-                onChange={(e) => setProcessStatus(e.target.value)}
-            >
-                <option value="">Все статусы</option>
-                {statuses.map((s) => (
-                    <option key={s} value={s}>
-                        {s}
+                <input
+                    className="input"
+                    type="datetime-local"
+                    value={endTime}
+                    onChange={(e) =>
+                        setEndTime(e.target.value)
+                    }
+                />
+
+                <select
+                    className="select"
+                    value={processStatus}
+                    onChange={(e) =>
+                        setProcessStatus(e.target.value)
+                    }
+                >
+                    <option value="">
+                        Все статусы
                     </option>
-                ))}
-            </select>
 
-            <button onClick={handleSubmit}>НАЙТИ</button>
+                    {statuses.map((s) => (
+                        <option key={s} value={s}>
+                            {s}
+                        </option>
+                    ))}
+                </select>
+
+                <button
+                    className="btn btn-primary"
+                    onClick={handleSubmit}
+                >
+                    Найти
+                </button>
+            </div>
         </div>
     );
 }

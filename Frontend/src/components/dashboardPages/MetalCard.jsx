@@ -6,33 +6,58 @@ export default function MetalCard({ metal }) {
     const location = useLocation();
 
     return (
-        <div style={{
-            border: '1px solid gray',
-            padding: 10,
-            borderRadius: 8,
-            background: '#fff'
-        }}>
-            <img
-                src={`/metals/${metal.metalType}.png`}
-                width={80}
-                alt={metal.metalType}
-                onError={(e) => {
-                    e.target.style.display = 'none';
-                }}
-            />
+        <div className="card card-hover info-card">
+            <div className="flex-center">
+                <img
+                    src={`/metals/${metal.metalType}.png`}
+                    width={80}
+                    alt={metal.metalType}
+                    onError={(e) => {
+                        e.target.style.display = 'none';
+                    }}
+                />
+            </div>
 
             <SimpleLink
-                text={<h3>{metal.metalTypeName}</h3>}
+                text={<h3 className="card-title"> {metal.metalTypeName}</h3>}
                 link={location.pathname + '/metals/' + metal.metalType}
-                style={{ background: 'gray' }}
+                style={{ textDecoration: 'none' }}
             />
 
-            <p>Всего партий: {metal.total ?? 0}</p>
-            <p>Поступило: {metal.arrival ?? 0}</p>
-            <p>Обработка: {metal.processing ?? 0}</p>
-            <p>На анализах: {metal.analysis ?? 0}</p>
-            <p>Одобрено: {metal.accepted ?? 0}</p>
-            <p>Брак: {metal.defective ?? 0}</p>
+            <div className="divider" />
+
+            <div className="stat-block">
+                <span className="stat-label">
+                    Всего партий
+                </span>
+                <span className="stat-value">
+                    {metal.total ?? 0}
+                </span>
+            </div>
+            <div className="flex-between">
+                <small>Поступило</small>
+                <span>{metal.arrival ?? 0}</span>
+            </div>
+            <div className="flex-between">
+                <small>Обработка</small>
+                <span>{metal.processing ?? 0}</span>
+            </div>
+            <div className="flex-between">
+                <small>На анализах</small>
+                <span>{metal.analysis ?? 0}</span>
+            </div>
+            <div className="flex-between">
+                <small>Одобрено</small>
+                <span className="badge badge-success">
+                    {metal.accepted ?? 0}
+                </span>
+            </div>
+            <div className="flex-between">
+                <small>Брак</small>
+                <span className="badge badge-danger">
+                    {metal.defective ?? 0}
+                </span>
+            </div>
         </div>
     );
 }

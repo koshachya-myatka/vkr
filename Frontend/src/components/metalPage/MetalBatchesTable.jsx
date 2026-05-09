@@ -9,28 +9,31 @@ export default function MetalBatchesTable({ data }) {
     const url = location.pathname.split("/metals")[0];
 
     return (
-        <table border="1" cellPadding="10" width="100%">
-            <thead>
-                <tr>
-                    <th>ID пробы</th>
-                    <th>ID оборудования</th>
-                    <th>Поступление</th>
-                    <th>Окончание анализов</th>
-                    <th>Статус</th>
-                </tr>
-            </thead>
-            <tbody>
-                {data && data.map((row) => (
-                    <tr key={row.batchId}>
-                        <td>{row.batchId}</td>
-                        <td>{row.equipmentId}</td>
-                        <td>{row.startTime}</td>
-                        <td>{row.endTime}</td>
-                        <td>{row.statusName}</td>
-                        <td><SimpleLink link={url + "/batches/" + row.batchId} text="Подробнее"/></td>
+        <div className="table-wrapper">
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th>ID пробы</th>
+                        <th>ID оборудования</th>
+                        <th>Поступление</th>
+                        <th>Окончание анализов</th>
+                        <th>Статус</th>
+                        <th></th>
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {data && data.map((row) => (
+                        <tr key={row.batchId}>
+                            <td>{row.batchId}</td>
+                            <td>{row.equipmentId}</td>
+                            <td>{row.startTime}</td>
+                            <td>{row.endTime}</td>
+                            <td><span className="badge badge-info">{row.statusName}</span></td>
+                            <td><SimpleLink link={url + "/batches/" + row.batchId} text="Подробнее" style={{ textDecoration: 'none' }} /></td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     );
 }

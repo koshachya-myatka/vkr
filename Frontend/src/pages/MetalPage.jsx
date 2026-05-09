@@ -56,36 +56,54 @@ export default function MetalPage() {
     };
 
     return (
-        <div>
+        <>
             <title>Металл - {id}</title>
 
             <Header />
-            
-            <h2>Metal: {id}</h2>
 
-            <SearchPanel onSearch={handleSearch} />
+            <main className="page-container">
 
-            {loading ? (
-                <div>Loading...</div>
-            ) : (
-                <MetalBatchesTable data={data} />
-            )}
+                <div className="page-section">
+                    <h1>{id}</h1>
+                    <p>
+                        Просмотр производственных партий металла.
+                    </p>
+                </div>
 
-            <div style={{ marginTop: "20px" }}>
-                <PaginationButton
-                    onClick={handlePrev}
-                    disabled={offset === 0}
-                >
-                    Prev
-                </PaginationButton>
-                <p>{pageNumber}</p>
-                <PaginationButton
-                    onClick={handleNext}
-                    disabled={data.length < PAGE_SIZE}
-                >
-                    Next
-                </PaginationButton>
-            </div>
-        </div>
+                <div className="page-section">
+                    <SearchPanel onSearch={handleSearch} />
+                </div>
+
+                <div className="page-section">
+                    {loading ? (
+                        <div className="card">
+                            Загрузка...
+                        </div>
+                    ) : (
+                        <MetalBatchesTable data={data} />
+                    )}
+                </div>
+
+                <div className="pagination">
+                    <PaginationButton
+                        onClick={handlePrev}
+                        disabled={offset === 0}
+                    >
+                        Назад
+                    </PaginationButton>
+
+                    <span className="badge badge-info">
+                        {pageNumber}
+                    </span>
+
+                    <PaginationButton
+                        onClick={handleNext}
+                        disabled={data.length < PAGE_SIZE}
+                    >
+                        Вперёд
+                    </PaginationButton>
+                </div>
+            </main>
+        </>
     );
 }

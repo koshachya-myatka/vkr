@@ -13,11 +13,19 @@ export default function BatchManagementPanel({ batchData }) {
     if (isError) return <div>Ошибка: {error?.message}</div>;
 
     return (
-        <div>
-            <h2>Лабораторные анализы</h2>
-            <LimsTableBrief analyses={analyses} />
-
-            
+        <div className="flex-column gap-lg">
+            <div className="card">
+                <div className="flex-between">
+                    <h2>
+                        Лабораторные анализы
+                    </h2>
+                    <span className="badge badge-info">
+                        LIMS
+                    </span>
+                </div>
+                <div className="divider" />
+                <LimsTableBrief analyses={analyses} />
+            </div>
         </div>
     )
 }

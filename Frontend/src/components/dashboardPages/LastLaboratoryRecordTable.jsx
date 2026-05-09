@@ -11,27 +11,29 @@ export default function LastLaboratoryRecordTable() {
     if (isError || !data.length) return <div>Ошибка: {error?.message}</div>;
 
     return (
-        <table border="1" width="100%">
-            <thead>
-                <tr>
-                    <th>Проба</th>
-                    <th>Тип металла</th>
-                    <th>Метод</th>
-                    <th>Дата</th>
-                    <th>Статус</th>
-                </tr>
-            </thead>
-            <tbody>
-                {data && data.map((r, i) => (
-                    <tr key={i}>
-                        <td>{r.sampleId}</td>
-                        <td>{r.metalType}</td>
-                        <td>{r.analysisMethod}</td>
-                        <td>{new Date(r.testDate).toLocaleString()}</td>
-                        <td>{r.statusName}</td>
+        <div className="table-wrapper">
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th>Проба</th>
+                        <th>Тип металла</th>
+                        <th>Метод</th>
+                        <th>Дата</th>
+                        <th>Статус</th>
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {data && data.map((r, i) => (
+                        <tr key={i}>
+                            <td>{r.sampleId}</td>
+                            <td>{r.metalType}</td>
+                            <td>{r.analysisMethod}</td>
+                            <td>{new Date(r.testDate).toLocaleString()}</td>
+                            <td><span className="badge badge-info">{r.statusName}</span></td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     );
 }

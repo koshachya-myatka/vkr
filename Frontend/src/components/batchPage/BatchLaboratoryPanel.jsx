@@ -13,12 +13,21 @@ export default function BatchLaboratoryPanel({ batchData }) {
     if (isError) return <div>Ошибка: {error?.message}</div>;
 
     return (
-        <div>
-            <h2>Лабораторные анализы</h2>
-            {analyses &&
-                (analyses?.map((analysis, index) => (
-                    <LimsTableItem analysis={analysis} index={index} />
-                )))}
+        <div className="flex-column gap-lg">
+            <div className="flex-between">
+                <h2>Лабораторные анализы</h2>
+                <span className="badge badge-info">
+                    LIMS
+                </span>
+            </div>
+
+            {analyses?.map((analysis, index) => (
+                <LimsTableItem
+                    key={index}
+                    analysis={analysis}
+                    index={index}
+                />
+            ))}
         </div>
     );
 }

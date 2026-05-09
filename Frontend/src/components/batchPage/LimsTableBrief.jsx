@@ -1,7 +1,15 @@
 export default function LimsTableBrief({ analyses }) {
+    if (!analyses || analyses.length === 0) {
+        return (
+            <div className="card">
+                Анализы отсутствуют
+            </div>
+        );
+    }
+
     return (
-        <div>
-            <table border="1" cellPadding="10" width="100%">
+        <div className="table-wrapper">
+            <table className="table">
                 <thead>
                     <tr>
                         <th>ID пробы</th>
@@ -11,15 +19,18 @@ export default function LimsTableBrief({ analyses }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {analyses &&
-                        (analyses?.map((analysis, index) => (
-                            <tr key={index}>
-                                <td>{analysis.sampleId}</td>
-                                <td>{analysis.analysisMethod}</td>
-                                <td>{analysis.testDate}</td>
-                                <td>{analysis.statusName}</td>
-                            </tr>
-                        )))}
+                    {analyses && analyses.map((analysis, index) => (
+                        <tr key={index}>
+                            <td>{analysis.sampleId}</td>
+                            <td>{analysis.analysisMethod}</td>
+                            <td>{analysis.testDate}</td>
+                            <td>
+                                <span className="badge badge-info">
+                                    {analysis.statusName}
+                                </span>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

@@ -5,10 +5,20 @@ export default function Header() {
     const location = useLocation();
 
     return (
-        <div style={{ display: 'flex', gap: '10px' }}>
-            <HeaderLinkButton text="Лаборатория" link="/laboratory" active={location.pathname.startsWith('/laboratory')} />
-            <HeaderLinkButton text="Производство" link="/production" active={location.pathname.startsWith('/production')} />
-            <HeaderLinkButton text="Руководство" link="/management" active={location.pathname.startsWith('/management')} />
-        </div>
+        <header className="header">
+            <div className="header-left">
+                <div className="header-logo">
+                    <span className="material-symbols-outlined">
+                        Лого?
+                    </span>
+                    Витрина качества металлов
+                </div>
+            </div>
+            <nav className="header-nav">
+                <HeaderLinkButton text="Лаборатория" link="/laboratory" active={location.pathname.startsWith('/laboratory')} />
+                <HeaderLinkButton text="Производство" link="/production" active={location.pathname.startsWith('/production')} />
+                <HeaderLinkButton text="Руководство" link="/management" active={location.pathname.startsWith('/management')} />
+            </nav>
+        </header>
     );
 }

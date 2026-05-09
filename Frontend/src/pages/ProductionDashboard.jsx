@@ -5,12 +5,33 @@ import LastProductionRecordTable from "../components/dashboardPages/LastProducti
 
 export default function ProductionDashboard() {
   return (
-    <div>
+    <>
       <title>Главная - Производство</title>
+
       <Header />
-      <NotificationPanel />
-      <MetalGrid />
-      <LastProductionRecordTable />
-    </div>
+
+      <main className="page-container">
+        <div className="page-section">
+          <NotificationPanel />
+        </div>
+
+        <div className="page-section">
+          <h1>Производство</h1>
+          <p>
+            Мониторинг производственных партий
+            и статусов обработки металлов.
+          </p>
+        </div>
+
+        <div className="page-section">
+          <MetalGrid />
+        </div>
+
+        <div className="page-section">
+          <h2>Последние партии</h2>
+          <LastProductionRecordTable />
+        </div>
+      </main>
+    </>
   );
 }
