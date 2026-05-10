@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.datamart.project.dto.BatchScadaDto;
+import ru.datamart.project.dto.BatchScadaParameterDto;
 import ru.datamart.project.dto.LastBatchDto;
 import ru.datamart.project.services.BatchService;
 import ru.datamart.project.services.ScadaService;
@@ -26,9 +26,7 @@ public class ProductionController {
     }
 
     @GetMapping("/scada/{batchId}")
-    public List<BatchScadaDto> getScada(@PathVariable String batchId) {
+    public List<BatchScadaParameterDto> getScada(@PathVariable String batchId) {
         return scadaService.getScadaByBatchId(batchId);
     }
-
-
 }

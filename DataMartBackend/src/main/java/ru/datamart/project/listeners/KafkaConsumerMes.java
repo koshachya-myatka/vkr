@@ -7,10 +7,12 @@ import org.springframework.stereotype.Component;
 import ru.datamart.project.dto.MesDto;
 import ru.datamart.project.dto.SimpleWsMessageDto;
 import ru.datamart.project.models.MesEntity;
+import ru.datamart.project.models.MesProcessStatusEnum;
 import ru.datamart.project.models.MesStatusEnum;
 import ru.datamart.project.models.NotificationSeverityEnum;
 import ru.datamart.project.services.MesService;
 import ru.datamart.project.services.NotificationService;
+import ru.datamart.project.services.ProcessingBatchRegistry;
 import ru.datamart.project.services.WebSocketService;
 import tools.jackson.databind.ObjectMapper;
 
@@ -24,6 +26,7 @@ public class KafkaConsumerMes {
     private final MesService mesService;
     private final WebSocketService webSocketService;
     private final NotificationService notificationService;
+    private final ProcessingBatchRegistry processingBatchRegistry;
 
     @KafkaListener(concurrency = "2", topics = "${kafka.mes.topic}", groupId = "${kafka.mes.group}")
     private void addMesRecord(String data) {
@@ -33,7 +36,22 @@ public class KafkaConsumerMes {
             if (mesEntityOptional.isPresent()) {
                 MesEntity mes = mesEntityOptional.get();
                 log.info(mes.toString());
-                webSocketService.sendMesUpdate(new SimpleWsMessageDto("MES_update"));
+                webSocketService.sendMesUpdate(mes.getBatch().getBatchId());
+
+                if (mesDto.getProcessStatus().equals(MesProcessStatusEnum.PROCESSING)) {
+                    processingBatchRegistry.addBatch(
+                            mes.getEquipmentId(),
+                            mes.getBatch().getBatchId()
+                    );
+                }
+
+                if (mesDto.getProcessStatus().equals(MesProcessStatusEnum.ANALYSIS)) {
+                    processingBatchRegistry.removeBatch(
+                            mes.getEquipmentId(),
+                            mes.getBatch().getBatchId()
+                    );
+                }
+
                 MesStatusEnum mesStatus = mes.getStatus();
                 if (mesStatus != null && !mesStatus.equals(MesStatusEnum.NORMAL)) {
                     String message = "Показатели при обработке партии вышли за пределы нормы!";
@@ -43,6 +61,7 @@ public class KafkaConsumerMes {
                     notificationService.create(message, severity,
                             mes.getEquipmentId(), "MES");
                 }
+
             } else {
                 log.info("MesEntity не создана. Ошибка в данных DTO");
             }

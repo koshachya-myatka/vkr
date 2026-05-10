@@ -27,6 +27,16 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
 
     @Query(value = """
             SELECT 
+                b.batch_id as batchId                
+            FROM dim_batch as b
+            JOIN fact_mes as m ON b.batch_id = m.batch_id
+            WHERE :time BETWEEN b.start_time AND COALESCE(b.end_time, NOW())
+                AND :equipmentId = m.equipment_id;
+            """, nativeQuery = true)
+    Optional<String> getBatchIdByScada(@Param("time") LocalDateTime time, @Param("equipmentId") String equipmentId);
+
+    @Query(value = """
+            SELECT 
                 b.metal_type as metalType,
                 '' as metalTypeName,
                 COUNT(b) as total,

@@ -4,14 +4,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.datamart.project.dto.BatchScadaDto;
+import ru.datamart.project.dto.BatchScadaParameterDto;
 import ru.datamart.project.dto.ScadaDto;
-import ru.datamart.project.models.LimsStatusEnum;
 import ru.datamart.project.models.ScadaEntity;
 import ru.datamart.project.models.ScadaStatusEnum;
 import ru.datamart.project.repositories.ScadaRepository;
 
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -19,12 +22,35 @@ import java.util.Optional;
 public class ScadaService {
     private final ScadaRepository scadaRepository;
 
-    public List<BatchScadaDto> getScadaByBatchId(String batchId) {
-        return scadaRepository.findScadaByBatchId(batchId).stream()
+    public List<BatchScadaParameterDto> getScadaByBatchId(String batchId) {
+        List<BatchScadaDto> raw = scadaRepository.findScadaByBatchId(batchId).stream()
                 .peek(dto -> {
                     ScadaStatusEnum status = ScadaStatusEnum.valueOf(dto.getStatus());
                     dto.setStatusName(status.toString());
                 })
+                .toList();
+        return raw.stream()
+                .collect(Collectors.groupingBy(BatchScadaDto::getEquipmentId,
+                        Collectors.groupingBy(BatchScadaDto::getParameter)))
+                .entrySet()
+                .stream()
+                .map(entryEquipmentId -> {
+                    String equipmentId = entryEquipmentId.getKey();
+                    return entryEquipmentId.getValue().entrySet().stream()
+                            .map(entryParameter -> {
+                                String parameter = entryParameter.getKey();
+                                List<BatchScadaDto> values = entryParameter.getValue();
+                                values.sort(Comparator.comparing(BatchScadaDto::getTime));
+                                return new BatchScadaParameterDto(
+                                        equipmentId,
+                                        parameter,
+                                        values.getFirst().getUnit(),
+                                        values
+                                );
+                            })
+                            .toList();
+                })
+                .flatMap(Collection::stream)
                 .toList();
     }
 

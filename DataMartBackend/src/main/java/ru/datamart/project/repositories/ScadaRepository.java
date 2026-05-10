@@ -13,7 +13,7 @@ public interface ScadaRepository extends JpaRepository<ScadaEntity, String> {
             SELECT
                 s.sensor_id as sensorId,
                 s.equipment_id as equipmentId,
-                s.time
+                s.time,
                 s.parameter,
                 s.value,
                 s.unit,
@@ -26,10 +26,10 @@ public interface ScadaRepository extends JpaRepository<ScadaEntity, String> {
                 WHERE m.batch_id = :batchId
             )
             AND s.time BETWEEN
-                (SELECT b.start_time FROM dim_batch as b WHERE b.batch_id = :batchId
+                (SELECT b.start_time FROM dim_batch as b WHERE b.batch_id = :batchId)
             AND
-                (SELECT COALESCE(b.end_time, NOW()) FROM dim_batch as b WHERE b.batch_id = :batchId
-            ORDER BY s.parameter, s.time DESC;
+                (SELECT COALESCE(b.end_time, NOW()) FROM dim_batch as b WHERE b.batch_id = :batchId)
+            ORDER BY s.parameter, s.time;
             """, nativeQuery = true)
     List<BatchScadaDto> findScadaByBatchId(@Param("batchId") String batchId);
 }

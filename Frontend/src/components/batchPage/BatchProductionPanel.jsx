@@ -48,7 +48,7 @@ export default function BatchProductionPanel({ batchData }) {
                     <div className="flex-column gap-lg">
                         {scada.map((parameter) => (
                             <div
-                                key={parameter.parameterName}
+                                key={`${parameter.equipmentId}_${parameter.parameter}`}
                                 className="card card-hover"
                             >
                                 <ScadaParameterGraph

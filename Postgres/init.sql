@@ -67,11 +67,6 @@ CREATE TABLE IF NOT EXISTS fact_scada (
 CREATE TABLE IF NOT EXISTS fact_batch_analytics (
     record_id SERIAL PRIMARY KEY,
     batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
-    lims_score DOUBLE PRECISION,
-    mes_score DOUBLE PRECISION,
-    scada_score DOUBLE PRECISION,
-    quality_score DOUBLE PRECISION,
-    compliance_status TEXT,
     alarm_count INT,
     deviation_count INT,
     created_at TIMESTAMP DEFAULT NOW()
@@ -113,29 +108,17 @@ ON fact_lims(batch_id, test_date DESC);
 CREATE INDEX IF NOT EXISTS idx_lims_results_record
 ON fact_lims_results(record_id);
 
-CREATE INDEX IF NOT EXISTS idx_lims_results_param
-ON fact_lims_results(parameter_name);
+CREATE INDEX IF NOT EXISTS idx_scada_equipment
+ON fact_scada(equipment_id);
 
 CREATE INDEX IF NOT EXISTS idx_scada_equipment_time
 ON fact_scada(equipment_id, time DESC);
 
-CREATE INDEX IF NOT EXISTS idx_scada_parameter_time
-ON fact_scada(parameter, time DESC);
-
-CREATE INDEX IF NOT EXISTS idx_scada_equipment_param_time
-ON fact_scada(equipment_id, parameter, time DESC);
-
-CREATE INDEX IF NOT EXISTS idx_scada_time
-ON fact_scada(time DESC);
+CREATE INDEX IF NOT EXISTS idx_scada_time_brin 
+ON fact_scada USING brin (time);
 
 CREATE INDEX IF NOT EXISTS idx_batch_analytics_batch
 ON fact_batch_analytics(batch_id);
 
-CREATE INDEX IF NOT EXISTS idx_batch_analytics_created
-ON fact_batch_analytics(created_at DESC);
-
-CREATE INDEX IF NOT EXISTS idx_batch_analytics_batch_created
-ON fact_batch_analytics(batch_id, created_at DESC);
-
 CREATE INDEX IF NOT EXISTS idx_dim_batch_dashboard_stats
-ON dim_batch (process_status, end_time, metal_type);
+ON dim_batch (process_status, metal_type);

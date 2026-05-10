@@ -7,6 +7,7 @@ import ru.datamart.project.dto.*;
 import ru.datamart.project.models.DimBatchEntity;
 import ru.datamart.project.models.MesProcessStatusEnum;
 import ru.datamart.project.models.MetalTypeEnum;
+import ru.datamart.project.models.ScadaEntity;
 import ru.datamart.project.repositories.DimBatchRepository;
 
 import java.util.List;
@@ -17,6 +18,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BatchService {
     private final DimBatchRepository batchRepository;
+
+    public Optional<String> getBatchIdByScada(ScadaEntity scada) {
+        return batchRepository.getBatchIdByScada(scada.getTime(), scada.getEquipmentId());
+    }
 
     public List<MetalStatisticsCardDto> getMetalStatisticsCards() {
         return batchRepository.getMetalStatistics()

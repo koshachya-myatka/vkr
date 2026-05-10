@@ -141,11 +141,6 @@ docker compose stop
     }
   ],
   "analytics": {
-    "lims_score": 100,
-    "mes_score": 100,
-    "scada_score": 100,
-    "quality_score": 100,
-    "compliance_status": 1,
     "alarm_count": 0,
     "deviation_count": 0,
     "created_at": "2026-04-21T10:30:00",
@@ -210,11 +205,6 @@ TABLE fact_scada (
 TABLE fact_batch_analytics (
     record_id SERIAL PRIMARY KEY,
     batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
-    lims_score DOUBLE PRECISION,
-    mes_score DOUBLE PRECISION,
-    scada_score DOUBLE PRECISION,
-    quality_score DOUBLE PRECISION,
-    compliance_status TEXT,
     alarm_count INT,
     deviation_count INT,
     created_at TIMESTAMP DEFAULT NOW()

@@ -27,8 +27,9 @@ public class KafkaConsumerLims {
             LimsDto limsDto = objectMapper.readValue(data, LimsDto.class);
             Optional<LimsEntity> limsEntityOptional = limsService.save(limsDto);
             if (limsEntityOptional.isPresent()) {
-                log.info(limsEntityOptional.get().toString());
-                webSocketService.sendLimsUpdate(new SimpleWsMessageDto("LIMS_update"));
+                LimsEntity lims = limsEntityOptional.get();
+                log.info(lims.toString());
+                webSocketService.sendLimsUpdate(lims.getBatch().getBatchId());
             } else {
                 log.info("LimsEntity не создана. Ошибка в данных DTO");
             }

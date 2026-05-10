@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import ru.datamart.project.dto.BatchScadaDto;
 import ru.datamart.project.dto.ScadaDto;
 import ru.datamart.project.dto.SimpleWsMessageDto;
 import ru.datamart.project.models.MesStatusEnum;
@@ -11,11 +12,13 @@ import ru.datamart.project.models.NotificationSeverityEnum;
 import ru.datamart.project.models.ScadaEntity;
 import ru.datamart.project.models.ScadaStatusEnum;
 import ru.datamart.project.services.NotificationService;
+import ru.datamart.project.services.ProcessingBatchRegistry;
 import ru.datamart.project.services.ScadaService;
 import ru.datamart.project.services.WebSocketService;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Component
@@ -25,6 +28,7 @@ public class KafkaConsumerScada {
     private final ScadaService scadaService;
     private final WebSocketService webSocketService;
     private final NotificationService notificationService;
+    private final ProcessingBatchRegistry processingBatchRegistry;
 
     @KafkaListener(concurrency = "5", topics = "${kafka.scada.topic}", groupId = "${kafka.scada.group}")
     private void addScadaRecord(String data) {
@@ -34,7 +38,12 @@ public class KafkaConsumerScada {
             if (scadaEntityOptional.isPresent()) {
                 ScadaEntity scada = scadaEntityOptional.get();
                 log.info(scada.toString());
-                webSocketService.sendScadaUpdate(new SimpleWsMessageDto("SCADA_update"));
+
+                Set<String> batchIds = processingBatchRegistry.getBatchIds(scada.getEquipmentId());
+                for (String batchId : batchIds){
+                    webSocketService.sendScadaUpdate(batchId);
+                }
+
                 ScadaStatusEnum scadaStatus = scada.getStatus();
                 if (!scadaStatus.equals(ScadaStatusEnum.NORMAL)) {
                     String message = "Показатели прибора вышли за пределы нормы!";
