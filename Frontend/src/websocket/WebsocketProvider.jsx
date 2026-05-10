@@ -36,8 +36,13 @@ export const WebSocketProvider = ({ children }) => {
             }
             const uniqueBatchIds = [...new Set(scadaBufferRef.current)];
             scadaBufferRef.current = [];
-            uniqueBatchIds.forEach(batchId =>
-                queryClient.invalidateQueries({ queryKey: ['batch-page-prod-scada', batchId] })
+            await Promise.all(
+                uniqueBatchIds.map(batchId =>
+                    Promise.all([
+                        queryClient.invalidateQueries({ queryKey: ['batch-page-prod-scada', batchId] }),
+                        queryClient.invalidateQueries({ queryKey: ['batch-page-manag-scada', batchId] }),
+                    ])
+                )
             )
         }, 1000);
 

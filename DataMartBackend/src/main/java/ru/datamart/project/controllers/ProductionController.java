@@ -26,7 +26,7 @@ public class ProductionController {
     }
 
     @GetMapping("/scada/{batchId}")
-    public List<BatchScadaParameterDto> getScada(@PathVariable String batchId) {
-        return scadaService.getScadaByBatchId(batchId);
+    public ResponseEntity<List<BatchScadaParameterDto>> getScada(@PathVariable String batchId) {
+        return ResponseEntity.ok(scadaService.getScadaByBatchId(batchId));
     }
 }

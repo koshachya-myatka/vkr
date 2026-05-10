@@ -257,6 +257,17 @@ small {
   gap: 10px;
 }
 
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.metric-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
 /* ===== BUTTONS ===== */
 
 .btn {

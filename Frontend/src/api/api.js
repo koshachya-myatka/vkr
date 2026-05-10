@@ -25,3 +25,4 @@ export const getScadaByBatch = (batchId) => API.get(`/production/scada/${batchId
 
 // МЕНЕДЖМЕНТ
 export const getMetalStatisticsCards = () => API.get('/management/metal-statistics-cards');
+export const getScadaAvgByBatch = (batchId) => API.get(`/management/scada/${batchId}`);

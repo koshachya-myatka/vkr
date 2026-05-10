@@ -42,7 +42,6 @@ export default function BatchProductionPanel({ batchData }) {
                         Онлайн мониторинг
                     </span>
                 </div>
-
                 <div className="divider" />
                 {scada.length > 0 ? (
                     <div className="flex-column gap-lg">

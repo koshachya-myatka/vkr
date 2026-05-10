@@ -2,18 +2,17 @@ package ru.datamart.project.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class BatchScadaDto {
+public class BatchScadaAvgDto {
     private String equipmentId;
     private String parameter;
-    private LocalDateTime time;
-    private Double value;
     private String unit;
-    private String status;
+    private Double avgValue;
+    private Double minValue;
+    private Double maxValue;
+    private Long valuesCount;
 }

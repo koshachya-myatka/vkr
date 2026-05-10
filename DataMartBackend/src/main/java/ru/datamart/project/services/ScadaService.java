@@ -3,6 +3,7 @@ package ru.datamart.project.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.datamart.project.dto.BatchScadaAvgDto;
 import ru.datamart.project.dto.BatchScadaDto;
 import ru.datamart.project.dto.BatchScadaParameterDto;
 import ru.datamart.project.dto.ScadaDto;
@@ -23,12 +24,7 @@ public class ScadaService {
     private final ScadaRepository scadaRepository;
 
     public List<BatchScadaParameterDto> getScadaByBatchId(String batchId) {
-        List<BatchScadaDto> raw = scadaRepository.findScadaByBatchId(batchId).stream()
-                .peek(dto -> {
-                    ScadaStatusEnum status = ScadaStatusEnum.valueOf(dto.getStatus());
-                    dto.setStatusName(status.toString());
-                })
-                .toList();
+        List<BatchScadaDto> raw = scadaRepository.findScadaByBatchId(batchId);
         return raw.stream()
                 .collect(Collectors.groupingBy(BatchScadaDto::getEquipmentId,
                         Collectors.groupingBy(BatchScadaDto::getParameter)))
@@ -52,6 +48,10 @@ public class ScadaService {
                 })
                 .flatMap(Collection::stream)
                 .toList();
+    }
+
+    public List<BatchScadaAvgDto> getScadaAvgByBatchId(String batchId) {
+        return scadaRepository.findScadaAvgByBatchId(batchId);
     }
 
     public Optional<ScadaEntity> save(ScadaDto dto) {
