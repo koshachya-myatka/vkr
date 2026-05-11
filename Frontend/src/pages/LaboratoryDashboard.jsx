@@ -1,21 +1,22 @@
 import Header from "../components/general/Header";
+import Footer from "../components/general/Footer";
 import NotificationPanel from "../components/general/NotificationPanel";
 import MetalGrid from "../components/dashboardPages/MetalGrid";
 import LastLaboratoryRecordTable from "../components/dashboardPages/LastLaboratoryRecordTable";
 
 export default function LaboratoryDashboard() {
-    return (        
+    return (
         <>
             <title>Главная - Лаборатория</title>
 
-            <Header />
-
+            <Header />            
+            
             <main className="page-container">
                 <div className="page-section">
                     <NotificationPanel />
                 </div>
                 <div className="page-section">
-                    <h1>Лаборатория</h1>
+                    <h1>Главная | Лаборатория</h1>
                     <p>
                         Мониторинг анализа металлов,
                         контроль проб и статусов партий.
@@ -31,6 +32,8 @@ export default function LaboratoryDashboard() {
                     <LastLaboratoryRecordTable />
                 </div>
             </main>
+
+            <Footer />
         </>
     );
 }

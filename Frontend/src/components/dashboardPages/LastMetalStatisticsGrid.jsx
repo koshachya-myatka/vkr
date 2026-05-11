@@ -1,15 +1,32 @@
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from 'react-router-dom';
 import MetalStatisticsCard from "./MetalStatisticsCard";
+import Loader from "../general/Loader";
 import { getMetalStatisticsCards } from "../../api/api";
 
 export default function LastMetalStatisticsGrid() {
+    const navigate = useNavigate();
+
     const { data: data, isLoading, isError, error } = useQuery({
         queryKey: ["dashboard-manag-last-statistics"],
         queryFn: () => getMetalStatisticsCards().then(res => res.data)
     });
 
-    if (isLoading) return <div>Загрузка...</div>;
-    if (isError || !data.length) return <div>Ошибка: {error?.message}</div>;
+    if (isLoading) {
+        return (
+            <Loader size="medium" />
+        );
+    }
+
+    if (isError) {
+        navigate("/error");
+    }
+
+    if (!data.length) {
+        <div className="page-section">
+            <h4>Нет данных</h4>
+        </div>
+    }   
 
     return (
         <div className="grid-cards">

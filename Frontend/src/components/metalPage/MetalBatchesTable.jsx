@@ -3,8 +3,13 @@ import { useLocation } from 'react-router-dom';
 
 export default function MetalBatchesTable({ data }) {
     if (!data || data.length === 0) {
-        return <div>No data found</div>;
-    }
+        return (
+            <div className="page-section">
+                <h4>Нет данных</h4>
+            </div>
+        )
+    };
+
     const location = useLocation();
     const url = location.pathname.split("/metals")[0];
 

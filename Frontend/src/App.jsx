@@ -7,6 +7,7 @@ import ProductionDashboard from './pages/ProductionDashboard'
 import ManagementDashboard from './pages/ManagementDashboard'
 import MetalPage from './pages/MetalPage';
 import BatchPage from './pages/BatchPage';
+import ErrorPage from './pages/ErrorPage';
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,8 @@ function App() {
             <Route path="/management" element={<ManagementDashboard />} />
             <Route path="/management/metals/:id" element={<MetalPage />} />
             <Route path="/management/batches/:id" element={<BatchPage />} />
+
+            <Route path='/error' element={<ErrorPage />} />
           </Routes>
         </BrowserRouter>
       </WebSocketProvider>

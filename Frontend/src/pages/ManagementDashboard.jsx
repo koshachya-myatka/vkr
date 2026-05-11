@@ -1,4 +1,5 @@
 import Header from "../components/general/Header";
+import Footer from "../components/general/Footer";
 import NotificationPanel from "../components/general/NotificationPanel";
 import MetalGrid from "../components/dashboardPages/MetalGrid";
 import LastMetalStatisticsGrid from "../components/dashboardPages/LastMetalStatisticsGrid";
@@ -31,8 +32,9 @@ export default function ManagementDashboard() {
                     <h2>Статистика по металлам</h2>
                     <LastMetalStatisticsGrid />
                 </div>
-
             </main>
+
+            <Footer />
         </>
     )
 }

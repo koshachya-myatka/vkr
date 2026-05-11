@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "../components/general/Header";
+import Footer from "../components/general/Footer";
 import SearchPanel from "../components/metalPage/SearchPanel";
 import MetalBatchesTable from "../components/metalPage/MetalBatchesTable";
 import PaginationButton from "../components/general/PaginationButton";
 import { getMetalBatches } from "../api/api";
+import Loader from "../components/general/Loader";
 
 const PAGE_SIZE = 20;
 
 export default function MetalPage() {
+    const navigate = useNavigate();
     const { id } = useParams(); // metalType
     const [data, setData] = useState([]);
     const [offset, setOffset] = useState(0);
@@ -30,6 +33,8 @@ export default function MetalPage() {
             };
             const res = await getMetalBatches(dto);
             setData(res.data);
+        } catch (error) {
+            navigate("/error");
         } finally {
             setLoading(false);
         }
@@ -62,9 +67,8 @@ export default function MetalPage() {
             <Header />
 
             <main className="page-container">
-
                 <div className="page-section">
-                    <h1>{id}</h1>
+                    <h1>Металл {id.charAt[0] + id.toLowerCase.charAt[1]}</h1>
                     <p>
                         Просмотр производственных партий металла.
                     </p>
@@ -76,9 +80,7 @@ export default function MetalPage() {
 
                 <div className="page-section">
                     {loading ? (
-                        <div className="card">
-                            Загрузка...
-                        </div>
+                        <Loader size="large" />
                     ) : (
                         <MetalBatchesTable data={data} />
                     )}
@@ -104,6 +106,8 @@ export default function MetalPage() {
                     </PaginationButton>
                 </div>
             </main>
+
+            <Footer />
         </>
     );
 }

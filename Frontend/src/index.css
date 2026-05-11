@@ -34,23 +34,22 @@
 
   /* ===== TYPOGRAPHY ===== */
   --font-main: 'Montserrat', sans-serif;
-
-  --h1-size: 40px;
+  --h1-size: 35px;
   --h2-size: 30px;
-  --h3-size: 22px;
-  --text-size: 15px;
+  --h3-size: 25px;
+  --h4-size: 20px;
+  --text-size: 16px;
   --small-size: 13px;
 
   /* ===== SIZES ===== */
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 22px;
-
   --transition-fast: 0.15s ease;
 
   /* ===== LAYOUT ===== */
   --content-width: 85%;
-  --header-height: 64px;
+  --header-height: 80px;
 }
 
 * {
@@ -62,6 +61,7 @@ html {
 }
 
 body {
+  min-height: 100vh;  
   margin: 0;
   padding: 0;
   background: var(--bg-primary);
@@ -75,6 +75,8 @@ body {
 
 #root {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 h1,
@@ -104,8 +106,14 @@ h3 {
   margin-bottom: 14px;
 }
 
+h4 {
+  font-size: var(--h4-size);
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+}
+
 p {
-  margin: 0 0 14px;
+  margin: 0 0 12px;
   color: var(--text-secondary);
 }
 
@@ -168,7 +176,6 @@ small {
 .header {
   height: var(--header-height);
   background: var(--header-bg);
-  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -185,7 +192,7 @@ small {
 }
 
 .header-logo {
-  font-size: 20px;
+  font-size: 25px;
   font-weight: 800;
   color: var(--text-primary);
   display: flex;
@@ -224,10 +231,68 @@ small {
   color: white;
 }
 
+/* ===== FOOTER ===== */
+
+.footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  background: var(--header-bg);
+  padding: 28px 6%;
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 720px;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.footer-text {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.footer-top-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 130px;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-top-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* ===== CARDS ===== */
 
 .card {
-  background: var(--card-bg);
+  background: var(--card-bg);  
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 22px;
@@ -258,14 +323,14 @@ small {
 }
 
 .grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
 }
 
 .metric-value {
-    font-size: 1.8rem;
-    font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 
 /* ===== BUTTONS ===== */
@@ -539,6 +604,85 @@ small {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #3d4c63;
+}
+
+/* ===== PRELOADER ===== */
+
+.loader-card {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 160px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(90deg,
+      #171b21 0%,
+      #1d2430 50%,
+      #171b21 100%);
+  background-size: 300% 100%;
+  animation: shimmer 1.6s infinite linear;
+  border: 1px solid var(--border);
+}
+
+.loader-card.small {
+  min-height: 80px;
+}
+
+.loader-card.medium {
+  min-height: 160px;
+}
+
+.loader-card.large {
+  min-height: 260px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ===== ERROR PAGE ===== */
+
+.error-page {
+  width: 100%;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.error-card {
+  width: 100%;
+  max-width: 620px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 42px;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 72px;
+  color: #f87171;
+  margin-bottom: 18px;
+}
+
+.error-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.error-text {
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  line-height: 1.6;
 }
 
 /* ===== RESPONSIVE ===== */

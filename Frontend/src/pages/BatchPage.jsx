@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/general/Header";
+import Footer from '../components/general/Footer';
+import Loader from '../components/general/Loader';
 import BatchDataPanel from "../components/batchPage/BatchDataPanel";
 import BatchLaboratoryPanel from "../components/batchPage/BatchLaboratoryPanel";
 import BatchProductionPanel from "../components/batchPage/BatchProductionPanel";
@@ -9,6 +11,7 @@ import BatchManagementPanel from "../components/batchPage/BatchManagementPanel";
 import { getBatch } from "../api/api";
 
 export default function BatchPage() {
+    const navigate = useNavigate();
     const { id } = useParams(); // batchId
     const location = useLocation();
 
@@ -23,18 +26,18 @@ export default function BatchPage() {
 
     if (isLoading) {
         return (
-            <div>
-                Загрузка...
-            </div>
-        )
+            <Loader size="small" />
+        );
     }
 
-    if (isError || !batchData) {
-        return (
-            <div>
-                Произошла какая-то ошибка или данные партии не были найдены
-            </div>
-        )
+    if (isError) {
+        navigate("/error");
+    }
+
+    if (!batchData) {
+        <div className="page-section">
+            <h4>Нет данных</h4>
+        </div>
     }
 
     return (
@@ -81,6 +84,8 @@ export default function BatchPage() {
                     </div>
                 )}
             </main>
+
+            <Footer />
         </>
     )
 }

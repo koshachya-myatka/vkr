@@ -1,10 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import Loader from '../general/Loader';
 import LimsTableBrief from './LimsTableBrief';
 import ScadaParameterGraph from './ScadaParameterGraph';
 import { getLimsWithoutResultsByBatch } from "../../api/api";
 import { getScadaByBatch } from '../../api/api';
 
 export default function BatchProductionPanel({ batchData }) {
+    const navigate = useNavigate();
+
     const { data: analyses, isLoading, isError, error } = useQuery({
         queryKey: ['batch-page-prod-lims', batchData.batchId],
         queryFn: () => getLimsWithoutResultsByBatch(batchData.batchId).then(res => res.data),
@@ -17,8 +21,21 @@ export default function BatchProductionPanel({ batchData }) {
         enabled: !!batchData?.batchId
     });
 
-    if (isLoading) return <div>Загрузка...</div>;
-    if (isError) return <div>Ошибка: {error?.message}</div>;
+    if (isLoading) {
+        return (
+            <Loader size="small" />
+        );
+    }
+
+    if (isError) {
+        navigate("/error");
+    }
+
+    if (!batchData) {
+        <div className="page-section">
+            <h4>Нет данных</h4>
+        </div>
+    }
 
     return (
         <div className="flex-column gap-lg">
@@ -37,13 +54,13 @@ export default function BatchProductionPanel({ batchData }) {
 
             <div className="card">
                 <div className="flex-between">
-                    <h2>SCADA данные</h2>
-                    <span className="badge badge-success">
-                        Онлайн мониторинг
+                    <h2>Показатели оборудования</h2>
+                    <span className="badge badge-info">
+                        SCADA
                     </span>
                 </div>
                 <div className="divider" />
-                {scada.length > 0 ? (
+                {scada && scada.length > 0 ? (
                     <div className="flex-column gap-lg">
                         {scada.map((parameter) => (
                             <div
@@ -59,7 +76,7 @@ export default function BatchProductionPanel({ batchData }) {
                     </div>
                 ) : (
                     <div className="card">
-                        Нет SCADA данных
+                        Нет данных
                     </div>
                 )}
             </div>

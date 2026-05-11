@@ -1,15 +1,32 @@
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import Loader from '../general/Loader';
 import { getBatch, getMesByBatch } from "../../api/api";
 
 export default function BatchDataPanel({ batchData }) {
+    const navigate = useNavigate();
+
     const { data: mes, isLoading, isError, error } = useQuery({
         queryKey: ['batch-page-mes', batchData.batchId],
         queryFn: () => getMesByBatch(batchData.batchId).then(res => res.data),
         enabled: !!batchData?.batchId
     });
 
-    if (isLoading) return <div>Загрузка...</div>;
-    if (isError) return <div>Ошибка: {error?.message}</div>;
+    if (isLoading) {
+        return (
+            <Loader size="small" />
+        );
+    }
+
+    if (isError) {
+        navigate("/error");
+    }
+
+    if (!batchData) {
+        <div className="page-section">
+            <h4>Нет данных</h4>
+        </div>
+    }
 
     return (
         <div className="flex-column gap-lg">
@@ -37,15 +54,16 @@ export default function BatchDataPanel({ batchData }) {
                     </table>
                 </div>
             </div>
-            {mes && (
-                <div className="card">
-                    <div className="flex-between">
-                        <h2>MES данные</h2>
-                        <span className="badge badge-info">
-                            Производство
-                        </span>
-                    </div>
 
+            <div className="card">
+                <div className="flex-between">
+                    <h2>MES данные</h2>
+                    <span className="badge badge-info">
+                        Производство
+                    </span>
+                </div>
+                {(!mes) && (<h4>Нет данных</h4>)}
+                {mes && (
                     <div className="table-wrapper">
                         <table className="table">
                             <thead>
@@ -68,8 +86,8 @@ export default function BatchDataPanel({ batchData }) {
                             </tbody>
                         </table>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 }

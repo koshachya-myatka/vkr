@@ -1,4 +1,5 @@
 import Header from "../components/general/Header";
+import Footer from "../components/general/Footer";
 import NotificationPanel from "../components/general/NotificationPanel";
 import MetalGrid from "../components/dashboardPages/MetalGrid";
 import LastProductionRecordTable from "../components/dashboardPages/LastProductionRecordTable";
@@ -32,6 +33,8 @@ export default function ProductionDashboard() {
           <LastProductionRecordTable />
         </div>
       </main>
+
+      <Footer />
     </>
   );
 }

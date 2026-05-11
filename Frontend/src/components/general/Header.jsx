@@ -9,7 +9,7 @@ export default function Header() {
             <div className="header-left">
                 <div className="header-logo">
                     <span className="material-symbols-outlined">
-                        Лого?
+                      Assessment
                     </span>
                     Витрина качества металлов
                 </div>

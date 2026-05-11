@@ -2,7 +2,7 @@ export default function LimsTableBrief({ analyses }) {
     if (!analyses || analyses.length === 0) {
         return (
             <div className="card">
-                Анализы отсутствуют
+                Нет данных
             </div>
         );
     }
