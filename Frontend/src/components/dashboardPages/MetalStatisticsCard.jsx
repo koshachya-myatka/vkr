@@ -16,15 +16,13 @@ export default function MetalStatisticsCard({
         <div className="card card-hover info-card">
             <div className="flex-between">
                 <div>
-                    <h3 className="card-title">
+                    <h3 style={{ fontSize: "20px", marginBottom: 0 }}>
                         {metalTypeName}
-                    </h3>   
+                    </h3>
                 </div>
-
                 <span className={`badge ${defectiveClass}`}>
-                    {defectivePercent}%
+                    𒊹
                 </span>
-
             </div>
 
             <div className="divider" />
@@ -43,7 +41,7 @@ export default function MetalStatisticsCard({
                     Средний выход годного
                 </small>
                 <span className="badge badge-success">
-                    {averageOutputYield}%
+                    {averageOutputYield.toFixed(2)}%
                 </span>
             </div>
 
@@ -52,7 +50,7 @@ export default function MetalStatisticsCard({
                     Процент брака
                 </small>
                 <span className={`badge ${defectiveClass}`}>
-                    {defectivePercent}%
+                    {defectivePercent.toFixed(2)}%
                 </span>
             </div>
         </div>

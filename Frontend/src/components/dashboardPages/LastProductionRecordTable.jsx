@@ -21,7 +21,7 @@ export default function LastProductionRecordTable() {
     navigate("/error");
   }
 
-  if (!data.length) {
+  if (!data || data.length === 0) {
     <div className="page-section">
       <h4>Нет данных</h4>
     </div>
@@ -44,9 +44,10 @@ export default function LastProductionRecordTable() {
             <tr key={i}>
               <td>{b.batchId}</td>
               <td>{b.metalType}</td>
-              <td>{b.startTime}</td>
-              <td>{b.endTime}</td>
-              <td><span className="badge badge-info">{b.statusName}</span></td>
+              <td>{new Date(b.startTime).toLocaleString()}</td>
+              <td>{b.endTime ? new Date(b.endTime).toLocaleString() : ""}</td>
+              <td><span className={"badge badge-" + (b.processStatus === 'ACCEPTED' ? "success"
+                : (b.processStatus === "DEFECTIVE" ? "danger" : "info"))}>{b.statusName}</span></td>
             </tr>
           ))}
         </tbody>

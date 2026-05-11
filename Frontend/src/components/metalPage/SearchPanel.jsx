@@ -1,6 +1,8 @@
 import { useState } from "react";
 
 const statuses = ["ARRIVAL", "PROCESSING", "ANALYSIS", "ACCEPTED", "DEFECTIVE"];
+const nameStatuses = new Map([["ARRIVAL", "Поступление"], ["PROCESSING", "Обработка"],
+["ANALYSIS", "Анализ"], ["ACCEPTED", "Одобрено"], ["DEFECTIVE", "Брак"]]);
 
 export default function SearchPanel({ onSearch }) {
     const [batchId, setBatchId] = useState("");
@@ -65,7 +67,7 @@ export default function SearchPanel({ onSearch }) {
                 <input
                     className="input"
                     type="datetime-local"
-                    value={startTime}
+                    value={startTime}                   
                     onChange={(e) =>
                         setStartTime(e.target.value)
                     }
@@ -93,7 +95,7 @@ export default function SearchPanel({ onSearch }) {
 
                     {statuses.map((s) => (
                         <option key={s} value={s}>
-                            {s}
+                            {nameStatuses.get(s)}
                         </option>
                     ))}
                 </select>

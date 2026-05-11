@@ -22,7 +22,7 @@ export default function Footer() {
                     </p>
                 </div>
                 <button
-                    className="btn footer-top-button"
+                    className="footer-top-button"
                     onClick={scrollToTop}
                 >
                     <span className="material-symbols-outlined">

@@ -9,18 +9,15 @@ export default function LaboratoryDashboard() {
         <>
             <title>Главная - Лаборатория</title>
 
-            <Header />            
+            <Header />        
             
             <main className="page-container">
                 <div className="page-section">
                     <NotificationPanel />
                 </div>
                 <div className="page-section">
-                    <h1>Главная | Лаборатория</h1>
-                    <p>
-                        Мониторинг анализа металлов,
-                        контроль проб и статусов партий.
-                    </p>
+                    <h1>Лаборатория</h1>
+                    <div className="divider" />
                 </div>
 
                 <div className="page-section">

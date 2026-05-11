@@ -68,10 +68,7 @@ export default function MetalPage() {
 
             <main className="page-container">
                 <div className="page-section">
-                    <h1>Металл {id.charAt[0] + id.toLowerCase.charAt[1]}</h1>
-                    <p>
-                        Просмотр производственных партий металла.
-                    </p>
+                    <h1>Металл {id[0] + id[1].toLowerCase()}</h1>
                 </div>
 
                 <div className="page-section">

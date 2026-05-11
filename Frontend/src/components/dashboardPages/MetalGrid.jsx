@@ -29,10 +29,13 @@ export default function MetalGrid() {
     }
 
     return (
-        <div className="grid-cards">
-            {metals && metals.map(m => (
-                <MetalCard key={m.metalType} metal={m} />
-            ))}
-        </div>
+        <>
+            <h2>Каталог</h2>
+            <div className="grid-cards">
+                {metals && metals.map(m => (
+                    <MetalCard key={m.metalType} metal={m} />
+                ))}
+            </div>
+        </>
     );
 }

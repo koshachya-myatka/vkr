@@ -18,11 +18,8 @@ export default function ProductionDashboard() {
 
         <div className="page-section">
           <h1>Производство</h1>
-          <p>
-            Мониторинг производственных партий
-            и статусов обработки металлов.
-          </p>
-        </div>
+          <div className="divider" />
+        </div>        
 
         <div className="page-section">
           <MetalGrid />

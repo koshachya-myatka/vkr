@@ -8,7 +8,7 @@ export default function NotificationItem({ item, onDelete }) {
         <div className={`notification ${severityClass}`}>
             <div className="flex-between gap-md">
                 <div className="flex-column gap-sm">
-                    <strong>{item.signalSource}</strong>
+                    <h4>{item.signalSource}</h4>
                     <small>
                         {new Date(item.createdAt).toLocaleString()}
                     </small>

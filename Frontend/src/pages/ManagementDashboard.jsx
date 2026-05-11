@@ -18,10 +18,7 @@ export default function ManagementDashboard() {
 
                 <div className="page-section">
                     <h1>Руководство</h1>
-                    <p>
-                        Сводная аналитика производства,
-                        эффективности и качества продукции.
-                    </p>
+                    <div className="divider" />
                 </div>
 
                 <div className="page-section">

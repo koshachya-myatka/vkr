@@ -13,11 +13,11 @@ public interface ScadaRepository extends JpaRepository<ScadaEntity, String> {
     @Query(value = """
             SELECT
                 s.equipment_id as equipmentId,
-                s.time,
-                s.parameter,
-                s.value,
-                s.unit,
-                s.status
+                s.parameter as parameter,
+                s.time as time,
+                s.value as value,
+                s.unit as unit,
+                s.status as status
             FROM fact_scada as s
             WHERE s.equipment_id IN (
                 SELECT DISTINCT m.equipment_id
@@ -35,8 +35,8 @@ public interface ScadaRepository extends JpaRepository<ScadaEntity, String> {
     @Query(value = """
             SELECT
                 s.equipment_id as equipmentId,
-                s.parameter,
-                s.unit,
+                s.parameter as parameter,
+                s.unit as unit,
                 CAST (ROUND(AVG(s.value)::numeric, 2) as DOUBLE PRECISION) as avgValue,
                 CAST (ROUND(MIN(s.value)::numeric, 2) as DOUBLE PRECISION) as minValue,
                 CAST (ROUND(MAX(s.value)::numeric, 2) as DOUBLE PRECISION) as maxValue,

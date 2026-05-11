@@ -31,10 +31,14 @@ export default function MetalBatchesTable({ data }) {
                         <tr key={row.batchId}>
                             <td>{row.batchId}</td>
                             <td>{row.equipmentId}</td>
-                            <td>{row.startTime}</td>
-                            <td>{row.endTime}</td>
+                            <td>{new Date(row.startTime).toLocaleString()}</td>
+                            <td>{row.endTime ? new Date(row.endTime).toLocaleString() : ''}</td>
                             <td><span className="badge badge-info">{row.statusName}</span></td>
-                            <td><SimpleLink link={url + "/batches/" + row.batchId} text="Подробнее" style={{ textDecoration: 'none' }} /></td>
+                            <td><SimpleLink
+                                className="btn btn-primary"
+                                link={url + "/batches/" + row.batchId}
+                                text="Подробнее"
+                                style={{ textDecoration: 'none', padding: "6px" }} /></td>
                         </tr>
                     ))}
                 </tbody>

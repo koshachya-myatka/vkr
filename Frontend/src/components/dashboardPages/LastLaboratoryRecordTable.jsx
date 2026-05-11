@@ -21,7 +21,7 @@ export default function LastLaboratoryRecordTable() {
         navigate("/error");
     }
 
-    if (!data.length) {
+    if (!data || data.length === 0) {
         <div className="page-section">
             <h4>Нет данных</h4>
         </div>
@@ -46,7 +46,7 @@ export default function LastLaboratoryRecordTable() {
                             <td>{r.metalType}</td>
                             <td>{r.analysisMethod}</td>
                             <td>{new Date(r.testDate).toLocaleString()}</td>
-                            <td><span className="badge badge-info">{r.statusName}</span></td>
+                            <td><span className={"badge badge-" + (r.status === 'APPROVED' ? "success" : "danger")}>{r.statusName}</span></td>
                         </tr>
                     ))}
                 </tbody>
