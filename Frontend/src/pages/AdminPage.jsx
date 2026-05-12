@@ -5,7 +5,7 @@ import Footer from "../components/general/Footer";
 import Loader from "../components/general/Loader";
 import PaginationButton from "../components/general/PaginationButton";
 import AdminSearchPanel from "../components/adminPage/AdminSearchPanel";
-import AdminUsersTable from "../components/adminPage/AdminUsersTable";
+import AdminUsersGrid from "../components/adminPage/AdminUsersGrid";
 import { getUsers } from "../api/api";
 
 const PAGE_SIZE = 20;
@@ -85,7 +85,7 @@ export default function AdminPage() {
                     {
                         loading
                             ? <Loader size="large" />
-                            : <AdminUsersTable data={data} />
+                            : <AdminUsersGrid data={data} />
                     }
                 </div>
 
