@@ -29,9 +29,9 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
                 u.created_at as createdAt
             FROM users as u
             WHERE
-                (:username IS NULL OR u.username ILIKE (CONCAT('%', :username, '%')) AND
-                (:name IS NULL OR u.name ILIKE (CONCAT('%', :name, '%')) AND
-                (:surname IS NULL OR u.surname ILIKE (CONCAT('%', :surname, '%')) AND
+                (:username IS NULL OR u.username ILIKE (CONCAT('%', :username, '%'))) AND
+                (:name IS NULL OR u.name ILIKE (CONCAT('%', :name, '%'))) AND
+                (:surname IS NULL OR u.surname ILIKE (CONCAT('%', :surname, '%'))) AND
                 (:role IS NULL OR u.role = :role)
             ORDER BY u.created_at DESC
             LIMIT 20 OFFSET :offset;

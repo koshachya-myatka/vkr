@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { disconnectWebSocket } from '../../websocket/websocket';
 
 export default function LogoutButton() {
     const navigate = useNavigate();

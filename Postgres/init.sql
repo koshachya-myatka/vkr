@@ -136,4 +136,8 @@ ON dim_batch (process_status, metal_type);
 
 INSERT INTO users 
     (username, password, name, surname, patronymic, email, role)
-    VALUES ('admin', '$2a$10$iUqhYXo17iUn48LnrTjH2eYRHv4XJ5BVunwb2Qcu1euRJOXjH8Pqm', 'Админ', 'Админов', 'Админович', 'admin@gmail.com', 'ADMIN');
+VALUES 
+    ('admin', '$2a$10$p3rjHEHq5vlFZ9mJhPt2mudzuqT.AaDi0nTyLITIrXmKZreBn9izq', 'Админ', 'Админов', 'Админович', 'admin@gmail.com', 'ADMIN'),
+    ('manager', '$2a$10$p3rjHEHq5vlFZ9mJhPt2mudzuqT.AaDi0nTyLITIrXmKZreBn9izq', 'Менеджер', 'Менеджеров', 'Менеджерович', 'manager@gmail.com', 'MANAGEMENT'),
+    ('lab', '$2a$10$p3rjHEHq5vlFZ9mJhPt2mudzuqT.AaDi0nTyLITIrXmKZreBn9izq', 'Лаборант', 'Лаборантов', 'Лаборантович', 'lab@gmail.com', 'LABORATORY'),
+    ('prod', '$2a$10$p3rjHEHq5vlFZ9mJhPt2mudzuqT.AaDi0nTyLITIrXmKZreBn9izq', 'Технолог', 'Технологов', 'Технологович', 'prod@gmail.com', 'PRODUCTION');
