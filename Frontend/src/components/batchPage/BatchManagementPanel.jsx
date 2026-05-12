@@ -61,7 +61,7 @@ export default function BatchManagementPanel({ batchData }) {
                 </div>
                 <div className="divider" />
                 {scada && scada.length > 0 ? (
-                    <div className="flex-column gap-lg">
+                    <div className="scada-grid">
                         {scada.map((parameter) => (
                             <div
                                 key={`${parameter.equipmentId}_${parameter.parameter}`}

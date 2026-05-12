@@ -371,6 +371,54 @@ small {
   text-align: center;
 }
 
+/* ===== SCADA GRID ===== */
+
+.scada-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.scada-parameter {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scada-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.scada-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metric-card {
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  padding: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 600;
+}
+
 /* ===== CARDS ===== */
 
 .card {
@@ -787,59 +835,59 @@ small {
 }
 
 .user-card {
-    background: var(--bg-secondary);
-    border-radius: 12px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .user-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .user-id {
-    font-size: 12px;
-    opacity: 0.7;
+  font-size: 12px;
+  opacity: 0.7;
 }
 
 .user-username {
-    font-weight: 600;
-    font-size: 16px;
+  font-weight: 600;
+  font-size: 16px;
 }
 
 .user-role-badge {
-    padding: 4px 10px;
-    border-radius: 8px;
-    background: var(--bg-tertiary);
-    font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  font-size: 12px;
 }
 
 .user-card-body {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .user-card-body label {
-    font-size: 12px;
-    opacity: 0.7;
+  font-size: 12px;
+  opacity: 0.7;
 }
 
 .user-card-footer {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
 }
 
 .created-at {
-    font-size: 11px;
-    opacity: 0.6;
-    margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.6;
+  margin-top: 6px;
 }
 
 /* ===== RESPONSIVE ===== */
