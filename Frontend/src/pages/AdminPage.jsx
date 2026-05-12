@@ -1,38 +1,41 @@
-import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/general/Header";
 import Footer from "../components/general/Footer";
-import MetalSearchPanel from "../components/metalPage/MetalSearchPanel";
-import MetalBatchesTable from "../components/metalPage/MetalBatchesTable";
-import PaginationButton from "../components/general/PaginationButton";
-import { getMetalBatches } from "../api/api";
 import Loader from "../components/general/Loader";
+import PaginationButton from "../components/general/PaginationButton";
+import AdminSearchPanel from "../components/adminPage/AdminSearchPanel";
+import AdminUsersTable from "../components/adminPage/AdminUsersTable";
+import { getUsers } from "../api/api";
 
 const PAGE_SIZE = 20;
 
-export default function MetalPage() {
+export default function AdminPage() {
     const navigate = useNavigate();
-    const { id } = useParams(); // metalType
     const [data, setData] = useState([]);
     const [offset, setOffset] = useState(0);
-    const [filter, setFilter] = useState({});
-    const [loading, setLoading] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
+    const [loading, setLoading] = useState(false);
+
+    const [filter, setFilter] = useState({
+        username: null,
+        name: null,
+        surname: null,
+        role: null
+    });
 
     const loadData = async (customFilter = filter, customOffset = offset) => {
         setLoading(true);
         try {
             const dto = {
-                metalType: id,
-                batchId: customFilter.batchId ?? null,
-                equipmentId: customFilter.equipmentId ?? null,
-                startTime: customFilter.startTime ?? null,
-                endTime: customFilter.endTime ?? null,
-                processStatus: customFilter.processStatus ?? null,
                 offset: customOffset,
+                username: customFilter.username ?? null,
+                name: customFilter.name ?? null,
+                surname: customFilter.surname ?? null,
+                role: customFilter.role ?? null
             };
-            const res = await getMetalBatches(dto);
-            setData(res.data);
+            const response = await getUsers(dto);
+            setData(response.data);
         } catch (error) {
             navigate("/error");
         } finally {
@@ -52,36 +55,38 @@ export default function MetalPage() {
     };
 
     const handleNext = () => {
-        setOffset((prev) => prev + PAGE_SIZE);
+        setOffset(prev => prev + PAGE_SIZE);
         setPageNumber(offset % PAGE_SIZE + 1);
     };
 
     const handlePrev = () => {
-        setOffset((prev) => Math.max(prev - PAGE_SIZE, 0));
+        setOffset(prev => Math.max(prev - PAGE_SIZE, 0));
         setPageNumber(offset % PAGE_SIZE + 1);
     };
 
     return (
         <>
-            <title>Металл - {id}</title>
+            <title>
+                Администрирование
+            </title>
 
             <Header />
 
             <main className="page-container">
                 <div className="page-section">
-                    <h1>Металл {id[0] + id[1].toLowerCase()}</h1>
+                    <h1>Пользователи</h1>
                 </div>
 
                 <div className="page-section">
-                    <MetalSearchPanel onSearch={handleSearch} />
+                    <AdminSearchPanel onSearch={handleSearch} />
                 </div>
 
                 <div className="page-section">
-                    {loading ? (
-                        <Loader size="large" />
-                    ) : (
-                        <MetalBatchesTable data={data} />
-                    )}
+                    {
+                        loading
+                            ? <Loader size="large" />
+                            : <AdminUsersTable data={data} />
+                    }
                 </div>
 
                 <div className="pagination">

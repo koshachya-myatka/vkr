@@ -4,9 +4,27 @@ const API = axios.create({
     baseURL: 'http://localhost:8081/api'
 });
 
+API.interceptors.request.use(config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization =
+            `Bearer ${token}`;
+    }
+    return config;
+});
+
+// АВТОРИЗАЦИЯ
+export const loginUser = (data) => API.post('/auth/login', data);
+export const registerUser = (data) => API.post('/auth/register', data);
+
+// УВЕДОМЛЕНИЯ
 export const getNotifications = () => API.get('/notifications');
 export const markNotificationViewed = (id) => API.post(`/notifications/${id}/viewed`);
 export const deleteNotification = (id) => API.delete(`/notifications/${id}`);
+
+// АДМИН
+export const getUsers = (filter) => API.post('/admin/users', filter);
+export const updateUser = (id, data) => API.put(`/admin/users/${id}`, data);
 
 // ОБЩИЕ
 export const getMetalCards = () => API.get('/metal-cards');

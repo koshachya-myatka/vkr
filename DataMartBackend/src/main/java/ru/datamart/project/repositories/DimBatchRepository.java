@@ -3,6 +3,7 @@ package ru.datamart.project.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import ru.datamart.project.dto.*;
 import ru.datamart.project.models.DimBatchEntity;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String> {
     @Query(value = """
             SELECT 

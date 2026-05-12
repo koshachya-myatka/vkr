@@ -4,7 +4,7 @@ const statuses = ["ARRIVAL", "PROCESSING", "ANALYSIS", "ACCEPTED", "DEFECTIVE"];
 const nameStatuses = new Map([["ARRIVAL", "Поступление"], ["PROCESSING", "Обработка"],
 ["ANALYSIS", "Анализ"], ["ACCEPTED", "Одобрено"], ["DEFECTIVE", "Брак"]]);
 
-export default function SearchPanel({ onSearch }) {
+export default function MetalSearchPanel({ onSearch }) {
     const [batchId, setBatchId] = useState("");
     const [equipmentId, setEquipmentId] = useState("");
     const [startTime, setStartTime] = useState("");

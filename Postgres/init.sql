@@ -71,6 +71,17 @@ CREATE TABLE IF NOT EXISTS fact_batch_analytics (
     deviation_count INT,
     created_at TIMESTAMP DEFAULT NOW()
 );
+CREATE TABLE IF NOT EXISTS users (
+    user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    name TEXT,
+    surname TEXT,
+    patronymic TEXT,
+    email TEXT,
+    role TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
 
 CREATE INDEX IF NOT EXISTS idx_notifications_viewed
 ON fact_notifications(viewed);
@@ -122,3 +133,7 @@ ON fact_batch_analytics(batch_id);
 
 CREATE INDEX IF NOT EXISTS idx_dim_batch_dashboard_stats
 ON dim_batch (process_status, metal_type);
+
+INSERT INTO users 
+    (username, password, name, surname, patronymic, email, role)
+    VALUES ('admin', '$2a$10$iUqhYXo17iUn48LnrTjH2eYRHv4XJ5BVunwb2Qcu1euRJOXjH8Pqm', 'Админ', 'Админов', 'Админович', 'admin@gmail.com', 'ADMIN');
