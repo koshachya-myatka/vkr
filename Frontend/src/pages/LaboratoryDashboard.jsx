@@ -15,6 +15,7 @@ export default function LaboratoryDashboard() {
                 <div className="page-section">
                     <NotificationPanel />
                 </div>
+                
                 <div className="page-section">
                     <h1>Лаборатория</h1>
                     <div className="divider" />

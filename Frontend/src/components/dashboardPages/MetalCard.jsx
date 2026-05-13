@@ -3,13 +3,14 @@ import { useLocation } from 'react-router-dom';
 
 export default function MetalCard({ metal }) {
     if (!metal) return null;
+    
     const location = useLocation();
 
     return (
         <div className="card card-hover info-card">
             <div className="flex-center">
                 <img
-                    src={`/metals/${metal.metalType}.png`}
+                    src={`../../assets/metals/${metal.metalType}.png`}
                     width={80}
                     alt={metal.metalType}
                     onError={(e) => {

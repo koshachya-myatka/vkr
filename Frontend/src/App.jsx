@@ -31,7 +31,7 @@ function App() {
               }
             />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path='/error' element={<ErrorPage />} />
+            <Route path='/error' element={<ErrorPage message={null} />} />
 
             <Route path="/admin"
               element={

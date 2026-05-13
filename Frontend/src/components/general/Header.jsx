@@ -28,7 +28,7 @@ export default function Header() {
                 {(isAdmin || isManager)
                     && <HeaderLinkButton text="Руководство" link="/management" active={location.pathname.startsWith('/management')} />}
                 {isAdmin
-                    && <HeaderLinkButton text="Администрирование" link="/admin" active={location.pathname.startsWith('/admin')} />}
+                    && <HeaderLinkButton text="Управление" link="/admin" active={location.pathname.startsWith('/admin')} />}
 
                 <LogoutButton />
             </nav>

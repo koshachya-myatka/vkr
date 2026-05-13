@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export default function ErrorPage() {
+export default function ErrorPage({ message }) {
     return (
         <div className="error-page">
             <div className="error-card">
@@ -10,9 +10,12 @@ export default function ErrorPage() {
                 <div className="error-title">
                     Произошла ошибка
                 </div>
-                <p className="error-text">
-                    Не удалось загрузить данные. Уже работаем над этим.
-                </p>
+
+                {message
+                    ? <p className="error-text">{message}</p>
+                    : <p className="error-text">Не удалось загрузить данные. Уже работаем над этим.</p>
+                }
+
                 <Link
                     to="/"
                     className="btn btn-primary"

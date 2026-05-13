@@ -47,8 +47,8 @@ export default function BatchDataPanel({ batchData }) {
                             <tr>
                                 <td>{batchData.batchId}</td>
                                 <td>{batchData.metalTypeName}</td>
-                                <td>{batchData.startTime}</td>
-                                <td>{batchData.endTime}</td>
+                                <td>{new Date(batchData.startTime).toLocaleString()}</td>
+                                <td>{batchData.endTime ? new Date(batchData.endTime).toLocaleString() : ""}</td>
                                 <td><span className="badge badge-info">{batchData.statusName}</span></td></tr>
                         </tbody>
                     </table>
@@ -57,12 +57,12 @@ export default function BatchDataPanel({ batchData }) {
 
             <div className="card">
                 <div className="flex-between">
-                    <h2>MES данные</h2>
+                    <h2>Производственные данные</h2>
                     <span className="badge badge-info">
-                        Производство
+                        MES
                     </span>
                 </div>
-                {(!mes) && (<h4>Нет данных</h4>)}
+                {(!mes || mes.length === 0) && (<h4>Нет данных</h4>)}
                 {mes && (
                     <div className="table-wrapper">
                         <table className="table">
@@ -71,18 +71,23 @@ export default function BatchDataPanel({ batchData }) {
                                     <th>ID оператора</th>
                                     <th>Температура</th>
                                     <th>Давление</th>
-                                    <th>Время обработки</th>
+                                    <th>Время обработки (сек)</th>
                                     <th>Энергопотребление</th>
                                     <th>Статус</th></tr>
                             </thead>
                             <tbody>
                                 <tr><td>{mes.equipmentId}</td>
                                     <td>{mes.operatorId}</td>
-                                    <td>{mes.temperature}</td>
-                                    <td>{mes.pressure}</td>
+                                    <td>{mes.temperature.toFixed(2)}</td>
+                                    <td>{mes.pressure.toFixed(2)}</td>
                                     <td>{mes.durationSec}</td>
-                                    <td>{mes.energyConsumption}</td>
-                                    <td><span className="badge badge-success">{mes.statusName}</span></td></tr>
+                                    <td>{mes.energyConsumption.toFixed(2)}</td>
+                                    <td>
+                                        <span className={"badge badge-" + (mes.status === 'NORMAL' ? "success"
+                                            : (mes.status === "ALARM" ? "danger" : "warning"))}>
+                                            {mes.statusName}
+                                        </span>
+                                    </td></tr>
                             </tbody>
                         </table>
                     </div>

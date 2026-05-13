@@ -22,24 +22,24 @@ export default function LastMetalStatisticsGrid() {
         navigate("/error");
     }
 
-    if (!data || data.length === 0) {
-        <div className="page-section">
-            <h4>Нет данных</h4>
-        </div>
-    }   
-
     return (
-        <div className="grid-cards">
-            {data?.map((item) => (
-                <MetalStatisticsCard
-                    key={item.metalType}
-                    metalType={item.metalType}
-                    metalTypeName={item.metalTypeName}
-                    batchesCount={item.batchesCount}
-                    averageOutputYield={item.averageOutputYield}
-                    defectivePercent={item.defectivePercent}
-                />
-            ))}
-        </div>
+        <>
+            {(!data || data.length === 0)
+                ? (<div className="page-section">
+                    <h4>Нет данных</h4>
+                </div>)
+                : (<div className="grid-cards">
+                    {data?.map((item) => (
+                        <MetalStatisticsCard
+                            key={item.metalType}
+                            metalType={item.metalType}
+                            metalTypeName={item.metalTypeName}
+                            batchesCount={item.batchesCount}
+                            averageOutputYield={item.averageOutputYield}
+                            defectivePercent={item.defectivePercent}
+                        />
+                    ))}
+                </div>)}
+        </>
     );
 }

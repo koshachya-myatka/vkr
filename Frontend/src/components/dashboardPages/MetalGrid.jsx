@@ -22,20 +22,24 @@ export default function MetalGrid() {
         navigate("/error");
     }
 
-    if (!metals.length) {
-        <div className="page-section">
-            <h4>Нет данных</h4>
-        </div>
-    }
-
     return (
         <>
-            <h2>Каталог</h2>
-            <div className="grid-cards">
-                {metals && metals.map(m => (
-                    <MetalCard key={m.metalType} metal={m} />
-                ))}
-            </div>
+            {(!metals || metals.length === 0)
+                ? (
+                    <div className="page-section">
+                        <h4>Нет данных</h4>
+                    </div>
+                )
+                : (
+                    <div>
+                        <h2>Каталог</h2>
+                        <div className="grid-cards">
+                            {metals && metals.map(m => (
+                                <MetalCard key={m.metalType} metal={m} />
+                            ))}
+                        </div>
+                    </div>
+                )}
         </>
     );
 }

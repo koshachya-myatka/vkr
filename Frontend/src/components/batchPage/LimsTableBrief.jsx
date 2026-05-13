@@ -1,9 +1,9 @@
 export default function LimsTableBrief({ analyses }) {
     if (!analyses || analyses.length === 0) {
         return (
-            <div className="card">
+            <h4>
                 Нет данных
-            </div>
+            </h4>
         );
     }
 
@@ -23,9 +23,9 @@ export default function LimsTableBrief({ analyses }) {
                         <tr key={index}>
                             <td>{analysis.sampleId}</td>
                             <td>{analysis.analysisMethod}</td>
-                            <td>{analysis.testDate}</td>
+                            <td>{new Date(analysis.testDate).toLocaleString()}</td>
                             <td>
-                                <span className="badge badge-info">
+                                <span className={"badge badge-" + (analysis.status === 'APPROVED' ? "success" : "danger")}>
                                     {analysis.statusName}
                                 </span>
                             </td>

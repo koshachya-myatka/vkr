@@ -21,36 +21,36 @@ export default function LastLaboratoryRecordTable() {
         navigate("/error");
     }
 
-    if (!data || data.length === 0) {
-        <div className="page-section">
-            <h4>Нет данных</h4>
-        </div>
-    }
-
     return (
-        <div className="table-wrapper">
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Проба</th>
-                        <th>Тип металла</th>
-                        <th>Метод</th>
-                        <th>Дата</th>
-                        <th>Статус</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data && data.map((r, i) => (
-                        <tr key={i}>
-                            <td>{r.sampleId}</td>
-                            <td>{r.metalType}</td>
-                            <td>{r.analysisMethod}</td>
-                            <td>{new Date(r.testDate).toLocaleString()}</td>
-                            <td><span className={"badge badge-" + (r.status === 'APPROVED' ? "success" : "danger")}>{r.statusName}</span></td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+        <>
+            {(!data || data.length === 0)
+                ? (<div className="page-section">
+                    <h4>Нет данных</h4>
+                </div>)
+                : (<div className="table-wrapper">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Проба</th>
+                                <th>Тип металла</th>
+                                <th>Метод</th>
+                                <th>Дата</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data && data.map((r, i) => (
+                                <tr key={i}>
+                                    <td>{r.sampleId}</td>
+                                    <td>{r.metalType}</td>
+                                    <td>{r.analysisMethod}</td>
+                                    <td>{new Date(r.testDate).toLocaleString()}</td>
+                                    <td><span className={"badge badge-" + (r.status === 'APPROVED' ? "success" : "danger")}>{r.statusName}</span></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>)}
+        </>
     );
 }

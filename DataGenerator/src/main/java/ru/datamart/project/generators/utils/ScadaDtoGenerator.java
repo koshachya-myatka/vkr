@@ -60,7 +60,7 @@ public class ScadaDtoGenerator {
             case "Вибрация" -> "мм/с";
             case "Влажность" -> "%";
             case "Напряжение" -> "В";
-            case "Уровень" -> "дБ";
+            case "Уровень шума" -> "дБ";
             default -> "unit";
         };
     }

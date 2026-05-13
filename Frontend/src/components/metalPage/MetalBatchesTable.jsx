@@ -33,7 +33,12 @@ export default function MetalBatchesTable({ data }) {
                             <td>{row.equipmentId}</td>
                             <td>{new Date(row.startTime).toLocaleString()}</td>
                             <td>{row.endTime ? new Date(row.endTime).toLocaleString() : ''}</td>
-                            <td><span className="badge badge-info">{row.statusName}</span></td>
+                            <td>
+                                <span className={"badge badge-" + (row.processStatus === 'ACCEPTED' ? "success"
+                                    : (row.processStatus === "DEFECTIVE" ? "danger" : "info"))}>
+                                    {row.statusName}
+                                </span>
+                            </td>
                             <td><SimpleLink
                                 className="btn btn-primary"
                                 link={url + "/batches/" + row.batchId}

@@ -31,7 +31,6 @@ export default function AdminUserCard({ user }) {
                     <div className="user-id">ID: {user.userId}</div>
                     <div className="user-username">@{user.username}</div>
                 </div>
-
                 <div className="user-role-badge">
                     {editData.role}
                 </div>

@@ -26,26 +26,19 @@ export default function ScadaParameterAvg({ parameter }) {
                         {parameter.parameter}, {parameter.unit}
                     </h3>
                 </div>
-
                 <span className="badge badge-info">
                     {parameter.equipmentId}
                 </span>
             </div>
-
             <div className="divider" />
-
             <div className="scada-metrics">
                 {metrics.map(metric => (
-                    <div
-                        key={metric.label}
-                        className="metric-card"
-                    >
+                    <div key={metric.label} className="metric-card">
                         <div className="metric-label">
                             {metric.label}
                         </div>
-
                         <div className="metric-value">
-                            {metric.value}
+                            {metric.value.toFixed(2)}
                         </div>
                     </div>
                 ))}

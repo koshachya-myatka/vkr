@@ -54,9 +54,9 @@ export default function BatchManagementPanel({ batchData }) {
 
             <div className="card">
                 <div className="flex-between">
-                    <h2>SCADA данные</h2>
-                    <span className="badge badge-success">
-                        Онлайн мониторинг
+                    <h2>Показатели оборудования</h2>
+                    <span className="badge badge-info">
+                        SCADA
                     </span>
                 </div>
                 <div className="divider" />
@@ -75,9 +75,9 @@ export default function BatchManagementPanel({ batchData }) {
 
                     </div>
                 ) : (
-                    <div className="card">
+                    <h4>
                         Нет данных
-                    </div>
+                    </h4>
                 )}
             </div>
         </div>

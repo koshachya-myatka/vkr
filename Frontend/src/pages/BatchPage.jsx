@@ -48,10 +48,7 @@ export default function BatchPage() {
 
             <main className="page-container">
                 <div className="page-section">
-                    <h1>Партия #{id}</h1>
-                    <p>
-                        Детальная информация о партии.
-                    </p>
+                    <h1>Партия #{id}</h1>                    
                 </div>
 
                 <div className="page-section">

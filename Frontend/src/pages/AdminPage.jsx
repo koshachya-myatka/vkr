@@ -67,7 +67,7 @@ export default function AdminPage() {
     return (
         <>
             <title>
-                Администрирование
+                Управление
             </title>
 
             <Header />

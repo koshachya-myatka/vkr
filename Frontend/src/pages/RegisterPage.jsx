@@ -36,7 +36,6 @@ export default function RegisterPage() {
         } catch (err) {
             if (err.response) {
                 setError(err.response.data?.message);
-                console.log("ошибкаманамана");
             } else { setError('Ошибка регистрации'); }
         } finally {
             setLoading(false);

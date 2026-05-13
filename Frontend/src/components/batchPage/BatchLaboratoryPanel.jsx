@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import LimsTableItem from './LimsTableItem';
 import Loader from '../general/Loader';
+import LimsTableItem from './LimsTableItem';
+import ScadaParameterAvg from './ScadaParameterAvg';
 import { getLimsByBatch } from "../../api/api";
+import { getScadaAvgByBatch } from '../../api/api';
 
 export default function BatchLaboratoryPanel({ batchData }) {
     const navigate = useNavigate();
@@ -10,6 +12,12 @@ export default function BatchLaboratoryPanel({ batchData }) {
     const { data: analyses, isLoading, isError, error } = useQuery({
         queryKey: ['batch-page-lab-lims', batchData.batchId],
         queryFn: () => getLimsByBatch(batchData.batchId).then(res => res.data),
+        enabled: !!batchData?.batchId
+    });
+
+    const { data: scada = [] } = useQuery({
+        queryKey: ['batch-page-manag-scada', batchData.batchId],
+        queryFn: () => getScadaAvgByBatch(batchData.batchId).then(res => res.data),
         enabled: !!batchData?.batchId
     });
 
@@ -31,20 +39,51 @@ export default function BatchLaboratoryPanel({ batchData }) {
 
     return (
         <div className="flex-column gap-lg">
-            <div className="flex-between">
-                <h2>Лабораторные анализы</h2>
-                <span className="badge badge-info">
-                    LIMS
-                </span>
+            <div className="card">
+                <div className="flex-between">
+                    <h2>Лабораторные анализы</h2>
+                    <span className="badge badge-info">
+                        LIMS
+                    </span>
+                </div>
+                <div className="divider" />
+                {(!analyses || analyses.length === 0) && (<h4>Нет данных</h4>)}
+                {analyses?.map((analysis, index) => (
+                    <LimsTableItem
+                        key={index}
+                        analysis={analysis}
+                        index={index}
+                    />
+                ))}
             </div>
-            {(!analyses || analyses.length === 0) && (<h4>Нет данных</h4>)}
-            {analyses?.map((analysis, index) => (
-                <LimsTableItem
-                    key={index}
-                    analysis={analysis}
-                    index={index}
-                />
-            ))}
+
+            <div className="card">
+                <div className="flex-between">
+                    <h2>Показатели оборудования</h2>
+                    <span className="badge badge-info">
+                        SCADA
+                    </span>
+                </div>
+                <div className="divider" />
+                {scada && scada.length > 0 ? (
+                    <div className="scada-grid">
+                        {scada.map((parameter) => (
+                            <div
+                                key={`${parameter.equipmentId}_${parameter.parameter}`}
+                                className="card card-hover"
+                            >
+                                <ScadaParameterAvg
+                                    parameter={parameter}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <h4>
+                        Нет данных
+                    </h4>
+                )}
+            </div>
         </div>
     );
 }

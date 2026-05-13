@@ -72,12 +72,11 @@ export default function BatchProductionPanel({ batchData }) {
                                 />
                             </div>
                         ))}
-
                     </div>
                 ) : (
-                    <div className="card">
+                    <h4>
                         Нет данных
-                    </div>
+                    </h4>
                 )}
             </div>
         </div>

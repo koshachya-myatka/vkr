@@ -13,6 +13,14 @@ export default function ScadaParameterGraph({ parameter }) {
         color: STATUS_COLORS[item.status]
     }));
 
+    const RenderCustomDot = (props) => {
+        const { cx, cy, payload } = props;
+        if (payload.color === "#22c55e") {
+            return null;
+        }
+        <circle cx={cx} cy={cy} r={8} fill={payload.color} stroke="#fff" strokeWidth={1} />
+    };
+
     return (
         <div className="flex-column gap-md">
             <div className="flex-between">
@@ -23,8 +31,7 @@ export default function ScadaParameterGraph({ parameter }) {
                     {parameter.equipmentId}
                 </span>
             </div>
-
-            <div style={{ width: '100%', height: 320, minWidth: 0}}>
+            <div style={{ width: '100%', height: 320, minWidth: 0 }}>
                 <ResponsiveContainer>
                     <LineChart data={data}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -40,21 +47,9 @@ export default function ScadaParameterGraph({ parameter }) {
                         <Line
                             type="monotone"
                             dataKey="value"
-                            stroke="#3b82f6"
+                            stroke="#2563eb"
                             strokeWidth={2}
-                            dot={(props) => {
-                                const { cx, cy, payload } = props;
-                                return (
-                                    <circle
-                                        cx={cx}
-                                        cy={cy}
-                                        r={5}
-                                        fill={payload.color}
-                                        stroke="#fff"
-                                        strokeWidth={1}
-                                    />
-                                );
-                            }}
+                            dot={<RenderCustomDot />}
                         />
                     </LineChart>
                 </ResponsiveContainer>
