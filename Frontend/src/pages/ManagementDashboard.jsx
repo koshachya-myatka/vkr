@@ -1,6 +1,5 @@
 import Header from "../components/general/Header";
 import Footer from "../components/general/Footer";
-import NotificationPanel from "../components/general/NotificationPanel";
 import MetalGrid from "../components/dashboardPages/MetalGrid";
 import LastMetalStatisticsGrid from "../components/dashboardPages/LastMetalStatisticsGrid";
 
@@ -12,10 +11,6 @@ export default function ManagementDashboard() {
             <Header />
 
             <main className="page-container">
-                <div className="page-section">
-                    <NotificationPanel />
-                </div>
-
                 <div className="page-section">
                     <h1>Руководство</h1>
                     <div className="divider" />

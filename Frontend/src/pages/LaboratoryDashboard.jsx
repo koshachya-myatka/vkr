@@ -1,6 +1,5 @@
 import Header from "../components/general/Header";
 import Footer from "../components/general/Footer";
-import NotificationPanel from "../components/general/NotificationPanel";
 import MetalGrid from "../components/dashboardPages/MetalGrid";
 import LastLaboratoryRecordTable from "../components/dashboardPages/LastLaboratoryRecordTable";
 
@@ -9,13 +8,9 @@ export default function LaboratoryDashboard() {
         <>
             <title>Главная - Лаборатория</title>
 
-            <Header />        
-            
+            <Header />
+
             <main className="page-container">
-                <div className="page-section">
-                    <NotificationPanel />
-                </div>
-                
                 <div className="page-section">
                     <h1>Лаборатория</h1>
                     <div className="divider" />

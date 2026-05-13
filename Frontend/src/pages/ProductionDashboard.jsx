@@ -1,6 +1,5 @@
 import Header from "../components/general/Header";
 import Footer from "../components/general/Footer";
-import NotificationPanel from "../components/general/NotificationPanel";
 import MetalGrid from "../components/dashboardPages/MetalGrid";
 import LastProductionRecordTable from "../components/dashboardPages/LastProductionRecordTable";
 
@@ -13,13 +12,9 @@ export default function ProductionDashboard() {
 
       <main className="page-container">
         <div className="page-section">
-          <NotificationPanel />
-        </div>
-
-        <div className="page-section">
           <h1>Производство</h1>
           <div className="divider" />
-        </div>        
+        </div>
 
         <div className="page-section">
           <MetalGrid />

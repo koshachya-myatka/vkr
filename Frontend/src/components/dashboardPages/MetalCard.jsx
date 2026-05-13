@@ -1,22 +1,41 @@
 import SimpleLink from '../general/SimpleLink';
 import { useLocation } from 'react-router-dom';
+import imageNi from '../../assets/metals/NI.png';
+import imageCu from '../../assets/metals/CU.png';
+import imageCo from '../../assets/metals/CO.png';
+import imageAg from '../../assets/metals/AG.png';
+import imageAu from '../../assets/metals/AU.png';
+import imagePd from '../../assets/metals/PD.png';
+import imagePt from '../../assets/metals/PT.png';
+import imageRh from '../../assets/metals/RH.png';
+import imageIr from '../../assets/metals/IR.png';
+import imageRu from '../../assets/metals/RU.png';
 
 export default function MetalCard({ metal }) {
     if (!metal) return null;
-    
+
     const location = useLocation();
+    const metalImages = {
+        NI: imageNi,
+        CU: imageCu,
+        CO: imageCo,
+        AG: imageAg,
+        AU: imageAu,
+        PD: imagePd,
+        PT: imagePt,
+        RH: imageRh,
+        IR: imageIr,
+        RU: imageRu
+    }
 
     return (
         <div className="card card-hover info-card">
             <div className="flex-center">
-                <img
-                    src={`../../assets/metals/${metal.metalType}.png`}
-                    width={80}
-                    alt={metal.metalType}
-                    onError={(e) => {
-                        e.target.style.display = 'none';
-                    }}
-                />
+                <div
+                    className="metal-card"
+                    style={{ backgroundImage: `url(${metalImages[metal.metalType]})` }}
+                >
+                </div>
             </div>
 
             <SimpleLink
