@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ErrorPage from './pages/ErrorPage';
 import AdminPage from './pages/AdminPage';
+import UserProfilePage from './pages/UserProfilePage';
 import LaboratoryDashboard from './pages/LaboratoryDashboard'
 import ProductionDashboard from './pages/ProductionDashboard'
 import ManagementDashboard from './pages/ManagementDashboard'
@@ -32,6 +33,15 @@ function App() {
             />
             <Route path="/register" element={<RegisterPage />} />
             <Route path='/error' element={<ErrorPage message={null} />} />
+
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute roles={['ADMIN', 'MANAGEMENT', 'LABORATORY', 'PRODUCTION']}>
+                  <UserProfilePage />
+                </ProtectedRoute>
+              }
+            />
 
             <Route path="/admin"
               element={

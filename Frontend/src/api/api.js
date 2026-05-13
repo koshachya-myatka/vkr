@@ -32,6 +32,7 @@ export const getMetalBatches = (filter) => API.post('/metals', filter);
 export const getBatch = (batchId) => API.get(`/batches/${batchId}`);
 export const getMesByBatch = (batchId) => API.get(`/mes/${batchId}`);
 export const getLimsWithoutResultsByBatch = (batchId) => API.get(`/lims/${batchId}`);
+export const getCurrentUser = () => API.get('/users/me');
 
 // ЛАБОРАТОРИЯ
 export const getLastLims = () => API.get('/laboratory/last-lims');

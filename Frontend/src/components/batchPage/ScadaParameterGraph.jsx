@@ -18,7 +18,7 @@ export default function ScadaParameterGraph({ parameter }) {
         if (payload.color === "#22c55e") {
             return null;
         }
-        <circle cx={cx} cy={cy} r={8} fill={payload.color} stroke="#fff" strokeWidth={1} />
+        return (<circle cx={cx} cy={cy} r={5} fill={payload.color} stroke="#fff" strokeWidth={1} />);
     };
 
     return (

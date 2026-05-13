@@ -7,16 +7,18 @@ import ru.datamart.project.dto.*;
 import ru.datamart.project.services.BatchService;
 import ru.datamart.project.services.LimsService;
 import ru.datamart.project.services.MesService;
+import ru.datamart.project.services.UserProfileService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class MetalController {
+public class CommonController {
     private final BatchService batchService;
     private final MesService mesService;
     private final LimsService limsService;
+    private final UserProfileService userProfileService;
 
     @GetMapping("/metal-cards")
     public ResponseEntity<List<MetalCardDto>> metalCards() {
@@ -49,5 +51,10 @@ public class MetalController {
     @GetMapping("/lims/{batchId}")
     public ResponseEntity<?> getLimsWithoutResults(@PathVariable String batchId) {
         return ResponseEntity.ok(limsService.getLimsWithoutResultsByBatchId(batchId));
+    }
+
+    @GetMapping("/users/me")
+    public ResponseEntity<UserProfileDto> getCurrentUser() {
+        return ResponseEntity.ok(userProfileService.getCurrentUser());
     }
 }
