@@ -76,12 +76,12 @@ export default function BatchDataPanel({ batchData }) {
                                     <th>Статус</th></tr>
                             </thead>
                             <tbody>
-                                <tr><td>{mes.equipmentId}</td>
-                                    <td>{mes.operatorId}</td>
-                                    <td>{mes.temperature.toFixed(2)}</td>
-                                    <td>{mes.pressure.toFixed(2)}</td>
-                                    <td>{mes.durationSec}</td>
-                                    <td>{mes.energyConsumption.toFixed(2)}</td>
+                                <tr><td>{mes.equipmentId ? mes.equipmentId : "—"}</td>
+                                    <td>{mes.operatorId ? mes.operatorId : "—"}</td>
+                                    <td>{mes.temperature ? mes.temperature.toFixed(2) : "—"}</td>
+                                    <td>{mes.pressure ? mes.pressure.toFixed(2) : "—"}</td>
+                                    <td>{mes.durationSec ? mes.durationSec : "—"}</td>
+                                    <td>{mes.energyConsumption ? mes.energyConsumption.toFixed(2) : "—"}</td>
                                     <td>
                                         <span className={"badge badge-" + (mes.status === 'NORMAL' ? "success"
                                             : (mes.status === "ALARM" ? "danger" : "warning"))}>

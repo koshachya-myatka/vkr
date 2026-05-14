@@ -27,8 +27,12 @@ public class MesService {
             return null;
         }
         BatchMesDto dto = optional.get();
-        MesStatusEnum status = MesStatusEnum.valueOf(dto.getStatus());
-        dto.setStatusName(status.toString());
+        if (dto.getStatus() != null) {
+            MesStatusEnum status = MesStatusEnum.valueOf(dto.getStatus());
+            dto.setStatusName(status.toString());
+        } else {
+            dto.setStatusName("—");
+        }
         return dto;
     }
 

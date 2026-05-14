@@ -27,7 +27,7 @@ export default function BatchPage() {
 
     if (isLoading) {
         return (
-            <Loader size="small" />
+            <Loader size="large" />
         );
     }
 

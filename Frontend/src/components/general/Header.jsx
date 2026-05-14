@@ -11,9 +11,11 @@ export default function Header() {
 
     const [notificationsOpen, setNotificationsOpen] = useState(false);
 
-    const { data: notifications = [] } = useQuery({
+    const { data: notifications, isLoading } = useQuery({
         queryKey: ['notifications'],
-        queryFn: () => getNotifications().then(res => res.data)
+        queryFn: () => getNotifications().then(res => res.data),
+        refetchOnMount: true,
+        staleTime: 0
     });
 
     const role = localStorage.getItem('role');
@@ -41,7 +43,7 @@ export default function Header() {
                     <div className="notification-wrapper">
                         <HeaderIconButton
                             icon="notifications"
-                            hasBadge={notifications?.length > 0}
+                            hasBadge={!isLoading && notifications?.length > 0}
                             onClick={() =>
                                 setNotificationsOpen(prev => !prev)
                             }
