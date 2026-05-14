@@ -21,7 +21,8 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
                 b.start_time as startTime, 
                 b.end_time as endTime, 
                 b.process_status as processStatus,
-                '' as statusName
+                '' as statusName,
+                b.output_yield as outputYield
             FROM dim_batch as b
             WHERE b.batch_id = ?1;
             """, nativeQuery = true)

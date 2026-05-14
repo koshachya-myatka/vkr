@@ -21,9 +21,10 @@ docker compose stop
 3. Проверка состояния оборудования из SCADA
 
 Витрины по ролям:
+0. Управление (все данные, админ)
 1. Производство (MES + LIMS (без д.) + SCADA)
-2. Лаборатории (MES + LIMS)
-3. Руководство (MES + LIMS + SCADA)
+2. Лаборатории (MES + LIMS, SCADA (без д.))
+3. Руководство (MES + LIMS (без д.) + SCADA (без д.))
 
 ## Генератор данных
 - MES - данные о состоянии партии (статус ["Поступление", "Обработка", "Лабораторный анализ", "Брак"/"Норма"], состояние при обработке)
@@ -91,7 +92,7 @@ docker compose stop
   ]
 }
 ```
-### Примерная полная связка данных
+### Связка данных для отчета
 ```
 {
   "batch": {
@@ -102,53 +103,55 @@ docker compose stop
     "process_status": "ACCEPTED",
     "output_yield": 95.5
   },
+  "mes": {
+    "equipment_id": "EQ-123",
+    "operator_id": "OP-114",
+    "temperature": 1450.00,
+    "pressure": 1.2,
+    "duration_sec": 7200,
+    "energy_consumption": 500.00,
+    "status": "NORMAL"
+  },
   "lims": [
     {
       "sample_id": "LIM-2026-04-21-001",
       "analysis_method": "Рентгенофлуоресцентный",
       "test_date": "2026-04-21T10:30:00",
       "status": "APPROVED",
-      "results": {...}
-    }
-  ],
-  "mes": {
-    "equipment_id": "Печь-123",
-    "operator_id": "Иванов И.И.",
-    "temperature": 1450,
-    "pressure": 1.2,
-    "duration_sec": 7200,
-    "energy_consumption": 500,
-    "status": "NORMAL"
-  },
-  "scada": [
-    {
-      "sensor_id": "SCADA-001",
-      "equipment_id": "Печь-123",
-      "time": "2026-04-21T09:00:00",      
-      "parameter": "Температура",
-      "value": 1450,
-      "unit": "°C",
-      "status": "NORMAL"
+      "results": [
+        {
+          "parameter_name": "",
+          "value": "",
+          "unit: "",
+          "normal": true
+        },
+        ...
+      ]
     },
-    {
-      "sensor_id": "SCADA-002",
-      "equipment_id": "Печь-123",
-      "time": "2026-04-21T09:05:00",
-      "parameter": "Давление",
-      "value": 1.2,
-      "unit": "атм",
-      "status": "NORMAL"
-    }
+    ...
+  ],  
+  "scada": [
+    {      
+      "equipment_id": "EQ-123",            
+      "parameter": "Температура",
+      "avgValue" : 0.00,
+      "minValue": 0.00,
+      "maxValue": 0.00,
+      "valuesCount": 1000
+    },
+    ...
   ],
   "analytics": {
     "alarm_count": 0,
     "deviation_count": 0,
-    "created_at": "2026-04-21T10:30:00",
+    "author": "",
+    "created_at": "2026-04-21T10:30:00"
   }
 }
 ```
 
-## Кафка  
+## Кафка
+3 топика: для MES, SCADA, LIMS  
 
 ## БД
 ```
@@ -211,9 +214,13 @@ TABLE fact_batch_analytics (
 );
 ```
 
-## Бэкенд
-
 ## Фронтенд
+http://localhost:5173/login
+http://localhost:5173/register
+http://localhost:5173/profile
+http://localhost:5173/admin
 http://localhost:5173/laboratory  
 http://localhost:5173/production  
 http://localhost:5173/management  
+
+## Бэкенд

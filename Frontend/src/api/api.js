@@ -33,6 +33,8 @@ export const getBatch = (batchId) => API.get(`/batches/${batchId}`);
 export const getMesByBatch = (batchId) => API.get(`/mes/${batchId}`);
 export const getLimsWithoutResultsByBatch = (batchId) => API.get(`/lims/${batchId}`);
 export const getCurrentUser = () => API.get('/users/me');
+export const getScadaAvgByBatch = (batchId) => API.get(`/scada/${batchId}`);
+export const createReport = (batchId) => API.get(`/report/${batchId}`, { responseType: 'blob' });
 
 // ЛАБОРАТОРИЯ
 export const getLastLims = () => API.get('/laboratory/last-lims');
@@ -44,4 +46,3 @@ export const getScadaByBatch = (batchId) => API.get(`/production/scada/${batchId
 
 // МЕНЕДЖМЕНТ
 export const getMetalStatisticsCards = () => API.get('/management/metal-statistics-cards');
-export const getScadaAvgByBatch = (batchId) => API.get(`/management/scada/${batchId}`);

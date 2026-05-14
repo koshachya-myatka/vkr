@@ -16,7 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationService {
     private final WebSocketService webSocketService;
-    private final NotificationRepository repository;
+    private final NotificationRepository notificationRepository;
+
+    public long countAlarmsByBatchId(String batchId) {
+        return notificationRepository.countAlarmsByBatchId(batchId);
+    }
 
     public NotificationEntity create(String message, NotificationSeverityEnum severity,
                                      String equipmentId, String signalSource) {
@@ -27,23 +31,23 @@ public class NotificationService {
         n.setEquipmentId(equipmentId);
         n.setSignalSource(signalSource);
         n.setSeverity(severity);
-        NotificationEntity saved = repository.save(n);
+        NotificationEntity saved = notificationRepository.save(n);
         webSocketService.sendNotificationsUpdate(new SimpleWsMessageDto("NOTIFICATION_create"));
         log.info("СОЗДАНО УВЕДОМЛЕНИЕ:\n" + saved);
         return saved;
     }
 
     public List<NotificationEntity> getActive() {
-        return repository.getLastNotifications();
+        return notificationRepository.getLastNotifications();
     }
 
     public void markAsViewed(Long id) {
-        NotificationEntity n = repository.findById(id).orElseThrow();
+        NotificationEntity n = notificationRepository.findById(id).orElseThrow();
         n.setViewed(true);
-        repository.save(n);
+        notificationRepository.save(n);
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        notificationRepository.deleteById(id);
     }
 }

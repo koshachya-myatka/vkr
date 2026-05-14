@@ -1,13 +1,10 @@
 package ru.datamart.project.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import ru.datamart.project.dto.*;
-import ru.datamart.project.services.BatchService;
-import ru.datamart.project.services.LimsService;
-import ru.datamart.project.services.MesService;
-import ru.datamart.project.services.UserProfileService;
+import ru.datamart.project.services.*;
 
 import java.util.List;
 
@@ -19,6 +16,8 @@ public class CommonController {
     private final MesService mesService;
     private final LimsService limsService;
     private final UserProfileService userProfileService;
+    private final ReportService reportService;
+    private final ScadaService scadaService;
 
     @GetMapping("/metal-cards")
     public ResponseEntity<List<MetalCardDto>> metalCards() {
@@ -53,8 +52,25 @@ public class CommonController {
         return ResponseEntity.ok(limsService.getLimsWithoutResultsByBatchId(batchId));
     }
 
+    @GetMapping("/scada/{batchId}")
+    public ResponseEntity<List<BatchScadaAvgDto>> getScadaAvgByBatchId(@PathVariable String batchId) {
+        return ResponseEntity.ok(scadaService.getScadaAvgByBatchId(batchId));
+    }
+
     @GetMapping("/users/me")
     public ResponseEntity<UserProfileDto> getCurrentUser() {
         return ResponseEntity.ok(userProfileService.getCurrentUser());
+    }
+
+    @GetMapping("/report/{batchId}")
+    public ResponseEntity<?> createReport(@PathVariable String batchId) {
+        byte[] pdfBytes = reportService.generateReport(batchId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.inline()
+                .filename("report-" + batchId + ".pdf")
+                .build()
+        );
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 }

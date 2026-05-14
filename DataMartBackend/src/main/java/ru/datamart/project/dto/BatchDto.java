@@ -17,4 +17,5 @@ public class BatchDto {
     private LocalDateTime endTime;
     private String processStatus;
     private String statusName;
+    private Double outputYield;
 }

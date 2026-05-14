@@ -64,13 +64,6 @@ CREATE TABLE IF NOT EXISTS fact_scada (
     unit TEXT,
     status TEXT
 );
-CREATE TABLE IF NOT EXISTS fact_batch_analytics (
-    record_id SERIAL PRIMARY KEY,
-    batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
-    alarm_count INT,
-    deviation_count INT,
-    created_at TIMESTAMP DEFAULT NOW()
-);
 CREATE TABLE IF NOT EXISTS users (
     user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username TEXT UNIQUE NOT NULL,
@@ -127,9 +120,6 @@ ON fact_scada(equipment_id, time DESC);
 
 CREATE INDEX IF NOT EXISTS idx_scada_time_brin 
 ON fact_scada USING brin (time);
-
-CREATE INDEX IF NOT EXISTS idx_batch_analytics_batch
-ON fact_batch_analytics(batch_id);
 
 CREATE INDEX IF NOT EXISTS idx_dim_batch_dashboard_stats
 ON dim_batch (process_status, metal_type);

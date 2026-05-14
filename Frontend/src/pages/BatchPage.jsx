@@ -3,6 +3,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/general/Header";
 import Footer from '../components/general/Footer';
 import Loader from '../components/general/Loader';
+import ReportButton from '../components/batchPage/ReportButton';
 import BatchDataPanel from "../components/batchPage/BatchDataPanel";
 import BatchLaboratoryPanel from "../components/batchPage/BatchLaboratoryPanel";
 import BatchProductionPanel from "../components/batchPage/BatchProductionPanel";
@@ -12,7 +13,7 @@ import { getBatch } from "../api/api";
 
 export default function BatchPage() {
     const navigate = useNavigate();
-    const { id } = useParams(); // batchId
+    const { id: batchId } = useParams(); // batchId
     const location = useLocation();
 
     const isLaboratory = location.pathname.startsWith("/laboratory");
@@ -20,8 +21,8 @@ export default function BatchPage() {
     const isManagement = location.pathname.startsWith("/management");
 
     const { data: batchData, isLoading, isError } = useQuery({
-        queryKey: ['batch-page-batchData', id],
-        queryFn: () => getBatch(id).then(res => res.data),
+        queryKey: ['batch-page-batchData', batchId],
+        queryFn: () => getBatch(batchId).then(res => res.data),
     });
 
     if (isLoading) {
@@ -42,13 +43,14 @@ export default function BatchPage() {
 
     return (
         <>
-            <title>Партия - {id}</title>
+            <title>Партия - {batchId}</title>
 
             <Header />
 
             <main className="page-container">
-                <div className="page-section">
-                    <h1>Партия #{id}</h1>                    
+                <div className="page-section flex-between">
+                    <h1>Партия #{batchId}</h1>
+                    <ReportButton />
                 </div>
 
                 <div className="page-section">
