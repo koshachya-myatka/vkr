@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import HeaderIconButton from './HeaderIconButton';
 import HeaderLinkButton from './HeaderLinkButton';
 import NotificationDropdown from './NotificationDropdown';
+import { getNotifications } from '../../api/api';
 
 export default function Header() {
     const location = useLocation();
@@ -11,10 +12,12 @@ export default function Header() {
 
     const [notificationsOpen, setNotificationsOpen] = useState(false);
 
-    const { data: notifications, isLoading } = useQuery({
-        queryKey: ['notifications'],
-        queryFn: () => getNotifications().then(res => res.data),
-        refetchOnMount: true,
+    const { data: unviewedCount = 0 } = useQuery({
+        queryKey: ['unviewedNotificationsCount'],
+        queryFn: async () => {
+            const { data } = await getNotifications();
+            return data.length;
+        },
         staleTime: 0
     });
 
@@ -43,7 +46,8 @@ export default function Header() {
                     <div className="notification-wrapper">
                         <HeaderIconButton
                             icon="notifications"
-                            hasBadge={!isLoading && notifications?.length > 0}
+                            hasBadge={unviewedCount > 0}
+                            badgeNumber={unviewedCount}
                             onClick={() =>
                                 setNotificationsOpen(prev => !prev)
                             }

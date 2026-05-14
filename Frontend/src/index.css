@@ -923,13 +923,21 @@ small {
 }
 
 .header-icon-badge {
-  width: 10px;
-  height: 10px;
+  min-width: 20px;
+  width: auto;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   background: #f87171;
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: -5px;
+  right: -5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  padding: 2px;
+  font-weight: 800;
+  box-sizing: border-box;
 }
 
 /* === NOTIFICATIONS === */

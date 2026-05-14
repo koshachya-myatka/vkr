@@ -2,7 +2,8 @@ export default function HeaderIconButton({
     icon,
     onClick,
     danger = false,
-    hasBadge = false
+    hasBadge = false,
+    badgeNumber = 0
 }) {
     return (
         <button
@@ -14,7 +15,9 @@ export default function HeaderIconButton({
             </span>
 
             {hasBadge && (
-                <span className="header-icon-badge" />
+                <div className="header-icon-badge">
+                    {badgeNumber}
+                </div>
             )}
         </button>
     );

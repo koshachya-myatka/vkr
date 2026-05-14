@@ -11,6 +11,7 @@ export const WebSocketProvider = ({ children }) => {
             switch (type) {
                 case 'notifications':
                     queryClient.invalidateQueries({ queryKey: ['notifications'] });
+                    queryClient.setQueryData(['unviewedNotificationsCount'], (old) => { return old + 1; });
                     break;
                 case 'mes':
                     queryClient.invalidateQueries({ queryKey: ['dashboard-manag-last-statistics'] });
