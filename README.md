@@ -215,10 +215,10 @@ TABLE fact_batch_analytics (
 ```
 
 ## Фронтенд
-http://localhost:5173/login
-http://localhost:5173/register
-http://localhost:5173/profile
-http://localhost:5173/admin
+http://localhost:5173/login  
+http://localhost:5173/register  
+http://localhost:5173/profile  
+http://localhost:5173/admin  
 http://localhost:5173/laboratory  
 http://localhost:5173/production  
 http://localhost:5173/management  

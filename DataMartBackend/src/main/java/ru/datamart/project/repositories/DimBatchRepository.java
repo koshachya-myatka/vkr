@@ -80,11 +80,11 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
             LEFT JOIN fact_mes as m ON m.batch_id = b.batch_id
             WHERE 
                 b.metal_type ILIKE :metalType || '%' AND
-                (:batchId IS NULL OR b.batch_id ILIKE :batchId || '%') AND
+                (:batchId IS NULL OR b.batch_id ILIKE (CONCAT('%', :batchId, '%'))) AND
                 (CAST(:startTime AS timestamp) IS NULL OR b.start_time >= CAST(:startTime AS timestamp)) AND
                 ((b.end_time IS NULL) OR (CAST(:endTime AS timestamp) IS NULL) OR (b.end_time <= CAST(:endTime AS timestamp))) AND
                 (:processStatus IS NULL OR b.process_status ILIKE :processStatus) AND
-                (:equipmentId is NULL OR m.equipment_id = :equipmentId)
+                (:equipmentId is NULL OR m.equipment_id ILIKE (CONCAT('%', :equipmentId, '%')))
             ORDER BY b.start_time DESC
             LIMIT 20 OFFSET :offset;
             """, nativeQuery = true)

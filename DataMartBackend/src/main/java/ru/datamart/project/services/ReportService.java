@@ -127,10 +127,18 @@ public class ReportService {
                 mesTable.setWidths(new float[]{3, 5});
                 addTableRow(mesTable, "Оборудование:", data.getMes().getEquipmentId(), white, white, true);
                 addTableRow(mesTable, "Оператор:", data.getMes().getOperatorId(), white, white, true);
-                addTableRow(mesTable, "Температура:", df.format(data.getMes().getTemperature()) + " °C", white, white, true);
-                addTableRow(mesTable, "Давление:", df.format(data.getMes().getPressure()) + " Па", white, white, true);
-                addTableRow(mesTable, "Длительность:", data.getMes().getDurationSec() + " сек", white, white, true);
-                addTableRow(mesTable, "Энергопотребление:", df.format(data.getMes().getEnergyConsumption()) + " кВт·ч", white, white, true);
+                addTableRow(mesTable, "Температура:",
+                        data.getMes().getTemperature() != null ? df.format(data.getMes().getTemperature()) + " °C" : "—",
+                        white, white, true);
+                addTableRow(mesTable, "Давление:",
+                        data.getMes().getPressure() != null ? df.format(data.getMes().getPressure()) + " Па" : "—",
+                        white, white, true);
+                addTableRow(mesTable, "Длительность:",
+                        data.getMes().getDurationSec() != null ? data.getMes().getDurationSec() + " сек" : "—",
+                        white, white, true);
+                addTableRow(mesTable, "Энергопотребление:",
+                        data.getMes().getEnergyConsumption() != null ? df.format(data.getMes().getEnergyConsumption()) + " кВт·ч" : "—",
+                        white, white, true);
                 addTableRow(mesTable, "Статус:", data.getMes().getStatusName(), white, white, true);
                 document.add(mesTable);
             } else {
@@ -167,10 +175,15 @@ public class ReportService {
                         addHeaderCell(resultsTable, "Ед. изм.", headerFont, primary);
                         addHeaderCell(resultsTable, "Норма", headerFont, primary);
                         for (BatchLimsResultDto r : lims.getResults()) {
-                            Font valueFont = r.getNormal() ? getBodyFont() :
-                                    new Font(BOLD_FONT, 10, Font.BOLD, primary);
                             addCell(resultsTable, r.getParameterName(), getBodyFont(), white);
-                            addCell(resultsTable, df.format(Double.parseDouble(r.getValue())), valueFont, white);
+                            String value = r.getValue();
+                            try {
+                                double valueDouble = Double.parseDouble(value);
+                                value = df.format(valueDouble);
+                            } catch (NumberFormatException e) {
+                                value = r.getValue();
+                            }
+                            addCell(resultsTable, value, getBodyFont(), white);
                             addCell(resultsTable, r.getUnit(), getBodyFont(), white);
                             String normalText = r.getNormal() ? "Да" : "Нет";
                             addCell(resultsTable, normalText, new Font(REGULAR_FONT, 10, Font.NORMAL, primary), white);
