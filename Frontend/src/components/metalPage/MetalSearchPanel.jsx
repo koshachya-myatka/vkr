@@ -36,9 +36,15 @@ export default function MetalSearchPanel({ onSearch }) {
         });
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            handleSubmit();
+        }
+    };
+
     return (
-        <div className="card">
-            <div className="flex gap-md">
+        <div className="card search-panel-wrapper">
+            <div className="search-panel-actions">
                 <button
                     className="btn"
                     onClick={resetFilter}
@@ -46,6 +52,15 @@ export default function MetalSearchPanel({ onSearch }) {
                     Сброс
                 </button>
 
+                <button
+                    className="btn btn-primary"
+                    onClick={handleSubmit}
+                >
+                    Найти
+                </button>
+            </div>
+
+            <div className="search-panel">
                 <input
                     className="input"
                     placeholder="ID партии"
@@ -53,6 +68,7 @@ export default function MetalSearchPanel({ onSearch }) {
                     onChange={(e) =>
                         setBatchId(e.target.value)
                     }
+                    onKeyDown={handleKeyDown}
                 />
 
                 <input
@@ -62,32 +78,36 @@ export default function MetalSearchPanel({ onSearch }) {
                     onChange={(e) =>
                         setEquipmentId(e.target.value)
                     }
+                    onKeyDown={handleKeyDown}
                 />
 
                 <input
-                    className="input"
+                    className="input search-date"
                     type="datetime-local"
-                    value={startTime}                   
+                    value={startTime}
                     onChange={(e) =>
                         setStartTime(e.target.value)
                     }
+                    onKeyDown={handleKeyDown}
                 />
 
                 <input
-                    className="input"
+                    className="input search-date"
                     type="datetime-local"
                     value={endTime}
                     onChange={(e) =>
                         setEndTime(e.target.value)
                     }
+                    onKeyDown={handleKeyDown}
                 />
 
                 <select
-                    className="select"
+                    className="select search-select"
                     value={processStatus}
                     onChange={(e) =>
                         setProcessStatus(e.target.value)
                     }
+                    onKeyDown={handleKeyDown}
                 >
                     <option value="">
                         Все статусы
@@ -99,13 +119,6 @@ export default function MetalSearchPanel({ onSearch }) {
                         </option>
                     ))}
                 </select>
-
-                <button
-                    className="btn btn-primary"
-                    onClick={handleSubmit}
-                >
-                    Найти
-                </button>
             </div>
         </div>
     );

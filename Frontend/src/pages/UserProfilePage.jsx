@@ -24,10 +24,6 @@ export default function UserProfilePage() {
         }
     }, [isError, error, navigate]);
 
-    if (isLoading) {
-        return <Loader size="large" />;
-    }
-
     if (isError) {
         return null;
     }
@@ -44,48 +40,52 @@ export default function UserProfilePage() {
                     <div className="divider" />
                 </div>
 
-                {!user
-                    ? (
-                        <div className="page-section">
-                            <h4>Нет данных</h4>
-                        </div>
-                    )
-                    : (
-                        <div className="card">
-                            <div className="profile-header">
-                                <div className="profile-avatar">
-                                    <span className="material-symbols-outlined" style={{ fontSize: "45px" }}>
-                                        person
-                                    </span>
+                {isLoading
+                    ? <Loader size="large" />
+                    : <>
+                        {!user
+                            ? (
+                                <div className="page-section">
+                                    <h4>Нет данных</h4>
                                 </div>
-                                <div>
-                                    <h2>{user.surname} {user.name} {user.patronymic}</h2>
-                                    <h4>@{user.username}</h4>
+                            )
+                            : (
+                                <div className="card">
+                                    <div className="profile-header">
+                                        <div className="profile-avatar">
+                                            <span className="material-symbols-outlined" style={{ fontSize: "45px" }}>
+                                                person
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h2>{user.surname} {user.name} {user.patronymic}</h2>
+                                            <h4>@{user.username}</h4>
+                                        </div>
+                                    </div>
+                                    <div className="divider" />
+                                    <div className="profile-grid">
+                                        <div className="profile-field">
+                                            <span className="profile-label">
+                                                Email
+                                            </span>
+                                            <span>
+                                                {user.email}
+                                            </span>
+                                        </div>
+                                        <div className="profile-field">
+                                            <span className="profile-label">
+                                                Роль
+                                            </span>
+                                            <span>
+                                                {roleNames.get(user.role)}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="divider" />
-                            <div className="profile-grid">
-                                <div className="profile-field">
-                                    <span className="profile-label">
-                                        Email
-                                    </span>
-                                    <span>
-                                        {user.email}
-                                    </span>
-                                </div>
-                                <div className="profile-field">
-                                    <span className="profile-label">
-                                        Роль
-                                    </span>
-                                    <span>
-                                        {roleNames.get(user.role)}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                            )
+                        }
+                    </>
                 }
-                
             </main>
 
             <Footer />

@@ -38,12 +38,6 @@ export default function BatchManagementPanel({ batchData }) {
         }
     }, [isErrorScada, errorLims, navigate]);
 
-    if (isLoadingLims || isLoadingScada) {
-        return (
-            <Loader size="small" />
-        );
-    }
-
     if (isErrorLims || isErrorScada) {
         return null;
     }
@@ -60,7 +54,9 @@ export default function BatchManagementPanel({ batchData }) {
                     </span>
                 </div>
                 <div className="divider" />
-                <LimsTableBrief analyses={analyses} />
+                {isLoadingLims
+                    ? <Loader size="small" />
+                    : <LimsTableBrief analyses={analyses} />}
             </div>
 
             <div className="card">
@@ -71,25 +67,30 @@ export default function BatchManagementPanel({ batchData }) {
                     </span>
                 </div>
                 <div className="divider" />
-                {scada && scada.length > 0 ? (
-                    <div className="scada-grid">
-                        {scada.map((parameter) => (
-                            <div
-                                key={`${parameter.equipmentId}_${parameter.parameter}`}
-                                className="card card-hover"
-                            >
-                                <ScadaParameterAvg
-                                    parameter={parameter}
-                                />
-                            </div>
-                        ))}
+                {isLoadingScada
+                    ? <Loader size="small" />
+                    : <>
+                        {scada && scada.length > 0 ? (
+                            <div className="scada-grid">
+                                {scada.map((parameter) => (
+                                    <div
+                                        key={`${parameter.equipmentId}_${parameter.parameter}`}
+                                        className="card card-hover"
+                                    >
+                                        <ScadaParameterAvg
+                                            parameter={parameter}
+                                        />
+                                    </div>
+                                ))}
 
-                    </div>
-                ) : (
-                    <h4>
-                        Нет данных
-                    </h4>
-                )}
+                            </div>
+                        ) : (
+                            <h4>
+                                Нет данных
+                            </h4>
+                        )}
+                    </>
+                }
             </div>
         </div>
     )

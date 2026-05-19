@@ -28,15 +28,18 @@ export default function ReportButton() {
     };
 
     return (
-        <button
-            onClick={handleClick}
-            disabled={loading}
-            className="btn btn-primary"
-        >
+        <div className="btn-report">
             {loading
                 ? <Loader size='supersmall' />
-                : 'СОЗДАТЬ ОТЧЁТ'
+                :
+                <button
+                    onClick={handleClick}
+                    disabled={loading}
+                    className="btn btn-primary btn-report"
+                >
+                    СОЗДАТЬ ОТЧЁТ
+                </button>
             }
-        </button>
+        </div>
     );
 }

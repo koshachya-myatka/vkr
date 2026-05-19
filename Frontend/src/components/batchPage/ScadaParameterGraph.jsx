@@ -31,8 +31,8 @@ export default function ScadaParameterGraph({ parameter }) {
                     {parameter.equipmentId}
                 </span>
             </div>
-            <div style={{ width: '100%', height: 320, minWidth: 0 }}>
-                <ResponsiveContainer>
+            <div style={{ width: '100%', height: 300, minWidth: 0 }}>
+                <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: '100%', height: 300 }}>
                     <LineChart data={data}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis

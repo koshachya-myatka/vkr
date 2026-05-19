@@ -33,12 +33,6 @@ export default function BatchPage() {
         }
     }, [isError, error, navigate]);
 
-    if (isLoading) {
-        return (
-            <Loader size="large" />
-        );
-    }
-
     if (isError) {
         return null;
     }
@@ -61,7 +55,7 @@ export default function BatchPage() {
                             <h4>Нет данных</h4>
                         </div>
                     )
-                    : (
+                    : (isLoading ? <Loader size='large' /> : (
                         <>
                             <div className="page-section">
                                 <BatchDataPanel
@@ -93,7 +87,7 @@ export default function BatchPage() {
                                 </div>
                             )}
                         </>
-                    )
+                    ))
                 }
             </main>
 

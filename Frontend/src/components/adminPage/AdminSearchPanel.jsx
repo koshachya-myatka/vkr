@@ -30,9 +30,15 @@ export default function AdminSearchPanel({ onSearch }) {
         });
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            handleSubmit();
+        }
+    };
+
     return (
-        <div className="card">
-            <div className="flex gap-md">
+        <div className="card search-panel-wrapper">
+            <div className="search-panel-actions">
                 <button
                     className="btn"
                     onClick={resetFilter}
@@ -40,6 +46,15 @@ export default function AdminSearchPanel({ onSearch }) {
                     Сброс
                 </button>
 
+                <button
+                    className="btn btn-primary"
+                    onClick={handleSubmit}
+                >
+                    Найти
+                </button>
+            </div>
+
+            <div className="search-panel">
                 <input
                     className="input"
                     placeholder="Username"
@@ -49,6 +64,7 @@ export default function AdminSearchPanel({ onSearch }) {
                             e.target.value
                         )
                     }
+                    onKeyDown={handleKeyDown}
                 />
 
                 <input
@@ -60,6 +76,7 @@ export default function AdminSearchPanel({ onSearch }) {
                             e.target.value
                         )
                     }
+                    onKeyDown={handleKeyDown}
                 />
 
                 <input
@@ -71,16 +88,18 @@ export default function AdminSearchPanel({ onSearch }) {
                             e.target.value
                         )
                     }
+                    onKeyDown={handleKeyDown}
                 />
 
                 <select
-                    className="select"
+                    className="select search-select"
                     value={role}
                     onChange={(e) =>
                         setRole(
                             e.target.value
                         )
                     }
+                    onKeyDown={handleKeyDown}
                 >
                     <option value="">
                         Все роли
@@ -96,13 +115,6 @@ export default function AdminSearchPanel({ onSearch }) {
                         ))
                     }
                 </select>
-
-                <button
-                    className="btn btn-primary"
-                    onClick={handleSubmit}
-                >
-                    Найти
-                </button>
             </div>
         </div>
     );

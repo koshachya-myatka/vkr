@@ -21,12 +21,6 @@ export default function BatchDataPanel({ batchData }) {
         }
     }, [isError, error, navigate]);
 
-    if (isLoading) {
-        return (
-            <Loader size="small" />
-        );
-    }
-
     if (isError) {
         return null;
     }
@@ -35,30 +29,36 @@ export default function BatchDataPanel({ batchData }) {
         <div className="flex-column gap-lg">
             <div className="card">
                 <h2>Общая информация</h2>
-                {(!batchData) && (<h4>Нет данных</h4>)}
-                {batchData && (
-                    <div className="table-wrapper">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>ID партии</th>
-                                    <th>Тип металла</th>
-                                    <th>Поступление</th>
-                                    <th>Окончание анализов</th>
-                                    <th>Статус</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{batchData.batchId}</td>
-                                    <td>{batchData.metalTypeName}</td>
-                                    <td>{new Date(batchData.startTime).toLocaleString()}</td>
-                                    <td>{batchData.endTime ? new Date(batchData.endTime).toLocaleString() : ""}</td>
-                                    <td><span className="badge badge-info">{batchData.statusName}</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+                {isLoading
+                    ? <Loader size="small" />
+                    : <>
+                        {(!batchData) && (<h4>Нет данных</h4>)}
+                        {batchData && (
+                            <div className="table-wrapper">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID партии</th>
+                                            <th>Тип металла</th>
+                                            <th>Поступление</th>
+                                            <th>Окончание анализов</th>
+                                            <th>Статус</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{batchData.batchId}</td>
+                                            <td>{batchData.metalTypeName}</td>
+                                            <td>{new Date(batchData.startTime).toLocaleString()}</td>
+                                            <td>{batchData.endTime ? new Date(batchData.endTime).toLocaleString() : ""}</td>
+                                            <td><span className="badge badge-info">{batchData.statusName}</span></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        )
+                        }
+                    </>
+                }
             </div>
 
             <div className="card">
@@ -68,36 +68,43 @@ export default function BatchDataPanel({ batchData }) {
                         MES
                     </span>
                 </div>
-                {(!mes || mes.length === 0) && (<h4>Нет данных</h4>)}
-                {mes && (
-                    <div className="table-wrapper">
-                        <table className="table">
-                            <thead>
-                                <tr><th>ID обородувания</th>
-                                    <th>ID оператора</th>
-                                    <th>Температура</th>
-                                    <th>Давление</th>
-                                    <th>Время обработки (сек)</th>
-                                    <th>Энергопотребление</th>
-                                    <th>Статус</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>{mes.equipmentId ? mes.equipmentId : "—"}</td>
-                                    <td>{mes.operatorId ? mes.operatorId : "—"}</td>
-                                    <td>{mes.temperature ? mes.temperature.toFixed(2) : "—"}</td>
-                                    <td>{mes.pressure ? mes.pressure.toFixed(2) : "—"}</td>
-                                    <td>{mes.durationSec ? mes.durationSec : "—"}</td>
-                                    <td>{mes.energyConsumption ? mes.energyConsumption.toFixed(2) : "—"}</td>
-                                    <td>
-                                        <span className={"badge badge-" + (mes.status === 'NORMAL' ? "success"
-                                            : (mes.status === "ALARM" ? "danger" : "warning"))}>
-                                            {mes.statusName}
-                                        </span>
-                                    </td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+                {isLoading
+                    ? <Loader size="small" />
+                    :
+                    <>
+                        {(!mes || mes.length === 0) && (<h4>Нет данных</h4>)}
+                        {mes && (
+                            <div className="table-wrapper">
+                                <table className="table">
+                                    <thead>
+                                        <tr><th>ID обородувания</th>
+                                            <th>ID оператора</th>
+                                            <th>Температура</th>
+                                            <th>Давление</th>
+                                            <th>Время обработки (сек)</th>
+                                            <th>Энергопотребление</th>
+                                            <th>Статус</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>{mes.equipmentId ? mes.equipmentId : "—"}</td>
+                                            <td>{mes.operatorId ? mes.operatorId : "—"}</td>
+                                            <td>{mes.temperature ? mes.temperature.toFixed(2) : "—"}</td>
+                                            <td>{mes.pressure ? mes.pressure.toFixed(2) : "—"}</td>
+                                            <td>{mes.durationSec ? mes.durationSec : "—"}</td>
+                                            <td>{mes.energyConsumption ? mes.energyConsumption.toFixed(2) : "—"}</td>
+                                            <td>
+                                                <span className={"badge badge-" + (mes.status === 'NORMAL' ? "success"
+                                                    : (mes.status === "ALARM" ? "danger" : "warning"))}>
+                                                    {mes.statusName}
+                                                </span>
+                                            </td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        )
+                        }
+                    </>
+                }
             </div>
         </div>
     );

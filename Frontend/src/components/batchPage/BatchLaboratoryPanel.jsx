@@ -38,12 +38,6 @@ export default function BatchLaboratoryPanel({ batchData }) {
         }
     }, [isErrorScada, errorLims, navigate]);
 
-    if (isLoadingLims || isLoadingScada) {
-        return (
-            <Loader size="small" />
-        );
-    }
-
     if (isErrorLims || isErrorScada) {
         return null;
     }
@@ -58,14 +52,20 @@ export default function BatchLaboratoryPanel({ batchData }) {
                     </span>
                 </div>
                 <div className="divider" />
-                {(!analyses || analyses.length === 0) && (<h4>Нет данных</h4>)}
-                {analyses?.map((analysis, index) => (
-                    <LimsTableItem
-                        key={index}
-                        analysis={analysis}
-                        index={index}
-                    />
-                ))}
+                {isLoadingLims
+                    ? <Loader size="small" />
+                    : <>
+                        {(!analyses || analyses.length === 0) && (<h4>Нет данных</h4>)}
+                        {analyses?.map((analysis, index) => (
+                            <LimsTableItem
+                                key={index}
+                                analysis={analysis}
+                                index={index}
+                            />
+                        ))
+                        }
+                    </>
+                }
             </div>
 
             <div className="card">
@@ -76,24 +76,29 @@ export default function BatchLaboratoryPanel({ batchData }) {
                     </span>
                 </div>
                 <div className="divider" />
-                {scada && scada.length > 0 ? (
-                    <div className="scada-grid">
-                        {scada.map((parameter) => (
-                            <div
-                                key={`${parameter.equipmentId}_${parameter.parameter}`}
-                                className="card card-hover"
-                            >
-                                <ScadaParameterAvg
-                                    parameter={parameter}
-                                />
+                {isLoadingScada
+                    ? <Loader size="small" />
+                    : <>
+                        {scada && scada.length > 0 ? (
+                            <div className="scada-grid">
+                                {scada.map((parameter) => (
+                                    <div
+                                        key={`${parameter.equipmentId}_${parameter.parameter}`}
+                                        className="card card-hover"
+                                    >
+                                        <ScadaParameterAvg
+                                            parameter={parameter}
+                                        />
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                ) : (
-                    <h4>
-                        Нет данных
-                    </h4>
-                )}
+                        ) : (
+                            <h4>
+                                Нет данных
+                            </h4>
+                        )}
+                    </>
+                }
             </div>
         </div>
     );
