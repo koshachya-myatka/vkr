@@ -25,7 +25,7 @@ public class CommonController {
     }
 
     @PostMapping("/metals")
-    public ResponseEntity<List<MetalBatchDto>> metalBatches(@RequestBody MetalBatchFilterDto dto) {
+    public ResponseEntity<PageResponseDto<MetalBatchDto>> metalBatches(@RequestBody MetalBatchFilterDto dto) {
         return ResponseEntity.ok(batchService.getMetalBatches(dto));
     }
 

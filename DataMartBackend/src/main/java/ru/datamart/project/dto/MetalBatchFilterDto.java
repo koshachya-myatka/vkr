@@ -10,11 +10,12 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class MetalBatchFilterDto {
+    private Integer offset;
+    private Integer limit;
     private String metalType;
     private String batchId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String processStatus;
-    private Integer offset;
     private String equipmentId;
 }

@@ -86,15 +86,35 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
                 (:processStatus IS NULL OR b.process_status ILIKE :processStatus) AND
                 (:equipmentId is NULL OR m.equipment_id ILIKE (CONCAT('%', :equipmentId, '%')))
             ORDER BY b.start_time DESC
-            LIMIT 20 OFFSET :offset;
+            LIMIT :limit OFFSET :offset;
             """, nativeQuery = true)
     List<MetalBatchDto> getMetalBatches(@Param("offset") int offset,
+                                        @Param("limit") int limit,
                                         @Param("metalType") String metalType,
                                         @Param("batchId") String batchId,
                                         @Param("startTime") LocalDateTime startTime,
                                         @Param("endTime") LocalDateTime endTime,
                                         @Param("processStatus") String processStatus,
                                         @Param("equipmentId") String equipmentId);
+
+    @Query(value = """
+        SELECT COUNT(DISTINCT b.batch_id)
+        FROM dim_batch as b
+        LEFT JOIN fact_mes as m ON m.batch_id = b.batch_id
+        WHERE 
+            b.metal_type ILIKE :metalType || '%' AND
+            (:batchId IS NULL OR b.batch_id ILIKE (CONCAT('%', :batchId, '%'))) AND
+            (CAST(:startTime AS timestamp) IS NULL OR b.start_time >= CAST(:startTime AS timestamp)) AND
+            ((b.end_time IS NULL) OR (CAST(:endTime AS timestamp) IS NULL) OR (b.end_time <= CAST(:endTime AS timestamp))) AND
+            (:processStatus IS NULL OR b.process_status ILIKE :processStatus) AND
+            (:equipmentId is NULL OR m.equipment_id ILIKE (CONCAT('%', :equipmentId, '%')));
+        """, nativeQuery = true)
+    long countMetalBatches(@Param("metalType") String metalType,
+                           @Param("batchId") String batchId,
+                           @Param("startTime") LocalDateTime startTime,
+                           @Param("endTime") LocalDateTime endTime,
+                           @Param("processStatus") String processStatus,
+                           @Param("equipmentId") String equipmentId);
 
     @Query(value = """
             SELECT

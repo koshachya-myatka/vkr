@@ -3,12 +3,12 @@ package ru.datamart.project.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.datamart.project.dto.PageResponseDto;
 import ru.datamart.project.dto.UserListFilterDto;
 import ru.datamart.project.dto.UserListItemDto;
 import ru.datamart.project.dto.UserUpdateDto;
 import ru.datamart.project.services.AdminService;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,7 +18,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @PostMapping("/users")
-    public ResponseEntity<List<UserListItemDto>> getUsers(@RequestBody UserListFilterDto dto) {
+    public ResponseEntity<PageResponseDto<UserListItemDto>> getUsers(@RequestBody UserListFilterDto dto) {
         return ResponseEntity.ok(adminService.getUsers(dto));
     }
 

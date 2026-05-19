@@ -55,15 +55,24 @@ public class BatchService {
                 .toList();
     }
 
-    public List<MetalBatchDto> getMetalBatches(MetalBatchFilterDto dto) {
-        return batchRepository.getMetalBatches(dto.getOffset(), dto.getMetalType(), dto.getBatchId(), dto.getStartTime(),
-                        dto.getEndTime(), dto.getProcessStatus(), dto.getEquipmentId())
+    public PageResponseDto<MetalBatchDto> getMetalBatches(MetalBatchFilterDto dto) {
+        int limit = dto.getLimit();
+        List<MetalBatchDto> items = batchRepository.getMetalBatches(
+                        dto.getOffset(), limit, dto.getMetalType(),
+                        dto.getBatchId(), dto.getStartTime(), dto.getEndTime(),
+                        dto.getProcessStatus(), dto.getEquipmentId())
                 .stream()
                 .peek(d -> {
                     MesProcessStatusEnum status = MesProcessStatusEnum.valueOf(d.getProcessStatus());
                     d.setStatusName(status.toString());
                 })
                 .toList();
+        long totalItems = batchRepository.countMetalBatches(
+                dto.getMetalType(), dto.getBatchId(), dto.getStartTime(),
+                dto.getEndTime(), dto.getProcessStatus(), dto.getEquipmentId());
+        int totalPages = (int) Math.ceil((double) totalItems / limit);
+        int currentPage = dto.getOffset() / limit + 1;
+        return new PageResponseDto<>(items, totalItems, totalPages, currentPage);
     }
 
     public BatchDto getBatchById(String batchId) {

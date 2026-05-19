@@ -12,27 +12,30 @@ const PAGE_SIZE = 20;
 
 export default function MetalPage() {
     const navigate = useNavigate();
-    const { id } = useParams(); // metalType
-    const [data, setData] = useState([]);
+    const { id: metalType } = useParams();
     const [offset, setOffset] = useState(0);
+    const [data, setData] = useState([]);
     const [filter, setFilter] = useState({});
     const [loading, setLoading] = useState(false);
+    const [totalPages, setTotalPages] = useState(1);
     const [pageNumber, setPageNumber] = useState(1);
 
-    const loadData = async (customFilter = filter, customOffset = offset) => {
+    const loadData = async (customFilter = filter, customOffset = offset, customLimit = PAGE_SIZE) => {
         setLoading(true);
         try {
             const dto = {
-                metalType: id,
+                offset: customOffset,
+                limit: customLimit,
+                metalType: metalType,
                 batchId: customFilter.batchId ?? null,
                 equipmentId: customFilter.equipmentId ?? null,
                 startTime: customFilter.startTime ?? null,
                 endTime: customFilter.endTime ?? null,
-                processStatus: customFilter.processStatus ?? null,
-                offset: customOffset,
+                processStatus: customFilter.processStatus ?? null,               
             };
             const res = await getMetalBatches(dto);
-            setData(res.data);
+            setData(res.data.items);
+            setTotalPages(res.data.totalPages);
         } catch (error) {
             navigate("/error");
         } finally {
@@ -53,23 +56,23 @@ export default function MetalPage() {
 
     const handleNext = () => {
         setOffset((prev) => prev + PAGE_SIZE);
-        setPageNumber(offset % PAGE_SIZE + 1);
+        setPageNumber((prev) => prev + 1);
     };
 
     const handlePrev = () => {
         setOffset((prev) => Math.max(prev - PAGE_SIZE, 0));
-        setPageNumber(offset % PAGE_SIZE + 1);
+        setPageNumber((prev) => Math.max(prev - 1, 1));
     };
 
     return (
         <>
-            <title>Металл - {id}</title>
+            <title>Металл - {metalType}</title>
 
             <Header />
 
             <main className="page-container">
                 <div className="page-section">
-                    <h1>Металл {id[0] + id[1].toLowerCase()}</h1>
+                    <h1>Металл {metalType[0] + metalType[1].toLowerCase()}</h1>
                 </div>
 
                 <div className="page-section">
@@ -98,7 +101,7 @@ export default function MetalPage() {
 
                     <PaginationButton
                         onClick={handleNext}
-                        disabled={data.length < PAGE_SIZE}
+                        disabled={pageNumber >= totalPages}
                     >
                         Вперёд
                     </PaginationButton>

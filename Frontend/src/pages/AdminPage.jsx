@@ -12,10 +12,11 @@ const PAGE_SIZE = 20;
 
 export default function AdminPage() {
     const navigate = useNavigate();
-    const [data, setData] = useState([]);
-    const [offset, setOffset] = useState(0);
-    const [pageNumber, setPageNumber] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [offset, setOffset] = useState(0);
+    const [data, setData] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
+    const [pageNumber, setPageNumber] = useState(1);
 
     const [filter, setFilter] = useState({
         username: null,
@@ -24,18 +25,20 @@ export default function AdminPage() {
         role: null
     });
 
-    const loadData = async (customFilter = filter, customOffset = offset) => {
+    const loadData = async (customFilter = filter, customOffset = offset, customLimit = PAGE_SIZE) => {
         setLoading(true);
         try {
             const dto = {
                 offset: customOffset,
+                limit: customLimit,
                 username: customFilter.username ?? null,
                 name: customFilter.name ?? null,
                 surname: customFilter.surname ?? null,
                 role: customFilter.role ?? null
             };
             const response = await getUsers(dto);
-            setData(response.data);
+            setData(response.data.items);
+            setTotalPages(response.data.totalPages)
         } catch (error) {
             navigate("/error");
         } finally {
@@ -56,12 +59,12 @@ export default function AdminPage() {
 
     const handleNext = () => {
         setOffset(prev => prev + PAGE_SIZE);
-        setPageNumber(offset % PAGE_SIZE + 1);
+        setPageNumber((prev) => prev + 1);
     };
 
     const handlePrev = () => {
         setOffset(prev => Math.max(prev - PAGE_SIZE, 0));
-        setPageNumber(offset % PAGE_SIZE + 1);
+        setPageNumber((prev) => Math.max(prev - 1, 1));
     };
 
     return (
@@ -103,7 +106,7 @@ export default function AdminPage() {
 
                     <PaginationButton
                         onClick={handleNext}
-                        disabled={data.length < PAGE_SIZE}
+                        disabled={pageNumber >= totalPages}
                     >
                         Вперёд
                     </PaginationButton>

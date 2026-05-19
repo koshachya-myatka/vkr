@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.datamart.project.customExceptions.InvalidCredentialsException;
+import ru.datamart.project.dto.PageResponseDto;
 import ru.datamart.project.dto.UserListFilterDto;
 import ru.datamart.project.dto.UserListItemDto;
 import ru.datamart.project.dto.UserUpdateDto;
@@ -20,9 +21,16 @@ import java.util.UUID;
 public class AdminService {
     private final UserRepository userRepository;
 
-    public List<UserListItemDto> getUsers(UserListFilterDto dto) {
-        return userRepository.getUsers(dto.getOffset(), dto.getUsername(),
+    public PageResponseDto<UserListItemDto> getUsers(UserListFilterDto dto) {
+        int limit = dto.getLimit();
+        List<UserListItemDto> items = userRepository.getUsers(
+                dto.getOffset(), limit, dto.getUsername(),
                 dto.getName(), dto.getSurname(), dto.getRole());
+        long totalItems = userRepository.countUsers(
+                dto.getUsername(), dto.getName(), dto.getSurname(), dto.getRole());
+        int totalPages = (int) Math.ceil((double) totalItems / limit);
+        int currentPage = dto.getOffset() / limit + 1;
+        return new PageResponseDto<>(items, totalItems, totalPages, currentPage);
     }
 
     public void updateUser(UUID userId, UserUpdateDto dto) {

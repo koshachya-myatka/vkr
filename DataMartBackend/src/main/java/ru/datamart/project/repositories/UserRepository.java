@@ -34,13 +34,31 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
                 (:surname IS NULL OR u.surname ILIKE (CONCAT('%', :surname, '%'))) AND
                 (:role IS NULL OR u.role = :role)
             ORDER BY u.created_at DESC
-            LIMIT 20 OFFSET :offset;
+            LIMIT :limit OFFSET :offset;
             """,
             nativeQuery = true)
     List<UserListItemDto> getUsers(@Param("offset") int offset,
+                                   @Param("limit") int limit,
                                    @Param("username") String username,
                                    @Param("name") String name,
                                    @Param("surname") String surname,
                                    @Param("role") String role
+    );
+
+    @Query(value = """
+            SELECT
+                COUNT(u.user_id)
+            FROM users as u
+            WHERE
+                (:username IS NULL OR u.username ILIKE (CONCAT('%', :username, '%'))) AND
+                (:name IS NULL OR u.name ILIKE (CONCAT('%', :name, '%'))) AND
+                (:surname IS NULL OR u.surname ILIKE (CONCAT('%', :surname, '%'))) AND
+                (:role IS NULL OR u.role = :role);
+            """,
+            nativeQuery = true)
+    long countUsers(@Param("username") String username,
+                    @Param("name") String name,
+                    @Param("surname") String surname,
+                    @Param("role") String role
     );
 }

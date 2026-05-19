@@ -9,6 +9,7 @@ import lombok.*;
 @ToString
 public class UserListFilterDto {
     private Integer offset;
+    private Integer limit;
     private String username;
     private String name;
     private String surname;
