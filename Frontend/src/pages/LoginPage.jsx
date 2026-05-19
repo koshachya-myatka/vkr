@@ -52,7 +52,7 @@ export default function LoginPage() {
         } catch (err) {
             if (err.response) {
                 setError(err.response.data?.message);
-            } else { setError('Ошибка авторизации'); }
+            } else { setError('Ошибка авторизации.'); }
         } finally {
             setLoading(false);
         }

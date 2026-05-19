@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/general/Header';
@@ -11,17 +12,24 @@ const roleNames = new Map([["LABORATORY", "Лаборатория"], ["PRODUCTIO
 export default function UserProfilePage() {
     const navigate = useNavigate();
 
-    const { data: user, isLoading, isError } = useQuery({
+    const { data: user, isLoading, isError, error } = useQuery({
         queryKey: ['current-user'],
         queryFn: () => getCurrentUser().then(res => res.data)
     });
+
+    useEffect(() => {
+        if (isError) {
+            const errorMessage = error?.response?.data?.message || null;
+            navigate('/error', { replace: true, state: { message: errorMessage } });
+        }
+    }, [isError, error, navigate]);
 
     if (isLoading) {
         return <Loader size="large" />;
     }
 
-    if (isError || !user) {
-        navigate('/error');
+    if (isError) {
+        return null;
     }
 
     return (
@@ -36,38 +44,48 @@ export default function UserProfilePage() {
                     <div className="divider" />
                 </div>
 
-                <div className="card">
-                    <div className="profile-header">
-                        <div className="profile-avatar">
-                            <span className="material-symbols-outlined" style={{ fontSize: "45px" }}>
-                                person
-                            </span>
+                {!user
+                    ? (
+                        <div className="page-section">
+                            <h4>Нет данных</h4>
                         </div>
-                        <div>
-                            <h2>{user.surname} {user.name} {user.patronymic}</h2>
-                            <h4>@{user.username}</h4>
+                    )
+                    : (
+                        <div className="card">
+                            <div className="profile-header">
+                                <div className="profile-avatar">
+                                    <span className="material-symbols-outlined" style={{ fontSize: "45px" }}>
+                                        person
+                                    </span>
+                                </div>
+                                <div>
+                                    <h2>{user.surname} {user.name} {user.patronymic}</h2>
+                                    <h4>@{user.username}</h4>
+                                </div>
+                            </div>
+                            <div className="divider" />
+                            <div className="profile-grid">
+                                <div className="profile-field">
+                                    <span className="profile-label">
+                                        Email
+                                    </span>
+                                    <span>
+                                        {user.email}
+                                    </span>
+                                </div>
+                                <div className="profile-field">
+                                    <span className="profile-label">
+                                        Роль
+                                    </span>
+                                    <span>
+                                        {roleNames.get(user.role)}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div className="divider" />
-                    <div className="profile-grid">
-                        <div className="profile-field">
-                            <span className="profile-label">
-                                Email
-                            </span>
-                            <span>
-                                {user.email}
-                            </span>
-                        </div>
-                        <div className="profile-field">
-                            <span className="profile-label">
-                                Роль
-                            </span>
-                            <span>
-                                {roleNames.get(user.role)}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                    )
+                }
+                
             </main>
 
             <Footer />

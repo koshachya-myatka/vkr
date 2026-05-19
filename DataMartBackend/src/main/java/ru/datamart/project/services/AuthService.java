@@ -8,9 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.datamart.project.customExceptions.InvalidCredentialsException;
-import ru.datamart.project.customExceptions.InvalidEmailException;
-import ru.datamart.project.customExceptions.InvalidRequestException;
-import ru.datamart.project.customExceptions.UserAlreadyExistsException;
+import ru.datamart.project.customExceptions.CustomEntityNotFoundException;
+import ru.datamart.project.customExceptions.CustomInvalidRequestException;
+import ru.datamart.project.customExceptions.EntityAlreadyExistsException;
 import ru.datamart.project.dto.AuthResponseDto;
 import ru.datamart.project.dto.LoginRequestDto;
 import ru.datamart.project.dto.RegisterRequestDto;
@@ -35,7 +35,7 @@ public class AuthService {
     public void register(RegisterRequestDto dto) {
         validateRegister(dto);
         if (userRepository.existsByUsername(dto.getUsername())) {
-            throw new UserAlreadyExistsException("Пользователь с таким логином уже существует");
+            throw new EntityAlreadyExistsException("Пользователь с таким логином уже существует.");
         }
         UserEntity user = UserEntity.builder()
                 .userId(UUID.randomUUID())
@@ -48,23 +48,26 @@ public class AuthService {
                 .role(UserRoleEnum.valueOf(dto.getRole()))
                 .createdAt(LocalDateTime.now())
                 .build();
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new CustomInvalidRequestException("Пользователь не был создан. Проверьте корректность данных.");
+        }
         log.info("СОЗДАН ПОЛЬЗОВАТЕЛЬ: " + user);
     }
 
     public AuthResponseDto login(LoginRequestDto dto) {
         if (dto.getUsername() == null || dto.getPassword() == null) {
-            throw new InvalidRequestException("Логин и пароль обязательны");
+            throw new CustomInvalidRequestException("Логин и пароль обязательны.");
         }
-        UserEntity entity = userRepository
-                .findByUsername(dto.getUsername())
-                .orElseThrow(() -> new InvalidCredentialsException("Пользователь не найден"));
+        UserEntity entity = userRepository.findByUsername(dto.getUsername())
+                .orElseThrow(() -> new CustomEntityNotFoundException("Пользователь не найден."));
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword())
             );
         } catch (Exception e) {
-            throw new InvalidCredentialsException("Неверный пароль");
+            throw new InvalidCredentialsException("Неверные логин и/или пароль.");
         }
         UserDetails user = new CustomUserDetails(entity);
         String token = jwtService.generateToken(user);
@@ -84,10 +87,10 @@ public class AuthService {
                 ||
                 dto.getRole() == null || dto.getRole().isBlank()
         ) {
-            throw new InvalidRequestException("Все обязательные поля должны быть заполнены");
+            throw new CustomInvalidRequestException("Все обязательные поля должны быть заполнены.");
         }
         if (!dto.getEmail().matches("^[A-Za-z0-9_.]+@+([A-Za-z]+[.]{1}[A-Za-z]+)+$")) {
-            throw new InvalidEmailException("Некорректный email");
+            throw new CustomInvalidRequestException("Некорректный email.");
         }
     }
 }

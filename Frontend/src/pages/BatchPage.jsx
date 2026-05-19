@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/general/Header";
@@ -13,17 +14,24 @@ import { getBatch } from "../api/api";
 
 export default function BatchPage() {
     const navigate = useNavigate();
-    const { id: batchId } = useParams(); // batchId
+    const { id: batchId } = useParams();
     const location = useLocation();
 
     const isLaboratory = location.pathname.startsWith("/laboratory");
     const isProduction = location.pathname.startsWith("/production");
     const isManagement = location.pathname.startsWith("/management");
 
-    const { data: batchData, isLoading, isError } = useQuery({
+    const { data: batchData, isLoading, isError, error } = useQuery({
         queryKey: ['batch-page-batchData', batchId],
         queryFn: () => getBatch(batchId).then(res => res.data),
     });
+
+    useEffect(() => {
+        if (isError) {
+            const errorMessage = error?.response?.data?.message || null;
+            navigate('/error', { replace: true, state: { message: errorMessage } });
+        }
+    }, [isError, error, navigate]);
 
     if (isLoading) {
         return (
@@ -32,13 +40,7 @@ export default function BatchPage() {
     }
 
     if (isError) {
-        navigate("/error");
-    }
-
-    if (!batchData) {
-        <div className="page-section">
-            <h4>Нет данных</h4>
-        </div>
+        return null;
     }
 
     return (
@@ -53,35 +55,46 @@ export default function BatchPage() {
                     <ReportButton />
                 </div>
 
-                <div className="page-section">
-                    <BatchDataPanel
-                        batchData={batchData}
-                    />
-                </div>
+                {!batchData
+                    ? (
+                        <div className="page-section">
+                            <h4>Нет данных</h4>
+                        </div>
+                    )
+                    : (
+                        <>
+                            <div className="page-section">
+                                <BatchDataPanel
+                                    batchData={batchData}
+                                />
+                            </div>
 
-                {isLaboratory && (
-                    <div className="page-section">
-                        <BatchLaboratoryPanel
-                            batchData={batchData}
-                        />
-                    </div>
-                )}
+                            {isLaboratory && (
+                                <div className="page-section">
+                                    <BatchLaboratoryPanel
+                                        batchData={batchData}
+                                    />
+                                </div>
+                            )}
 
-                {isProduction && (
-                    <div className="page-section">
-                        <BatchProductionPanel
-                            batchData={batchData}
-                        />
-                    </div>
-                )}
+                            {isProduction && (
+                                <div className="page-section">
+                                    <BatchProductionPanel
+                                        batchData={batchData}
+                                    />
+                                </div>
+                            )}
 
-                {isManagement && (
-                    <div className="page-section">
-                        <BatchManagementPanel
-                            batchData={batchData}
-                        />
-                    </div>
-                )}
+                            {isManagement && (
+                                <div className="page-section">
+                                    <BatchManagementPanel
+                                        batchData={batchData}
+                                    />
+                                </div>
+                            )}
+                        </>
+                    )
+                }
             </main>
 
             <Footer />

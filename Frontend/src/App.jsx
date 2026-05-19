@@ -32,7 +32,7 @@ function App() {
               }
             />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path='/error' element={<ErrorPage message={null} />} />
+            <Route path='/error' element={<ErrorPage />} />
 
             <Route
               path="/profile"
@@ -116,6 +116,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route path="*" element={<ErrorPage message="Такой страницы не существует." />} />
           </Routes>
         </BrowserRouter>
       </WebSocketProvider>

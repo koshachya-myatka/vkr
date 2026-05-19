@@ -20,12 +20,14 @@ public class NotificationController {
     }
 
     @PostMapping("/{id}/viewed")
-    public void markViewed(@PathVariable Long id) {
+    public ResponseEntity<?> markViewed(@PathVariable Long id) {
         service.markAsViewed(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         service.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

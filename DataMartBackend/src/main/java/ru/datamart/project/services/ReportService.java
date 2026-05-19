@@ -4,7 +4,7 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.datamart.project.customExceptions.InvalidRequestException;
+import ru.datamart.project.customExceptions.CustomInvalidRequestException;
 import ru.datamart.project.dto.*;
 
 import com.itextpdf.text.*;
@@ -43,15 +43,15 @@ public class ReportService {
     }
 
     public byte[] generateReport(String batchId) {
+        if (batchId == null) {
+            throw new CustomInvalidRequestException("Укажите ID партии.");
+        }
         BatchReportDto reportDto = buildReportData(batchId);
         return buildPdf(reportDto);
     }
 
     private BatchReportDto buildReportData(String batchId) {
         BatchDto batch = batchService.getBatchById(batchId);
-        if (batch == null) {
-            throw new InvalidRequestException("Партия не найдена");
-        }
         BatchMesDto mes = mesService.getMesByBatchId(batchId);
         List<BatchLimsDto> lims = limsService.getLimsByBatchId(batchId);
         List<BatchScadaAvgDto> scada = scadaService.getScadaAvgByBatchId(batchId);
@@ -104,6 +104,29 @@ public class ReportService {
             batchIdTitle.setSpacingAfter(10);
             document.add(batchIdTitle);
             drawSeparator(document, accent, 2f);
+
+            addSectionTitle(document, "ИНФОРМАЦИЯ ОБ ОТЧЁТЕ");
+            PdfPTable metaTable = createStyledTable(2);
+            metaTable.setWidths(new float[]{3, 5});
+            addTableRow(metaTable, "Автор:", data.getReportInfo().getAuthor(),
+                    white, white, true);
+            addTableRow(metaTable, "Дата создания:",
+                    format(data.getReportInfo().getCreatedAt()),
+                    white, white, true);
+            document.add(metaTable);
+
+            addSectionTitle(document, "ОТКЛОНЕНИЯ И АВАРИИ");
+            PdfPTable analyticsTable = createStyledTable(2);
+            analyticsTable.setWidths(new float[]{4, 3});
+            Font alarmFont = new Font(REGULAR_FONT, 11, Font.NORMAL, primary);
+            addTableRow(analyticsTable, "Аварийные уведомления:",
+                    String.valueOf(data.getReportInfo().getAlarmCount()),
+                    white, white, alarmFont);
+            Font devFont = new Font(REGULAR_FONT, 11, Font.NORMAL, primary);
+            addTableRow(analyticsTable, "Отклонения от норм (LIMS):",
+                    String.valueOf(data.getReportInfo().getDeviationCount()),
+                    white, white, devFont);
+            document.add(analyticsTable);
 
             addSectionTitle(document, "ИНФОРМАЦИЯ О ПАРТИИ");
             PdfPTable batchTable = createStyledTable(2);
@@ -226,29 +249,6 @@ public class ReportService {
                 addEmptyDataMessage(document);
             }
 
-            addSectionTitle(document, "ОТКЛОНЕНИЯ И АВАРИИ");
-            PdfPTable analyticsTable = createStyledTable(2);
-            analyticsTable.setWidths(new float[]{4, 3});
-            Font alarmFont = new Font(REGULAR_FONT, 11, Font.NORMAL, primary);
-            addTableRow(analyticsTable, "Аварийные уведомления:",
-                    String.valueOf(data.getReportInfo().getAlarmCount()),
-                    white, white, alarmFont);
-            Font devFont = new Font(REGULAR_FONT, 11, Font.NORMAL, primary);
-            addTableRow(analyticsTable, "Отклонения от норм (LIMS):",
-                    String.valueOf(data.getReportInfo().getDeviationCount()),
-                    white, white, devFont);
-            document.add(analyticsTable);
-
-            addSectionTitle(document, "ИНФОРМАЦИЯ ОБ ОТЧЁТЕ");
-            PdfPTable metaTable = createStyledTable(2);
-            metaTable.setWidths(new float[]{3, 5});
-            addTableRow(metaTable, "Автор:", data.getReportInfo().getAuthor(),
-                    white, white, true);
-            addTableRow(metaTable, "Дата создания:",
-                    format(data.getReportInfo().getCreatedAt()),
-                    white, white, true);
-            document.add(metaTable);
-
             drawSeparator(document, accent, 2f);
             Paragraph footer = new Paragraph(
                     "Документ сгенерирован автоматически • " +
@@ -263,7 +263,7 @@ public class ReportService {
 
         } catch (Exception e) {
             log.error("Ошибка при создании PDF-отчёта", e);
-            throw new InvalidRequestException("Ошибка при создании PDF-отчета");
+            throw new CustomInvalidRequestException("Ошибка при создании PDF-отчета.");
         }
     }
 

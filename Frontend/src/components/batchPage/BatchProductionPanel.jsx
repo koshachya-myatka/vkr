@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../general/Loader';
@@ -9,32 +10,42 @@ import { getScadaByBatch } from '../../api/api';
 export default function BatchProductionPanel({ batchData }) {
     const navigate = useNavigate();
 
-    const { data: analyses, isLoading, isError, error } = useQuery({
+    const { data: analyses, isLoading: isLoadingLims, isError: isErrorLims, error: errorLims } = useQuery({
         queryKey: ['batch-page-prod-lims', batchData.batchId],
         queryFn: () => getLimsWithoutResultsByBatch(batchData.batchId).then(res => res.data),
         enabled: !!batchData?.batchId
     });
 
-    const { data: scada = [] } = useQuery({
+    const { data: scada, isLoading: isLoadingScada, isError: isErrorScada, error: errorScada } = useQuery({
         queryKey: ['batch-page-prod-scada', batchData.batchId],
         queryFn: () => getScadaByBatch(batchData.batchId).then(res => res.data),
         enabled: !!batchData?.batchId
     });
 
-    if (isLoading) {
+    useEffect(() => {
+        if (isErrorLims) {
+            const errorMessage = errorLims?.response?.data?.message || null;
+            if (errorLims.response?.status === 403) { errorMessage = "У вас нет доступа к этому ресурсу."; }
+            navigate('/error', { replace: true, state: { message: errorMessage } });
+        }
+    }, [isErrorLims, errorLims, navigate]);
+
+    useEffect(() => {
+        if (isErrorScada) {
+            const errorMessage = errorScada?.response?.data?.message || null;
+            if (errorScada.response?.status === 403) { errorMessage = "У вас нет доступа к этому ресурсу."; }
+            navigate('/error', { replace: true, state: { message: errorMessage } });
+        }
+    }, [isErrorScada, errorLims, navigate]);
+
+    if (isLoadingLims || isLoadingScada) {
         return (
             <Loader size="small" />
         );
     }
 
-    if (isError) {
-        navigate("/error");
-    }
-
-    if (!batchData) {
-        <div className="page-section">
-            <h4>Нет данных</h4>
-        </div>
+    if (isErrorLims || isErrorScada) {
+        return null;
     }
 
     return (

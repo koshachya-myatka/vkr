@@ -12,7 +12,7 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<NotificationEntity, Long> {
     @Query(value = "SELECT * FROM fact_notifications as f WHERE f.viewed=false ORDER BY f.created_at DESC;",
             nativeQuery = true)
-    List<NotificationEntity> getLastNotifications();
+    List<NotificationEntity> getActive();
 
     @Query(value = """
             SELECT COUNT(*)

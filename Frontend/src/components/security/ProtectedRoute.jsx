@@ -5,11 +5,18 @@ export default function ProtectedRoute({ roles, children }) {
     const role = localStorage.getItem('role');
 
     if (!token) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/login" replace />;
     }
 
     if (!roles.includes(role)) {
-        return <Navigate to="/error" />;
+        return <Navigate
+            to="/error"
+            replace
+            state={{
+                message:
+                    'У вас нет доступа к данной странице.'
+            }}
+        />;
     }
 
     return children;

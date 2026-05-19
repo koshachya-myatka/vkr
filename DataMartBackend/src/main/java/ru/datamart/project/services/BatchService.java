@@ -3,6 +3,8 @@ package ru.datamart.project.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.datamart.project.customExceptions.CustomEntityNotFoundException;
+import ru.datamart.project.customExceptions.CustomInvalidRequestException;
 import ru.datamart.project.dto.*;
 import ru.datamart.project.models.DimBatchEntity;
 import ru.datamart.project.models.MesProcessStatusEnum;
@@ -56,6 +58,9 @@ public class BatchService {
     }
 
     public PageResponseDto<MetalBatchDto> getMetalBatches(MetalBatchFilterDto dto) {
+        if (dto.getOffset() == null || dto.getLimit() == null || dto.getLimit().equals(0)) {
+            throw new CustomInvalidRequestException("Кол-во искомых данных не определено.");
+        }
         int limit = dto.getLimit();
         List<MetalBatchDto> items = batchRepository.getMetalBatches(
                         dto.getOffset(), limit, dto.getMetalType(),
@@ -76,9 +81,12 @@ public class BatchService {
     }
 
     public BatchDto getBatchById(String batchId) {
+        if (batchId == null) {
+            throw new CustomInvalidRequestException("Укажите ID партии.");
+        }
         Optional<BatchDto> optional = batchRepository.getBatchById(batchId);
         if (optional.isEmpty()) {
-            return null;
+            throw new CustomEntityNotFoundException("Партия с таким ID не была найдена.");
         }
         BatchDto dto = optional.get();
         MesProcessStatusEnum status = MesProcessStatusEnum.valueOf(dto.getProcessStatus());
@@ -89,6 +97,9 @@ public class BatchService {
     }
 
     public DimBatchEntity getOrCreate(MesDto dto) {
+        if (dto.getRecordId() == null || dto.getBatchId() == null) {
+            throw new CustomInvalidRequestException("Укажите ID записи и партии.");
+        }
         DimBatchEntity batch = batchRepository.findById(dto.getBatchId())
                 .orElseGet(() -> {
                     DimBatchEntity b = new DimBatchEntity();

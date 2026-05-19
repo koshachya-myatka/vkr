@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../general/Loader';
@@ -12,6 +13,14 @@ export default function BatchDataPanel({ batchData }) {
         enabled: !!batchData?.batchId
     });
 
+    useEffect(() => {
+        if (isError) {
+            const errorMessage = error?.response?.data?.message || null;
+            if (error.response?.status === 403) { errorMessage = "У вас нет доступа к этому ресурсу."; }
+            navigate('/error', { replace: true, state: { message: errorMessage } });
+        }
+    }, [isError, error, navigate]);
+
     if (isLoading) {
         return (
             <Loader size="small" />
@@ -19,40 +28,37 @@ export default function BatchDataPanel({ batchData }) {
     }
 
     if (isError) {
-        navigate("/error");
-    }
-
-    if (!batchData) {
-        <div className="page-section">
-            <h4>Нет данных</h4>
-        </div>
+        return null;
     }
 
     return (
         <div className="flex-column gap-lg">
             <div className="card">
                 <h2>Общая информация</h2>
-                <div className="table-wrapper">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>ID партии</th>
-                                <th>Тип металла</th>
-                                <th>Поступление</th>
-                                <th>Окончание анализов</th>
-                                <th>Статус</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{batchData.batchId}</td>
-                                <td>{batchData.metalTypeName}</td>
-                                <td>{new Date(batchData.startTime).toLocaleString()}</td>
-                                <td>{batchData.endTime ? new Date(batchData.endTime).toLocaleString() : ""}</td>
-                                <td><span className="badge badge-info">{batchData.statusName}</span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
+                {(!batchData) && (<h4>Нет данных</h4>)}
+                {batchData && (
+                    <div className="table-wrapper">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>ID партии</th>
+                                    <th>Тип металла</th>
+                                    <th>Поступление</th>
+                                    <th>Окончание анализов</th>
+                                    <th>Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{batchData.batchId}</td>
+                                    <td>{batchData.metalTypeName}</td>
+                                    <td>{new Date(batchData.startTime).toLocaleString()}</td>
+                                    <td>{batchData.endTime ? new Date(batchData.endTime).toLocaleString() : ""}</td>
+                                    <td><span className="badge badge-info">{batchData.statusName}</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
 
             <div className="card">

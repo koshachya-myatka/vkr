@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.datamart.project.customExceptions.CustomEntityNotFoundException;
+import ru.datamart.project.customExceptions.CustomInvalidRequestException;
 import ru.datamart.project.dto.BatchLimsDto;
 import ru.datamart.project.dto.LastLimsDto;
 import ru.datamart.project.dto.LimsDto;
@@ -37,6 +39,9 @@ public class LimsService {
     }
 
     public List<BatchLimsDto> getLimsByBatchId(String batchId) {
+        if (batchId == null) {
+            throw new CustomInvalidRequestException("Укажите ID партии.");
+        }
         return limsRepo.getLimsByBatchId(batchId)
                 .stream()
                 .peek(dto -> {
@@ -48,6 +53,9 @@ public class LimsService {
     }
 
     public List<BatchLimsDto> getLimsWithoutResultsByBatchId(String batchId) {
+        if (batchId == null) {
+            throw new CustomInvalidRequestException("Укажите ID партии.");
+        }
         return limsRepo.getLimsByBatchId(batchId)
                 .stream()
                 .peek(dto -> {
@@ -59,8 +67,11 @@ public class LimsService {
 
     @Transactional
     public Optional<LimsEntity> save(LimsDto dto) {
+        if (dto.getRecordId() == null || dto.getBatchId() == null) {
+            throw new CustomInvalidRequestException("Укажите ID записи и партии.");
+        }
         DimBatchEntity batch = batchRepo.findById(dto.getBatchId())
-                .orElseThrow();
+                .orElseThrow(() -> new CustomEntityNotFoundException("Партия с таким ID не найдена."));
 
         LimsEntity e = new LimsEntity();
         e.setRecordId(dto.getRecordId());
@@ -85,10 +96,16 @@ public class LimsService {
     }
 
     public Optional<LimsEntity> get(String id) {
+        if (id == null) {
+            throw new CustomInvalidRequestException("Укажите ID записи.");
+        }
         return limsRepo.findById(id);
     }
 
     public void delete(String id) {
+        if (id == null) {
+            throw new CustomInvalidRequestException("Укажите ID записи.");
+        }
         limsRepo.deleteById(id);
         resultRepo.deleteAllByRecordId(id);
         log.info("УДАЛЕНА ЗАПИСЬ LIMS");

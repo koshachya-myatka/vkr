@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getMetalCards } from "../../api/api";
@@ -12,6 +13,14 @@ export default function MetalGrid() {
         queryFn: () => getMetalCards().then(res => res.data),
     });
 
+    useEffect(() => {
+        if (isError) {
+            const errorMessage = error?.response?.data?.message || null;
+            if (error.response?.status === 403) { errorMessage = "У вас нет доступа к этому ресурсу."; }
+            navigate('/error', { replace: true, state: { message: errorMessage } });
+        }
+    }, [isError, error, navigate]);
+
     if (isLoading) {
         return (
             <Loader size="medium" />
@@ -19,7 +28,7 @@ export default function MetalGrid() {
     }
 
     if (isError) {
-        navigate("/error");
+        return null;
     }
 
     return (

@@ -30,25 +30,17 @@ public class CommonController {
     }
 
     @GetMapping("/batches/{batchId}")
-    public ResponseEntity<?> batch(@PathVariable String batchId) {
-        BatchDto dto = batchService.getBatchById(batchId);
-        if (dto != null) {
-            return ResponseEntity.ok(dto);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<BatchDto> batch(@PathVariable String batchId) {
+        return ResponseEntity.ok(batchService.getBatchById(batchId));
     }
 
     @GetMapping("/mes/{batchId}")
-    public ResponseEntity<?> batchMes(@PathVariable String batchId) {
-        BatchMesDto dto = mesService.getMesByBatchId(batchId);
-        if (dto != null) {
-            return ResponseEntity.ok(dto);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<BatchMesDto> batchMes(@PathVariable String batchId) {
+        return ResponseEntity.ok(mesService.getMesByBatchId(batchId));
     }
 
     @GetMapping("/lims/{batchId}")
-    public ResponseEntity<?> getLimsWithoutResults(@PathVariable String batchId) {
+    public ResponseEntity<List<BatchLimsDto>> getLimsWithoutResults(@PathVariable String batchId) {
         return ResponseEntity.ok(limsService.getLimsWithoutResultsByBatchId(batchId));
     }
 

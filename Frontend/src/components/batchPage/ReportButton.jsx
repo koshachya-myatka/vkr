@@ -19,7 +19,9 @@ export default function ReportButton() {
             window.open(url, '_blank');
             setTimeout(() => window.URL.revokeObjectURL(url), 100);
         } catch (error) {
-            navigate("/error", { state: { message: "Не удалось сформировать отчёт" } })
+            const errorMessage = error?.response?.data?.message || "Не удалось сформировать отчёт";
+            if (error.response?.status === 403) { errorMessage = "У вас нет доступа к этому ресурсу."; }
+            navigate('/error', { replace: true, state: { message: errorMessage } });
         } finally {
             setLoading(false);
         }

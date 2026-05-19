@@ -1,6 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-export default function ErrorPage({ message }) {
+export default function ErrorPage({ message: propMessage }) {
+    const location = useLocation();
+    const message =
+        propMessage ||
+        location.state?.message ||
+        'Что-то пошло не так. Уже работаем над этим.';
+
     return (
         <div className="error-page">
             <div className="error-card">
@@ -8,13 +14,10 @@ export default function ErrorPage({ message }) {
                     error
                 </span>
                 <div className="error-title">
-                    Произошла ошибка
+                    Ошибка
                 </div>
 
-                {message
-                    ? <p className="error-text">{message}</p>
-                    : <p className="error-text">Не удалось загрузить данные. Уже работаем над этим.</p>
-                }
+                <p className="error-text">{message}</p>
 
                 <Link
                     to="/"

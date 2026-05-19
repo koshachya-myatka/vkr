@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ru.datamart.project.customExceptions.InvalidCredentialsException;
 import ru.datamart.project.dto.UserProfileDto;
 import ru.datamart.project.models.UserEntity;
 import ru.datamart.project.security.CustomUserDetails;
@@ -16,8 +17,13 @@ public class UserProfileService {
 
     public UserProfileDto getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserEntity user = userDetails.getUser();
+        UserEntity user;
+        try {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            user = userDetails.getUser();
+        } catch (NullPointerException e) {
+            throw new InvalidCredentialsException("Пользователь не был авторизован.");
+        }
         return objectMapper.convertValue(user, UserProfileDto.class);
     }
 }

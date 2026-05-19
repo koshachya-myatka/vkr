@@ -3,12 +3,12 @@ package ru.datamart.project.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.datamart.project.customExceptions.CustomInvalidRequestException;
 import ru.datamart.project.dto.BatchScadaAvgDto;
 import ru.datamart.project.dto.BatchScadaDto;
 import ru.datamart.project.dto.BatchScadaParameterDto;
 import ru.datamart.project.dto.ScadaDto;
 import ru.datamart.project.models.ScadaEntity;
-import ru.datamart.project.models.ScadaStatusEnum;
 import ru.datamart.project.repositories.ScadaRepository;
 
 import java.util.Collection;
@@ -24,6 +24,9 @@ public class ScadaService {
     private final ScadaRepository scadaRepository;
 
     public List<BatchScadaParameterDto> getScadaByBatchId(String batchId) {
+        if (batchId == null) {
+            throw new CustomInvalidRequestException("Укажите ID партии.");
+        }
         List<BatchScadaDto> raw = scadaRepository.findScadaByBatchId(batchId);
         return raw.stream()
                 .collect(Collectors.groupingBy(BatchScadaDto::getEquipmentId,
@@ -51,10 +54,16 @@ public class ScadaService {
     }
 
     public List<BatchScadaAvgDto> getScadaAvgByBatchId(String batchId) {
+        if (batchId == null) {
+            throw new CustomInvalidRequestException("Укажите ID партии.");
+        }
         return scadaRepository.findScadaAvgByBatchId(batchId);
     }
 
     public Optional<ScadaEntity> save(ScadaDto dto) {
+        if (dto.getRecordId() == null) {
+            throw new CustomInvalidRequestException("Укажите ID записи.");
+        }
         ScadaEntity e = new ScadaEntity();
         e.setRecordId(dto.getRecordId());
         e.setSensorId(dto.getSensorId());
@@ -70,10 +79,16 @@ public class ScadaService {
     }
 
     public Optional<ScadaEntity> get(String id) {
+        if (id == null) {
+            throw new CustomInvalidRequestException("Укажите ID записи.");
+        }
         return scadaRepository.findById(id);
     }
 
     public void delete(String id) {
+        if (id == null) {
+            throw new CustomInvalidRequestException("Укажите ID уведомления.");
+        }
         scadaRepository.deleteById(id);
         log.info("УДАЛЕНА ЗАПИСЬ SCADA");
     }
