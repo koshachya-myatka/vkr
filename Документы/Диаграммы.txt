@@ -1,0 +1,152 @@
+@startuml
+skinparam actorStyle Hollow
+skinparam backgroundColor #FFFFFF
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam ArrowColor #444444
+skinparam packageStyle rectangle
+
+actor "Пользователь" as User
+
+package "Клиентская часть" {
+  component "Frontend Application" as Frontend
+  component "WebSocket Client" as WSClient
+}
+
+package "Серверная часть" {
+  component "Backend API" as Backend
+  component "JWT Filter" as JWT
+  component "REST Controllers" as REST
+  component "Kafka Consumers" as KafkaConsumers
+  component "Notification Service" as NotificationService
+  component "Report Service" as PDFService
+}
+
+package "Инфраструктура данных" {
+  database "PostgreSQL" as DB
+  queue "Apache Kafka" as Kafka
+  collections "Kafka Topics\nMES / SCADA / LIMS" as Topics
+}
+
+package "Внешние сервисы" {
+  component "MES Emulator" as MES
+  component "SCADA Emulator" as SCADA
+  component "LIMS Emulator" as LIMS
+}
+
+User -> Frontend : HTTP
+Frontend ---> Backend : REST API
+Frontend <--> WSClient : WebSocket events
+WSClient <---> NotificationService : WebSocket notifications
+Backend --> JWT : проверка JWT-токена
+Backend --> REST : обработка HTTP-запросов
+Backend ---> KafkaConsumers : получение сообщений
+Backend --> PDFService : генерация PDF-отчётов
+REST --> DB : JPA / Hibernate
+KafkaConsumers --> DB : сохранение данных
+NotificationService --> KafkaConsumers : создание уведомлений
+MES ---> Kafka : Kafka Producer
+SCADA ---> Kafka : Kafka Producer
+LIMS ---> Kafka : Kafka Producer
+Kafka --> Topics : маршрутизация сообщений
+Topics --> KafkaConsumers : Kafka Consumer
+Frontend --> Backend : запрос аналитики\nи dashboard данных
+Backend --> Frontend : JSON responses
+@enduml
+
+================================
+
+@startuml
+skinparam actorStyle Hollow
+
+title Просмотр информации о партии металла и формирование отчёта
+
+actor "Пользователь" as User
+
+participant "Frontend" as Frontend
+participant "Backend" as Backend
+participant "JWT Filter" as JWT
+database "PostgreSQL" as DB
+participant "Report Service" as PDF
+
+== Авторизация ==
+
+User -> Frontend : Ввод логина и пароля
+activate Frontend
+
+Frontend -> Backend : POST /api/auth/login
+activate Backend
+
+Backend -> JWT : Проверка пользователя
+activate JWT
+
+JWT --> Backend : JWT-токен
+deactivate JWT
+
+Backend --> Frontend : Access token
+deactivate Backend
+
+Frontend --> User : Успешная авторизация
+deactivate Frontend
+
+== Выбор партии ==
+
+User -> Frontend : Просмотр списка партий
+activate Frontend
+
+Frontend -> Backend : GET /api/batches
+activate Backend
+
+Backend -> DB : Получить список партий
+activate DB
+
+DB --> Backend : Список партий
+deactivate DB
+
+Backend --> Frontend : JSON с партиями
+deactivate Backend
+
+Frontend --> User : Отображение списка партий
+deactivate Frontend
+
+== Детальная информация ==
+
+User -> Frontend : Выбор партии
+activate Frontend
+
+Frontend -> Backend : GET /api/batches/{id}
+activate Backend
+
+Backend -> DB : Получить данные партии,\nMES, SCADA, LIMS
+activate DB
+
+DB --> Backend : Детальная информация
+deactivate DB
+
+Backend --> Frontend : JSON с данными партии
+deactivate Backend
+
+Frontend --> User : Отображение графиков,\nстатусов и показателей
+deactivate Frontend
+
+== Формирование отчёта ==
+
+User -> Frontend : Сформировать PDF-отчёт
+activate Frontend
+
+Frontend -> Backend : POST /api/report/{id}
+activate Backend
+
+Backend -> PDF : Генерация PDF
+activate PDF
+
+PDF --> Backend : PDF-документ
+deactivate PDF
+
+Backend --> Frontend : PDF-файл
+deactivate Backend
+
+Frontend --> User : Загрузка отчёта
+deactivate Frontend
+
+@enduml
