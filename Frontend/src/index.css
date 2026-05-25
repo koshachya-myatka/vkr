@@ -347,7 +347,7 @@ small {
 .form-group select {
   padding: 0.8rem 1rem;
   border-radius: 10px;
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--border);
   background: var(--bg-hover);
   color: var(--text-primary);
   font-family: var(--font-main);
@@ -926,6 +926,13 @@ small {
   opacity: 0.7;
 }
 
+.user-card-text {
+  padding: 0.8rem 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary);
+}
+
 .user-card-footer {
   display: flex;
   justify-content: flex-end;
@@ -1105,6 +1112,10 @@ small {
     align-items: flex-start;
   }
 
+  .header-logo {
+    font-size: 20px;
+  }
+
   .header-actions {
     width: 100%;
     justify-content: center;
@@ -1112,7 +1123,6 @@ small {
 
   .header-nav {
     width: 100%;
-
     flex-direction: column;
   }
 
@@ -1122,8 +1132,8 @@ small {
 
   .notification-dropdown {
     width: 100vw;
-    right: 0;
-    left: 0;
+    position: fixed;
+    top: 130px;
   }
 
   .page-container {

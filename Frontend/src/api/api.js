@@ -18,9 +18,11 @@ export const loginUser = (data) => API.post('/auth/login', data);
 export const registerUser = (data) => API.post('/auth/register', data);
 
 // УВЕДОМЛЕНИЯ
-export const getNotifications = () => API.get('/notifications');
-export const markNotificationViewed = (id) => API.post(`/notifications/${id}/viewed`);
-export const deleteNotification = (id) => API.delete(`/notifications/${id}`);
+export const getActiveNotifications = () => API.get('/notifications/active');
+export const markNotificationInProgress = (id) => API.post(`/notifications/${id}/in-progress`);
+export const getAllNotifications = (dto) => API.post('/notifications', dto);
+export const updateNotification = (id, dto) => API.put(`/notifications/${id}`, dto);
+export const getNotificationsStats = () => API.get('/notifications/stats');
 
 // АДМИН
 export const getUsers = (filter) => API.post('/admin/users', filter);

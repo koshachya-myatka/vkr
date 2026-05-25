@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import ru.datamart.project.dto.BatchScadaDto;
-import ru.datamart.project.dto.ScadaDto;
-import ru.datamart.project.dto.SimpleWsMessageDto;
-import ru.datamart.project.models.MesStatusEnum;
+import ru.datamart.project.dto.kafkaData.ScadaDto;
 import ru.datamart.project.models.NotificationSeverityEnum;
 import ru.datamart.project.models.ScadaEntity;
 import ru.datamart.project.models.ScadaStatusEnum;
@@ -51,7 +48,7 @@ public class KafkaConsumerScada {
                             scadaStatus.equals(ScadaStatusEnum.WARNING) ?
                                     NotificationSeverityEnum.WARNING : NotificationSeverityEnum.ALARM;
                     notificationService.create(message, severity,
-                            scada.getEquipmentId(), "SCADA");
+                            scada.getEquipmentId(), scada.getSensorId(), "SCADA");
                 }
             } else {
                 log.info("ScadaEntity не создана. Ошибка в данных DTO");

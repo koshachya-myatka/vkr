@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import ru.datamart.project.dto.MesDto;
-import ru.datamart.project.dto.SimpleWsMessageDto;
+import ru.datamart.project.dto.kafkaData.MesDto;
 import ru.datamart.project.models.MesEntity;
 import ru.datamart.project.models.MesProcessStatusEnum;
 import ru.datamart.project.models.MesStatusEnum;
@@ -59,7 +58,7 @@ public class KafkaConsumerMes {
                             mesStatus.equals(MesStatusEnum.WARNING) ?
                                     NotificationSeverityEnum.WARNING : NotificationSeverityEnum.ALARM;
                     notificationService.create(message, severity,
-                            mes.getEquipmentId(), "MES");
+                            mes.getEquipmentId(), null,"MES");
                 }
 
             } else {

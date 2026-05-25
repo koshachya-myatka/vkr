@@ -12,11 +12,16 @@ $$;
 CREATE TABLE IF NOT EXISTS fact_notifications (
     id SERIAL PRIMARY KEY,
     message TEXT,
-    equipment_id TEXT, 
+    equipment_id TEXT,
+    sensor_id TEXT,
     signal_source TEXT,   
     severity TEXT,
+    status TEXT,
+    comment TEXT,
     viewed BOOLEAN DEFAULT false,
-    created_at TIMESTAMP DEFAULT now()
+    created_at TIMESTAMP DEFAULT now(),
+    updated_at TIMESTAMP,
+    updated_by TEXT
 );
 
 CREATE TABLE IF NOT EXISTS dim_batch (

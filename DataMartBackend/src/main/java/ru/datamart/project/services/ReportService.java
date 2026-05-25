@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.datamart.project.customExceptions.CustomInvalidRequestException;
-import ru.datamart.project.dto.*;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import ru.datamart.project.dto.batchData.*;
+import ru.datamart.project.dto.report.BatchReportDto;
+import ru.datamart.project.dto.report.BatchReportInfoDto;
+import ru.datamart.project.dto.users.UserProfileDto;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;

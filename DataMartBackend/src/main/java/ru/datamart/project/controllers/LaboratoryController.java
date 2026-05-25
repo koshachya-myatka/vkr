@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.datamart.project.dto.LastLimsDto;
+import ru.datamart.project.dto.dashboards.LastLimsDto;
 import ru.datamart.project.services.LimsService;
 
 import java.util.List;

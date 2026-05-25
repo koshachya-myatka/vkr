@@ -4,7 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.datamart.project.dto.*;
+import ru.datamart.project.dto.batchData.BatchDto;
+import ru.datamart.project.dto.dashboards.LastBatchDto;
+import ru.datamart.project.dto.dashboards.MetalCardDto;
+import ru.datamart.project.dto.dashboards.MetalStatisticsCardDto;
+import ru.datamart.project.dto.metalBatches.MetalBatchDto;
 import ru.datamart.project.models.DimBatchEntity;
 
 import java.time.LocalDateTime;

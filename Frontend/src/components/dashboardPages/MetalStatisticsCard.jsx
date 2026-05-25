@@ -28,7 +28,7 @@ export default function MetalStatisticsCard({
             <div className="divider" />
 
             <div className="stat-block">
-                <p>Данные за последнюю неделю</p>
+                <p>Данные за последнюю неделю:</p>
                 <span className="stat-label">
                     Обработано партий
                 </span>

@@ -1,5 +1,6 @@
-export default function NotificationItem({ item, onDelete }) {
+export default function NotificationItem({ item, onTake }) {
     const severityClass = {
+        INFO: 'notification-info',
         WARNING: 'notification-warning',
         ALARM: 'notification-danger'
     }[item.severity];
@@ -7,8 +8,16 @@ export default function NotificationItem({ item, onDelete }) {
     return (
         <div className={`notification ${severityClass}`}>
             <div className="flex-between gap-md">
-                <div className="flex-column gap-sm">
-                    <h4>{item.signalSource}</h4>
+                <div className="flex-column">
+                    <div className="flex-between">
+                        <h4>{item.signalSource}</h4>
+                        <button
+                            className="btn btn-danger"
+                            onClick={() => onTake(item.id)}
+                        >
+                            На проверку
+                        </button>
+                    </div>
                     <small>
                         {new Date(item.createdAt).toLocaleString()}
                     </small>
@@ -17,12 +26,6 @@ export default function NotificationItem({ item, onDelete }) {
                         Оборудование: {item.equipmentId}
                     </small>
                 </div>
-                <button
-                    className="btn btn-danger"
-                    onClick={() => onDelete(item.id)}
-                >
-                    ✕
-                </button>
             </div>
         </div>
     );

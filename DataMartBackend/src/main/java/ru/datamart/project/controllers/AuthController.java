@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.datamart.project.dto.AuthResponseDto;
-import ru.datamart.project.dto.LoginRequestDto;
-import ru.datamart.project.dto.RegisterRequestDto;
+import ru.datamart.project.dto.auth.AuthResponseDto;
+import ru.datamart.project.dto.auth.LoginRequestDto;
+import ru.datamart.project.dto.auth.RegisterRequestDto;
 import ru.datamart.project.services.AuthService;
 
 @RestController

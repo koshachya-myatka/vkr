@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.datamart.project.customExceptions.CustomInvalidRequestException;
-import ru.datamart.project.dto.BatchScadaAvgDto;
-import ru.datamart.project.dto.BatchScadaDto;
-import ru.datamart.project.dto.BatchScadaParameterDto;
-import ru.datamart.project.dto.ScadaDto;
+import ru.datamart.project.dto.batchData.BatchScadaAvgDto;
+import ru.datamart.project.dto.batchData.BatchScadaDto;
+import ru.datamart.project.dto.batchData.BatchScadaParameterDto;
+import ru.datamart.project.dto.kafkaData.ScadaDto;
 import ru.datamart.project.models.ScadaEntity;
 import ru.datamart.project.repositories.ScadaRepository;
 

@@ -3,7 +3,15 @@ package ru.datamart.project.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import ru.datamart.project.dto.*;
+import ru.datamart.project.dto.batchData.BatchDto;
+import ru.datamart.project.dto.batchData.BatchLimsDto;
+import ru.datamart.project.dto.batchData.BatchMesDto;
+import ru.datamart.project.dto.batchData.BatchScadaAvgDto;
+import ru.datamart.project.dto.dashboards.MetalCardDto;
+import ru.datamart.project.dto.metalBatches.MetalBatchDto;
+import ru.datamart.project.dto.metalBatches.MetalBatchFilterDto;
+import ru.datamart.project.dto.other.PageResponseDto;
+import ru.datamart.project.dto.users.UserProfileDto;
 import ru.datamart.project.services.*;
 
 import java.util.List;

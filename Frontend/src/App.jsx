@@ -14,6 +14,7 @@ import ProductionDashboard from './pages/ProductionDashboard'
 import ManagementDashboard from './pages/ManagementDashboard'
 import MetalPage from './pages/MetalPage';
 import BatchPage from './pages/BatchPage';
+import NotificationsPage from './components/notificationsPage/NotificationsPage';
 
 const queryClient = new QueryClient();
 
@@ -113,6 +114,14 @@ function App() {
               element={
                 <ProtectedRoute roles={['MANAGEMENT', 'ADMIN']}>
                   <BatchPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="/notifications"
+              element={
+                <ProtectedRoute roles={['MANAGEMENT', 'PRODUCTION']}>
+                  <NotificationsPage />
                 </ProtectedRoute>
               }
             />

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import HeaderIconButton from './HeaderIconButton';
 import HeaderLinkButton from './HeaderLinkButton';
 import NotificationDropdown from './NotificationDropdown';
-import { getNotifications } from '../../api/api';
+import { getActiveNotifications } from '../../api/api';
 
 export default function Header() {
     const location = useLocation();
@@ -15,7 +15,7 @@ export default function Header() {
     const { data: unviewedCount = 0 } = useQuery({
         queryKey: ['unviewedNotificationsCount'],
         queryFn: async () => {
-            const { data } = await getNotifications();
+            const { data } = await getActiveNotifications();
             return data.length;
         },
         staleTime: 0
@@ -43,25 +43,27 @@ export default function Header() {
                 </div>
 
                 <div className="header-actions">
-                    <div className="notification-wrapper">
-                        <HeaderIconButton
-                            icon="notifications"
-                            hasBadge={unviewedCount > 0}
-                            badgeNumber={unviewedCount}
-                            onClick={() =>
-                                setNotificationsOpen(prev => !prev)
+                    {(isManager || isProd) && (
+                        <div className="notification-wrapper">
+                            <HeaderIconButton
+                                icon="notifications"
+                                hasBadge={unviewedCount > 0}
+                                badgeNumber={unviewedCount}
+                                onClick={() =>
+                                    setNotificationsOpen(prev => !prev)
+                                }
+                            />
+                            {
+                                notificationsOpen && (
+                                    <NotificationDropdown
+                                        onClose={() =>
+                                            setNotificationsOpen(false)
+                                        }
+                                    />
+                                )
                             }
-                        />
-                        {
-                            notificationsOpen && (
-                                <NotificationDropdown
-                                    onClose={() =>
-                                        setNotificationsOpen(false)
-                                    }
-                                />
-                            )
-                        }
-                    </div>
+                        </div>
+                    )}
 
                     <HeaderIconButton
                         icon="person"

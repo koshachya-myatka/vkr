@@ -1,16 +1,18 @@
 import { useEffect, useRef } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Loader from "./Loader";
 import NotificationItem from './NotificationItem';
-import { getNotifications, markNotificationViewed } from '../../api/api';
+import { getActiveNotifications, markNotificationInProgress } from '../../api/api';
 
 export default function NotificationDropdown({ onClose }) {
     const ref = useRef();
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     const { data: items, isLoading } = useQuery({
         queryKey: ['notifications'],
-        queryFn: () => getNotifications().then(res => res.data)
+        queryFn: () => getActiveNotifications().then(res => res.data)
     });
 
     useEffect(() => {
@@ -27,13 +29,13 @@ export default function NotificationDropdown({ onClose }) {
             );
     }, []);
 
-    const remove = async (id) => {
+    const takeToWork = async (id) => {
         const oldLength = items.length;
         const updatedItems = items.filter(i => i.id !== id);
         queryClient.setQueryData(['notifications'], updatedItems);
         queryClient.setQueryData(['unviewedNotificationsCount'], updatedItems.length);
         try {
-            await markNotificationViewed(id);
+            await markNotificationInProgress(id);
         } catch (e) {
             queryClient.invalidateQueries({ queryKey: ['notifications'] });
             queryClient.setQueryData(['unviewedNotificationsCount'], oldLength);
@@ -46,7 +48,7 @@ export default function NotificationDropdown({ onClose }) {
         queryClient.setQueryData(['unviewedNotificationsCount'], 0);
         try {
             for (const item of items) {
-                await markNotificationViewed(item.id);
+                await markNotificationInProgress(item.id);
             }
         } catch (e) {
             queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -64,11 +66,16 @@ export default function NotificationDropdown({ onClose }) {
                             className="btn btn-danger"
                             onClick={clearAll}
                         >
-                            Очистить
+                            Все на проверку
                         </button>
                     )
                 }
-            </div>
+            </div> 
+
+            <Link to="/notifications" className="link">
+                Все уведомления о сбоях
+            </Link>
+            
             <div className="divider" />
             {isLoading
                 ? <Loader size="supersmall" />
@@ -86,7 +93,7 @@ export default function NotificationDropdown({ onClose }) {
                                 <NotificationItem
                                     key={item.id}
                                     item={item}
-                                    onDelete={remove}
+                                    onTake={takeToWork}
                                 />
                             ))
                         }

@@ -17,6 +17,10 @@ public enum MetalTypeEnum {
 
     private final String name;
 
+    MetalTypeEnum(String name) {
+        this.name = name;
+    }
+
     public String toString() {
         return name;
     }
@@ -27,10 +31,6 @@ public enum MetalTypeEnum {
         for (MetalTypeEnum metal : values()) {
             BY_NAME.put(metal.name, metal);
         }
-    }
-
-    MetalTypeEnum(String name) {
-        this.name = name;
     }
 
     public static MetalTypeEnum fromName(String name) {

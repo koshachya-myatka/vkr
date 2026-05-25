@@ -3,8 +3,8 @@ package ru.datamart.project.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import ru.datamart.project.dto.BatchIdWsMessageDto;
-import ru.datamart.project.dto.SimpleWsMessageDto;
+import ru.datamart.project.dto.websocket.BatchIdWsMessageDto;
+import ru.datamart.project.dto.websocket.SimpleWsMessageDto;
 
 @Service
 @RequiredArgsConstructor

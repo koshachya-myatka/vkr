@@ -3,10 +3,10 @@ package ru.datamart.project.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.datamart.project.dto.PageResponseDto;
-import ru.datamart.project.dto.UserListFilterDto;
-import ru.datamart.project.dto.UserListItemDto;
-import ru.datamart.project.dto.UserUpdateDto;
+import ru.datamart.project.dto.other.PageResponseDto;
+import ru.datamart.project.dto.users.UserListFilterDto;
+import ru.datamart.project.dto.users.UserListItemDto;
+import ru.datamart.project.dto.users.UserUpdateDto;
 import ru.datamart.project.services.AdminService;
 
 import java.util.UUID;
