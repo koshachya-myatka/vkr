@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "fact_lims")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"batch"})
 public class LimsEntity {
     @Id
     @Column(name = "record_id")

@@ -42,7 +42,7 @@ public class LimsService {
         if (batchId == null) {
             throw new CustomInvalidRequestException("Укажите ID партии.");
         }
-        return limsRepo.getLimsByBatchId(batchId)
+        return limsRepo.getLimsByBatchIdWithoutResults(batchId)
                 .stream()
                 .peek(dto -> {
                     LimsStatusEnum status = LimsStatusEnum.valueOf(dto.getStatus());
@@ -56,7 +56,7 @@ public class LimsService {
         if (batchId == null) {
             throw new CustomInvalidRequestException("Укажите ID партии.");
         }
-        return limsRepo.getLimsByBatchId(batchId)
+        return limsRepo.getLimsByBatchIdWithoutResults(batchId)
                 .stream()
                 .peek(dto -> {
                     LimsStatusEnum status = LimsStatusEnum.valueOf(dto.getStatus());

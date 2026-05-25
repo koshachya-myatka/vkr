@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface LimsResultRepository extends JpaRepository<LimsResultEntity, Long> {
-    @Query(value = "DELETE * FROM fact_lims_results as res WHERE res.record_id=:id;", nativeQuery = true)
+    @Query(value = "DELETE FROM fact_lims_results as res WHERE res.record_id=:id;", nativeQuery = true)
     void deleteAllByRecordId(@Param("id") String id);
 
     @Query(value = """

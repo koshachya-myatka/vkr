@@ -27,7 +27,7 @@ public interface LimsRepository extends JpaRepository<LimsEntity, String> {
     List<LastLimsDto> getLastLimsRecords();
 
     @Query(value = """
-                SELECT 
+                SELECT
                     l.record_id as recordId,
                     l.sample_id as sampleId,
                     l.analysis_method as analysisMethod,
@@ -38,5 +38,5 @@ public interface LimsRepository extends JpaRepository<LimsEntity, String> {
                 FROM fact_lims as l
                 WHERE l.batch_id = :batchId;
             """, nativeQuery = true)
-    List<BatchLimsDto> getLimsByBatchId(@Param("batchId") String batchId);
+    List<BatchLimsDto> getLimsByBatchIdWithoutResults(@Param("batchId") String batchId);
 }

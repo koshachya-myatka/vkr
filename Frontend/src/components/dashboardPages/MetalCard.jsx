@@ -47,6 +47,7 @@ export default function MetalCard({ metal }) {
             <div className="divider" />
 
             <div className="stat-block">
+                <p>Статистика за сегодня</p>
                 <span className="stat-label">
                     Всего партий
                 </span>

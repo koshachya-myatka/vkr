@@ -5,6 +5,19 @@ import { getMetalCards } from "../../api/api";
 import MetalCard from './MetalCard';
 import Loader from '../general/Loader'
 
+const METAL_TYPES = {
+    NI: "Никель (Ni)",
+    CU: "Медь (Cu)",
+    CO: "Кобальт (Co)",
+    AG: "Серебро (Ag)",
+    AU: "Золото (Au)",
+    PD: "Палладий (Pd)",
+    PT: "Платина (Pt)",
+    RH: "Родий (Rh)",
+    IR: "Иридий (Ir)",
+    RU: "Рутений (Ru)"
+};
+
 export default function MetalGrid() {
     const navigate = useNavigate();
 
@@ -31,24 +44,29 @@ export default function MetalGrid() {
         return null;
     }
 
+    const metalCards = Object.entries(METAL_TYPES).map(([metalType, metalTypeName]) => {
+        const existingMetal = metals?.find(
+            m => m.metalType === metalType
+        );
+        if (existingMetal) {
+            return existingMetal;
+        }
+        return {
+            metalType,
+            metalTypeName
+        };
+    });
+
     return (
         <>
-            {(!metals || metals.length === 0)
-                ? (
-                    <div className="page-section">
-                        <h4>Нет данных</h4>
-                    </div>
-                )
-                : (
-                    <div>
-                        <h2>Каталог</h2>
-                        <div className="grid-cards">
-                            {metals && metals.map(m => (
-                                <MetalCard key={m.metalType} metal={m} />
-                            ))}
-                        </div>
-                    </div>
-                )}
+            <div>
+                <h2>Каталог</h2>
+                <div className="grid-cards">
+                    {metalCards && metalCards.map(m => (
+                        <MetalCard key={m.metalType} metal={m} />
+                    ))}
+                </div>
+            </div>
         </>
     );
 }
