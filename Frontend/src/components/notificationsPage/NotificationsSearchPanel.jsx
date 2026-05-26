@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const STATUSES_NAMES = {
     CREATED: "СОЗДАНО",
-    IN_PROGRESS: "В РАБОТЕ",
+    IN_PROGRESS: "НА ПРОВЕРКЕ",
     FALSE_POSITIVE: "ЛОЖНОЕ СРАБАТЫВАНИЕ",
     RESOLVED: "ПРИЧИНА УСТРАНЕНА"
 };
