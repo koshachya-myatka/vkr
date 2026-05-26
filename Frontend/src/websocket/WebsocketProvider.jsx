@@ -10,8 +10,10 @@ export const WebSocketProvider = ({ children }) => {
         connectWebSocket((type, msg) => {
             switch (type) {
                 case 'notifications':
-                    queryClient.invalidateQueries({ queryKey: ['notifications'] });
                     queryClient.setQueryData(['unviewedNotificationsCount'], (old) => { return old + 1; });
+                    window.dispatchEvent(new Event("notifications-new"));
+                    queryClient.invalidateQueries({ queryKey: ['notifications-active'] });
+                    queryClient.invalidateQueries({ queryKey: ['notifications-stats'] });
                     break;
                 case 'mes':
                     queryClient.invalidateQueries({ queryKey: ['dashboard-manag-last-statistics'] });

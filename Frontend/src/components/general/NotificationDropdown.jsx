@@ -11,7 +11,7 @@ export default function NotificationDropdown({ onClose }) {
     const navigate = useNavigate();
 
     const { data: items, isLoading } = useQuery({
-        queryKey: ['notifications'],
+        queryKey: ['notifications-active'],
         queryFn: () => getActiveNotifications().then(res => res.data)
     });
 
@@ -32,26 +32,26 @@ export default function NotificationDropdown({ onClose }) {
     const takeToWork = async (id) => {
         const oldLength = items.length;
         const updatedItems = items.filter(i => i.id !== id);
-        queryClient.setQueryData(['notifications'], updatedItems);
+        queryClient.setQueryData(['notifications-active'], updatedItems);
         queryClient.setQueryData(['unviewedNotificationsCount'], updatedItems.length);
         try {
             await markNotificationInProgress(id);
         } catch (e) {
-            queryClient.invalidateQueries({ queryKey: ['notifications'] });
+            queryClient.invalidateQueries({ queryKey: ['notifications-active'] });
             queryClient.setQueryData(['unviewedNotificationsCount'], oldLength);
         }
     };
 
     const clearAll = async () => {
         const oldLength = items.length;
-        queryClient.setQueryData(['notifications'], []);
+        queryClient.setQueryData(['notifications-active'], []);
         queryClient.setQueryData(['unviewedNotificationsCount'], 0);
         try {
             for (const item of items) {
                 await markNotificationInProgress(item.id);
             }
         } catch (e) {
-            queryClient.invalidateQueries({ queryKey: ['notifications'] });
+            queryClient.invalidateQueries({ queryKey: ['notifications-active'] });
             queryClient.setQueryData(['unviewedNotificationsCount'], oldLength);
         }
     };

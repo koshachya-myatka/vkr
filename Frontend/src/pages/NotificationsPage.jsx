@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
-import Header from "../general/Header";
-import Footer from "../general/Footer";
-import Loader from "../general/Loader";
-import PaginationButton from "../general/PaginationButton";
-import NotificationsSearchPanel from "./NotificationsSearchPanel";
-import NotificationsGrid from "./NotificationsGrid";
-import NotificationsStats from "./NotificationsStats";
-import { getAllNotifications, getNotificationsStats } from "../../api/api";
+import { useQueryClient } from "@tanstack/react-query";
+import Header from "../components/general/Header";
+import HeaderIconButton from "../components/general/HeaderIconButton";
+import Footer from "../components/general/Footer";
+import Loader from "../components/general/Loader";
+import PaginationButton from "../components/general/PaginationButton";
+import NotificationsSearchPanel from "../components/notificationsPage/NotificationsSearchPanel";
+import NotificationsGrid from "../components/notificationsPage/NotificationsGrid";
+import NotificationsStats from "../components/notificationsPage/NotificationsStats";
+import { getAllNotifications } from "../api/api";
 
 const PAGE_SIZE = 20;
 
 export default function NotificationsPage() {
+    const queryClient = useQueryClient();
+    const [hasNewNotifications, setHasNewNotifications] = useState(false);
+
     const role = localStorage.getItem("role");
     const isManager = role === "MANAGEMENT";
 
@@ -19,7 +24,6 @@ export default function NotificationsPage() {
     const [pageNumber, setPageNumber] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [data, setData] = useState([]);
-    const [stats, setStats] = useState(null);
 
     const [filter, setFilter] = useState({
         equipmentId: null,
@@ -29,8 +33,24 @@ export default function NotificationsPage() {
         dateTo: null
     });
 
+    useEffect(() => {
+        const handler = () => {
+            setHasNewNotifications(true);
+        };
+        window.addEventListener("notifications-new", handler);
+        return () => {
+            window.removeEventListener("notificatios-new", handler);
+        };
+
+    }, []);
+
+    const refreshNotifications = async () => {
+        await loadData();
+    };
+
     const loadData = async (customFilter = filter, customOffset = offset) => {
         setLoading(true);
+        setHasNewNotifications(false);
         try {
             const response =
                 await getAllNotifications({
@@ -40,10 +60,6 @@ export default function NotificationsPage() {
                 });
             setData(response.data.items);
             setTotalPages(response.data.totalPages);
-            if (isManager) {
-                const statsResponse = await getNotificationsStats();
-                setStats(statsResponse.data);
-            }
         } finally {
             setLoading(false);
         }
@@ -69,20 +85,25 @@ export default function NotificationsPage() {
                     <h1>Уведомления о сбоях</h1>
                 </div>
 
-                {
-                    isManager && stats && (
-                        <div className="page-section">
-                            <h3>Статистика за сегодня</h3>
-                            <NotificationsStats stats={stats} />
-                        </div>
-                    )
-                }
+                {isManager && (<NotificationsStats />)}
 
                 <div className="page-section">
                     <NotificationsSearchPanel
                         onSearch={handleSearch}
                     />
                 </div>
+
+                {
+                    hasNewNotifications && (
+                        <div className="notification-card">
+                            <p>Появились новые уведомления</p>
+                            <HeaderIconButton
+                                icon="refresh"
+                                onClick={refreshNotifications}
+                            />
+                        </div>
+                    )
+                }
 
                 <div className="page-section">
                     {

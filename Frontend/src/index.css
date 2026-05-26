@@ -731,6 +731,25 @@ small {
   border-color: rgba(16, 185, 129, 0.2);
 }
 
+.notification-card {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 1000;
+  padding: 5px 10px;
+  display: flex;
+  background: var(--accent);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition);
+}
+
+.notification-card p {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0 15px;
+}
+
 /* ===== PAGINATION ===== */
 
 .pagination {

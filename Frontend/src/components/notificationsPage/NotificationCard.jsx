@@ -39,13 +39,23 @@ export default function NotificationCard({ item, reload }) {
     return (
         <div className="user-card">
             <div className="user-card-header">
-                <div>
-                    <div className="user-id">
-                        #{item.id}
+                <div className="flex gap-sm">
+                    <div
+                        className={"badge badge-" + (item.severity === 'WARNING' ? "warning"
+                            : (item.severity === "ALARM" ? "danger" : "info"))}
+                        style={{ borderRadius: '50%', width: '30px', alignSelf: 'center' }}
+                    >
+                        <span className="material-symbols-outlined">
+                            priority_high
+                        </span>
                     </div>
-
-                    <div className="user-username">
-                        {item.signalSource}
+                    <div>
+                        <div className="user-id">
+                            #{item.id}
+                        </div>
+                        <div className="user-username">
+                            {item.signalSource}
+                        </div>
                     </div>
                 </div>
 
@@ -65,7 +75,7 @@ export default function NotificationCard({ item, reload }) {
                     {item.equipmentId || "—"}
                 </div>
 
-                <label>Датчик</label>
+                <label>ID датчика</label>
                 <div className="user-card-text">
                     {item.sensorId || "—"}
                 </div>

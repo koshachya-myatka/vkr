@@ -14,7 +14,7 @@ import ProductionDashboard from './pages/ProductionDashboard'
 import ManagementDashboard from './pages/ManagementDashboard'
 import MetalPage from './pages/MetalPage';
 import BatchPage from './pages/BatchPage';
-import NotificationsPage from './components/notificationsPage/NotificationsPage';
+import NotificationsPage from './pages/NotificationsPage';
 
 const queryClient = new QueryClient();
 
