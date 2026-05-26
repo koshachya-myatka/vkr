@@ -25,10 +25,11 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
                 FROM fact_mes as m
                 WHERE m.batch_id = :batchId
             )
-            AND n.created_at BETWEEN
-                (SELECT b.start_time FROM dim_batch as b WHERE b.batch_id = :batchId)
-            AND
-                COALESCE((SELECT b.end_time FROM dim_batch as b WHERE b.batch_id = :batchId), NOW())
+            AND (n.created_at BETWEEN
+                    (SELECT b.start_time FROM dim_batch as b WHERE b.batch_id = :batchId)
+                AND
+                    COALESCE((SELECT b.end_time FROM dim_batch as b WHERE b.batch_id = :batchId), NOW()))
+            AND n.status <> 'FALSE_POSITIVE';
             """, nativeQuery = true)
     long countAlarmsByBatchId(@Param("batchId") String batchId);
 
@@ -57,7 +58,13 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
                 ((CAST(:dateFrom AS timestamp) IS NULL) OR (n.created_at >= CAST(:dateFrom AS timestamp)))
             AND
                 ((CAST(:dateTo AS timestamp) IS NULL) OR (n.created_at <= CAST(:dateTo AS timestamp)))
-            ORDER BY n.created_at DESC
+            ORDER BY
+                n.created_at DESC,
+                CASE n.severity
+                    WHEN 'ALARM' THEN 1
+                    WHEN 'WARNING' THEN 2
+                    ELSE 3
+                END ASC
             LIMIT :limit OFFSET :offset;
             """,
             nativeQuery = true)

@@ -113,6 +113,10 @@ public class NotificationService {
         n.setComment(dto.getComment());
         n.setUpdatedAt(LocalDateTime.now());
         n.setUpdatedBy(username);
+        if (n.getStatus().equals(NotificationStatusEnum.FALSE_POSITIVE) ||
+                n.getStatus().equals(NotificationStatusEnum.RESOLVED)) {
+            n.setSeverity(NotificationSeverityEnum.INFO);
+        }
         NotificationEntity saved;
         try {
             saved = notificationRepository.save(n);

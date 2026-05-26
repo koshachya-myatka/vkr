@@ -56,7 +56,7 @@ export default function NotificationsStats() {
 
                                 <div className="card card-hover info-card">
                                     <div className="stat-block">
-                                        <span className="stat-label">В работе</span>
+                                        <span className="stat-label">На проверке</span>
                                         <span className="stat-value badge badge-warning">
                                             {stats.inProgressCount ?? 0}
                                         </span>
