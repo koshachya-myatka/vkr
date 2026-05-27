@@ -22,13 +22,15 @@ public class MesDtoGenerator {
         return dto;
     }
 
-    public static MesDto startProcessing(MesDto dto) {
+    public static MesDto startProcessing(MesDto dto, boolean isDefective) {
         dto.setProcessStatus(MesProcessStatusEnum.PROCESSING);
         dto.setProcessingTime(LocalDateTime.now());
-        double temperature = randomWithoutOrWithDeviation(900D, 1100D, false);
-        double pressure = randomWithoutOrWithDeviation(10D, 20D, false);
-        double duration = randomWithoutOrWithDeviation(100D, 500D, false);
-        double energy = randomWithoutOrWithDeviation(100D, 500D, false);
+        int defectParam1 = isDefective ? ThreadLocalRandom.current().nextInt(3) : -1;
+        int defectParam2 = isDefective ? ThreadLocalRandom.current().nextInt(3) : -1;
+        double temperature = generateValue(900D, 1100D, defectParam1 == 0 || defectParam2 == 0);
+        double pressure = generateValue(10D, 20D, defectParam1 == 1 || defectParam2 == 1);
+        double duration = generateValue(100D, 500D, false);
+        double energy = generateValue(100D, 500D, defectParam1 == 2 || defectParam2 == 2);
         dto.setTemperature(temperature);
         dto.setPressure(pressure);
         dto.setDurationSec((int) duration);
@@ -38,16 +40,31 @@ public class MesDtoGenerator {
         return dto;
     }
 
-    private static double randomWithoutOrWithDeviation(Double min, Double max, boolean fix) {
+    public static void scheduleFixParameters(MesDto dto, Consumer<MesDto> sender) {
+        new Thread(() -> {
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Не удалось запустить исправление параметров MES", e);
+            }
+            ThreadLocalRandom rnd = ThreadLocalRandom.current();
+            double temperature = rnd.nextDouble(900, 1100);
+            double pressure = rnd.nextDouble(10, 20);
+            double energy = rnd.nextDouble(100, 500);
+            dto.setTemperature(temperature);
+            dto.setPressure(pressure);
+            dto.setEnergyConsumption(energy);
+            dto.setStatus(calculateStatus(temperature, pressure, energy));
+            sender.accept(dto);
+        }).start();
+    }
+
+    private static double generateValue(double min, double max, boolean forceDeviation) {
         ThreadLocalRandom rnd = ThreadLocalRandom.current();
-        double value = rnd.nextDouble(min, max);
-        if (fix) {
-            return value;
+        if (forceDeviation) {
+            return max + rnd.nextDouble((max - min) * 0.01, (max - min) * 0.15);
         }
-        if (rnd.nextDouble() < 0.01) {
-            value = max + rnd.nextDouble((max - min) * 0.01, (max - min) * 0.15);
-        }
-        return value;
+        return rnd.nextDouble(min, max);
     }
 
     private static MesStatusEnum calculateStatus(double temperature, double pressure, double energy) {
@@ -58,23 +75,5 @@ public class MesDtoGenerator {
         if (deviations == 0) return MesStatusEnum.NORMAL;
         if (deviations == 1) return MesStatusEnum.WARNING;
         return MesStatusEnum.ALARM;
-    }
-
-    public static void scheduleFixParameters(MesDto dto, Consumer<MesDto> sender) {
-        new Thread(() -> {
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException("Не удалось запустить исправление параметров MES", e);
-            }
-            double temperature = randomWithoutOrWithDeviation(900D, 1100D, true);
-            double pressure = randomWithoutOrWithDeviation(10D, 20D, true);
-            double energy = randomWithoutOrWithDeviation(100D, 500D, true);
-            dto.setTemperature(temperature);
-            dto.setPressure(pressure);
-            dto.setEnergyConsumption(energy);
-            dto.setStatus(calculateStatus(temperature, pressure, energy));
-            sender.accept(dto);
-        }).start();
     }
 }

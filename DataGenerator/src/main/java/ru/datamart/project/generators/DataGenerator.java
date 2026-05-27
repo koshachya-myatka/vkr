@@ -1,6 +1,5 @@
 package ru.datamart.project.generators;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.datamart.project.generators.utils.*;
@@ -19,8 +18,8 @@ public class DataGenerator {
     private final KafkaProducerScada producerScada;
     private final KafkaProducerLims producerLims;
 
-    private final ExecutorService batchExecutor = Executors.newFixedThreadPool(5);
-    private final ScheduledExecutorService restartScheduler = Executors.newScheduledThreadPool(5);
+    private final ExecutorService batchExecutor = Executors.newFixedThreadPool(10);
+    private final ScheduledExecutorService restartScheduler = Executors.newScheduledThreadPool(10);
 
     public void generate() {
         for (int i = 0; i < 5; i++) {
@@ -43,7 +42,7 @@ public class DataGenerator {
     }
 
     private void onBatchCompleted() {
-        long delaySeconds = ThreadLocalRandom.current().nextLong(60, 301);
+        long delaySeconds = ThreadLocalRandom.current().nextLong(60, 241);
         restartScheduler.schedule(this::submitBatch, delaySeconds, TimeUnit.SECONDS);
     }
 }

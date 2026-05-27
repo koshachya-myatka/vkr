@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import Loader from "../general/Loader";
 import { updateNotification } from "../../api/api";
 
@@ -16,6 +18,9 @@ const STATUS_BADGES = {
 };
 
 export default function NotificationCard({ item, reload }) {
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState(item.status);
     const [comment, setComment] = useState(item.comment || "");
@@ -31,8 +36,11 @@ export default function NotificationCard({ item, reload }) {
                 }
             );
             reload();
+        } catch (err) {
+            navigate('/error', { replace: true, state: { message: 'Не удалось обновить данные.' } });
         } finally {
             setLoading(false);
+            queryClient.invalidateQueries({ queryKey: ['unviewedNotificationsCount'] });
         }
     };
 

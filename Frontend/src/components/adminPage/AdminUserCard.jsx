@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import Loader from "../general/Loader";
 import { updateUser } from "../../api/api";
 
 const roles = ["LABORATORY", "PRODUCTION", "MANAGEMENT", "ADMIN"];
 
 export default function AdminUserCard({ user }) {
+    const navigate = useNavigate();
+
     const [editData, setEditData] = useState(user);
     const [loading, setLoading] = useState(false);
 
@@ -19,6 +22,8 @@ export default function AdminUserCard({ user }) {
         setLoading(true);
         try {
             await updateUser(user.userId, editData);
+        } catch (err) {
+            navigate('/error', { replace: true, state: { message: 'Не удалось обновить данные.' } });
         } finally {
             setLoading(false);
         }

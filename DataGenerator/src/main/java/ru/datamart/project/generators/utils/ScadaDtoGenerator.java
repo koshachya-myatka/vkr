@@ -5,14 +5,12 @@ import ru.datamart.project.dto.ScadaDto;
 import ru.datamart.project.models.ScadaStatusEnum;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ScadaDtoGenerator {
-    private static final Map<String, double[]> RANGES = Map.of(
+    public static final Map<String, double[]> RANGES = Map.of(
             "Температура", new double[]{800, 1200},
             "Давление", new double[]{5, 25},
             "Скорость", new double[]{100, 300},
@@ -22,14 +20,13 @@ public class ScadaDtoGenerator {
             "Уровень шума", new double[]{30, 90}
     );
 
-    public static ScadaDto generate(String equipmentId) {
+    public static ScadaDto generate(String equipmentId, String param, boolean forceFault) {
         ScadaDto dto = new ScadaDto();
         dto.setRecordId("SCADA-" + UUID.randomUUID());
         dto.setSensorId("S-" + ThreadLocalRandom.current().nextInt(1, 100));
         dto.setEquipmentId(equipmentId);
-        String param = random();
         dto.setParameter(param);
-        double value = generateValue(param);
+        double value = generateValue(param, forceFault);
         dto.setValue(value);
         dto.setUnit(getUnit(param));
         dto.setStatus(evaluateStatus(param, value));
@@ -37,19 +34,17 @@ public class ScadaDtoGenerator {
         return dto;
     }
 
-    private static String random() {
-        List<String> keys = new ArrayList<>(RANGES.keySet());
-        return keys.get(ThreadLocalRandom.current().nextInt(keys.size()));
-    }
-
-    private static double generateValue(String param) {
+    private static double generateValue(String param, boolean forceFault) {
         double[] range = RANGES.get(param);
-        double value = ThreadLocalRandom.current().nextDouble(range[0], range[1]);
-        if (ThreadLocalRandom.current().nextDouble() < 0.01) {
-            value = range[1] + ThreadLocalRandom.current().nextDouble(
-                    (range[1] - range[0]) * 0.01, (range[1] - range[0]) * 0.15);
+        ThreadLocalRandom rnd = ThreadLocalRandom.current();
+        if (forceFault) {
+            boolean alarm = rnd.nextBoolean();
+            double overMax = alarm
+                    ? (range[1] - range[0]) * rnd.nextDouble(0.10, 0.20)
+                    : (range[1] - range[0]) * rnd.nextDouble(0.01, 0.10);
+            return range[1] + overMax;
         }
-        return value;
+        return rnd.nextDouble(range[0], range[1]);
     }
 
     private static String getUnit(String param) {
