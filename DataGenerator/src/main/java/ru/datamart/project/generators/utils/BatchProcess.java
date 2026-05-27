@@ -25,17 +25,22 @@ public class BatchProcess implements Runnable {
     private final KafkaProducerMes producerMes;
     private final KafkaProducerScada producerScada;
     private final KafkaProducerLims producerLims;
+    private final Runnable onCompleted;
+
+    private final boolean isDefective = ThreadLocalRandom.current().nextDouble() < 0.05;
     private final String batchId = "BATCH-" + UUID.randomUUID();
     private final String equipmentId = "EQ-" + ThreadLocalRandom.current().nextInt(1, 20);
     private final String metalType = MetalType.random();
     private final AtomicBoolean processing = new AtomicBoolean(true);
 
     public BatchProcess(ObjectMapper objectMapper, KafkaProducerMes producerMes,
-                        KafkaProducerScada producerScada, KafkaProducerLims producerLims) {
+                        KafkaProducerScada producerScada, KafkaProducerLims producerLims,
+                        Runnable onCompleted) {
         this.objectMapper = objectMapper;
         this.producerMes = producerMes;
         this.producerScada = producerScada;
         this.producerLims = producerLims;
+        this.onCompleted = onCompleted;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ru.datamart.project.generators;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.datamart.project.generators.utils.*;
@@ -17,15 +18,32 @@ public class DataGenerator {
     private final KafkaProducerMes producerMes;
     private final KafkaProducerScada producerScada;
     private final KafkaProducerLims producerLims;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
+
     private final ExecutorService batchExecutor = Executors.newFixedThreadPool(5);
+    private final ScheduledExecutorService restartScheduler = Executors.newScheduledThreadPool(5);
 
     public void generate() {
-        scheduler.scheduleWithFixedDelay(this::startNewBatch, 0,
-                ThreadLocalRandom.current().nextInt(30, 180), TimeUnit.SECONDS);
+        for (int i = 0; i < 5; i++) {
+            submitBatch();
+        }
     }
 
-    private void startNewBatch() {
-        batchExecutor.submit(new BatchProcess(objectMapper, producerMes, producerScada, producerLims));
+    private void submitBatch() {
+        batchExecutor.submit(() -> {
+            try {
+                BatchProcess batch = new BatchProcess(
+                        objectMapper, producerMes, producerScada, producerLims,
+                        this::onBatchCompleted
+                );
+                batch.run();
+            } catch (Exception e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+    }
+
+    private void onBatchCompleted() {
+        long delaySeconds = ThreadLocalRandom.current().nextLong(60, 301);
+        restartScheduler.schedule(this::submitBatch, delaySeconds, TimeUnit.SECONDS);
     }
 }
