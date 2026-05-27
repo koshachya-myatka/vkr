@@ -13,13 +13,9 @@ export default function ScadaParameterGraph({ parameter }) {
         color: STATUS_COLORS[item.status]
     }));
 
-    const RenderCustomDot = (props) => {
-        const { cx, cy, payload } = props;
-        if (payload.color === "#22c55e") {
-            return null;
-        }
-        return (<circle cx={cx} cy={cy} r={5} fill={payload.color} stroke="#fff" strokeWidth={1} />);
-    };
+    const alarmPoints = data.filter(
+        x => x.status !== 'NORMAL'
+    );
 
     return (
         <div className="flex-column gap-md">
@@ -43,17 +39,40 @@ export default function ScadaParameterGraph({ parameter }) {
                             dataKey="value"
                             tick={{ fontSize: 12 }}
                         />
-                        <Tooltip />
+                        <Tooltip content={<CustomTooltip />} />
                         <Line
                             type="monotone"
                             dataKey="value"
                             stroke="#2563eb"
                             strokeWidth={2}
-                            dot={<RenderCustomDot />}
+                            dot={<CustomDot />}
+                            activeDot={{ r: 4, fill: '#2563eb' }}
+                            isAnimationActive={false}
                         />
                     </LineChart>
                 </ResponsiveContainer>
             </div>
+        </div>
+    );
+}
+
+function CustomDot(props) {
+    const { cx, cy, payload } = props;
+    if (!payload || !payload.status || payload.status === 'NORMAL') return null;
+    const fill = STATUS_COLORS[payload.status] ?? '#ef4444';
+    return <circle cx={cx} cy={cy} r={5} fill={fill} stroke="#fff" strokeWidth={1} />;
+}
+
+function CustomTooltip({ active, payload }) {
+    if (!active || !payload?.length) return null;
+    const d = payload[0].payload;
+    return (
+        <div style={{
+            background: '#225cda1f', border: '1px solid #2257DA33',
+            borderRadius: 6, padding: '8px 12px', fontSize: 12, color: '#f3f4f6'
+        }}>
+            <div>{new Date(d.time).toLocaleTimeString()}</div>
+            <div>Значение: <b>{d.value?.toFixed(2)}</b></div>
         </div>
     );
 }

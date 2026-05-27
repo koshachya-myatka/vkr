@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import Loader from '../components/general/Loader';
 import { connectWebSocket, disconnectWebSocket } from './websocket';
+import { optimizeRealtimePoints } from '../components/batchPage/optimizeRealtimePoints';
 
 export const WebSocketProvider = ({ children }) => {
     const queryClient = useQueryClient();
-    const scadaBufferRef = useRef([]);
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
@@ -18,7 +18,7 @@ export const WebSocketProvider = ({ children }) => {
         connectWebSocket((type, msg) => {
             switch (type) {
                 case 'notifications':
-                    queryClient.setQueryData(['unviewedNotificationsCount'], (old) => { return old + 1; });
+                    queryClient.setQueryData(['unviewedNotificationsCount'], (old) => { return (old ?? 0) + 1; });
                     window.dispatchEvent(new Event("notifications-new"));
                     queryClient.invalidateQueries({ queryKey: ['notifications-active'] });
                     queryClient.invalidateQueries({ queryKey: ['notifications-stats'] });
@@ -36,7 +36,68 @@ export const WebSocketProvider = ({ children }) => {
                     queryClient.invalidateQueries({ queryKey: ['dashboard-lab-last-lims'] });
                     break;
                 case 'scada':
-                    scadaBufferRef.current.push(msg.batchId);
+                    const graphKey = ['batch-page-prod-scada', msg.batchId];
+                    const existingGraph = queryClient.getQueryData(graphKey);
+                    if (!existingGraph) {
+                        queryClient.invalidateQueries({ queryKey: graphKey });
+                    } else {
+                        queryClient.setQueryData(graphKey, (oldData) => {
+                            if (!oldData) return oldData;
+
+                            return oldData.map(parameter => {
+                                const isCurrent =
+                                    parameter.equipmentId === msg.scada.equipmentId &&
+                                    parameter.parameter === msg.scada.parameter;
+                                if (!isCurrent) {
+                                    return parameter;
+                                }
+                                const exists = parameter.values.some(
+                                    v =>
+                                        v.time === msg.scada.time &&
+                                        v.value === msg.scada.value
+                                );
+                                if (exists) {
+                                    return parameter;
+                                }
+                                const newValue = {
+                                    time: msg.scada.time,
+                                    value: msg.scada.value,
+                                    unit: msg.scada.unit,
+                                    status: msg.scada.status
+                                };
+                                let values = [...parameter.values, newValue];
+                                values = optimizeRealtimePoints(values);
+                                return { ...parameter, values };
+                            });
+                        });
+                    }
+
+                    const avgKey = ['batch-page-manag-scada', msg.batchId];
+                    const existingAvg = queryClient.getQueryData(avgKey);
+                    if (!existingAvg) {
+                        queryClient.invalidateQueries({ queryKey: avgKey });
+                    } else {
+                        queryClient.setQueryData(avgKey, (oldData) => {
+                            if (!oldData) return oldData;
+
+                            return oldData.map(parameter => {
+                                const isCurrent =
+                                    parameter.equipmentId === msg.scada.equipmentId &&
+                                    parameter.parameter === msg.scada.parameter;
+                                if (!isCurrent) return parameter;
+                                const newCount = parameter.valuesCount + 1;
+                                const newValue = msg.scada.value;
+                                const newAvg = (parameter.avgValue * parameter.valuesCount + newValue) / newCount;
+                                return {
+                                    ...parameter,
+                                    valuesCount: newCount,
+                                    avgValue: Math.round(newAvg * 100) / 100,
+                                    minValue: Math.min(parameter.minValue, newValue),
+                                    maxValue: Math.max(parameter.maxValue, newValue)
+                                };
+                            });
+                        });
+                    }
                     break;
             }
         },
@@ -51,29 +112,12 @@ export const WebSocketProvider = ({ children }) => {
             }
         );
 
-        const intervalScada = setInterval(async () => {
-            if (scadaBufferRef.current.length === 0) {
-                return;
-            }
-            const uniqueBatchIds = [...new Set(scadaBufferRef.current)];
-            scadaBufferRef.current = [];
-            await Promise.all(
-                uniqueBatchIds.map(batchId =>
-                    Promise.all([
-                        queryClient.invalidateQueries({ queryKey: ['batch-page-prod-scada', batchId] }),
-                        queryClient.invalidateQueries({ queryKey: ['batch-page-manag-scada', batchId] }),
-                    ])
-                )
-            )
-        }, 1000);
-
         return () => {
             clearTimeout(timeout);
-            clearInterval(intervalScada);
             disconnectWebSocket();
         };
 
-    }, [queryClient, isConnected]);
+    }, [queryClient]);
 
     if (!isConnected) {
         return (

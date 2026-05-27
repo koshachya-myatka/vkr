@@ -38,7 +38,10 @@ export default function ScadaParameterAvg({ parameter }) {
                             {metric.label}
                         </div>
                         <div className="metric-value">
-                            {metric.value.toFixed(2)}
+                            {metric.label === "Кол-во измерений"
+                                ? metric.value
+                                : (metric.value ?? 0).toFixed(2)
+                            }
                         </div>
                     </div>
                 ))}

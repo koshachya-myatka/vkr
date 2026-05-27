@@ -732,7 +732,7 @@ small {
 }
 
 .notification-info {
-  background: rgb(34, 92, 218, 0.12);
+  background: rgba(34, 92, 218, 0.12);
   border-color: rgba(34, 87, 218, 0.2);
 }
 

@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import ru.datamart.project.dto.batchData.BatchScadaDto;
 import ru.datamart.project.dto.kafkaData.ScadaDto;
+import ru.datamart.project.dto.websocket.ScadaWsMessageDto;
 import ru.datamart.project.models.NotificationSeverityEnum;
 import ru.datamart.project.models.ScadaEntity;
 import ru.datamart.project.models.ScadaStatusEnum;
@@ -37,8 +39,10 @@ public class KafkaConsumerScada {
                 log.info(scada.toString());
 
                 Set<String> batchIds = processingBatchRegistry.getBatchIds(scada.getEquipmentId());
-                for (String batchId : batchIds){
-                    webSocketService.sendScadaUpdate(batchId);
+                for (String batchId : batchIds) {
+                    BatchScadaDto scadaWsDto = objectMapper.convertValue(scada, BatchScadaDto.class);
+                    scadaWsDto.setStatus(scada.getStatus().name());
+                    webSocketService.sendScadaUpdate(new ScadaWsMessageDto(batchId, scadaWsDto));
                 }
 
                 ScadaStatusEnum scadaStatus = scada.getStatus();

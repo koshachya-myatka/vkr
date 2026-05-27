@@ -57,7 +57,7 @@ public class BatchProcess implements Runnable {
             if (!mesDto.getStatus().equals(MesStatusEnum.NORMAL)) {
                 MesDtoGenerator.scheduleFixParameters(mesDto, this::sendMesDto);
             }
-            Thread.sleep(randomBetween(30000, 90000));
+            Thread.sleep(randomBetween(30000, 120000));
             processing.compareAndSet(true, false);
             scadaExecutors.forEach(ScheduledExecutorService::shutdownNow);
 

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import ru.datamart.project.dto.websocket.BatchIdWsMessageDto;
+import ru.datamart.project.dto.websocket.ScadaWsMessageDto;
 import ru.datamart.project.dto.websocket.SimpleWsMessageDto;
 
 @Service
@@ -23,7 +24,7 @@ public class WebSocketService {
         messagingTemplate.convertAndSend("/topic/lims", new BatchIdWsMessageDto("LIMS_UPDATE", batchId));
     }
 
-    public void sendScadaUpdate(String batchId) {
-        messagingTemplate.convertAndSend("/topic/scada", new BatchIdWsMessageDto("SCADA_UPDATE", batchId));
+    public void sendScadaUpdate(ScadaWsMessageDto dto) {
+        messagingTemplate.convertAndSend("/topic/scada", dto);
     }
 }

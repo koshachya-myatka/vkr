@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.datamart.project.customExceptions.CustomInvalidRequestException;
+import ru.datamart.project.dto.batchData.BatchDto;
 import ru.datamart.project.dto.batchData.BatchScadaAvgDto;
 import ru.datamart.project.dto.batchData.BatchScadaDto;
 import ru.datamart.project.dto.batchData.BatchScadaParameterDto;
@@ -11,10 +12,7 @@ import ru.datamart.project.dto.kafkaData.ScadaDto;
 import ru.datamart.project.models.ScadaEntity;
 import ru.datamart.project.repositories.ScadaRepository;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,12 +20,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ScadaService {
     private final ScadaRepository scadaRepository;
+    private final BatchService batchService;
 
     public List<BatchScadaParameterDto> getScadaByBatchId(String batchId) {
         if (batchId == null) {
             throw new CustomInvalidRequestException("Укажите ID партии.");
         }
-        List<BatchScadaDto> raw = scadaRepository.findScadaByBatchId(batchId);
+        BatchDto batch = batchService.getBatchById(batchId);
+
+        List<BatchScadaDto> raw = (batch.getAnalysesTime() != null)
+                ? scadaRepository.findCompressedScadaByBatchId(batchId)
+                : scadaRepository.findRealtimeScadaByBatchId(batchId);
+
         return raw.stream()
                 .collect(Collectors.groupingBy(BatchScadaDto::getEquipmentId,
                         Collectors.groupingBy(BatchScadaDto::getParameter)))
