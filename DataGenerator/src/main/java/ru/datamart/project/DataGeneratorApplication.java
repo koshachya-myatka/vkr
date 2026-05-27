@@ -24,8 +24,6 @@ public class DataGeneratorApplication {
 
     @Bean
     public static ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        //todo вот тут разобраться с датами
-        return mapper;
+        return new ObjectMapper();
     }
 }

@@ -21,6 +21,10 @@ public class MesDto {
     private String equipmentId;
     @JsonProperty("start_time")
     private LocalDateTime startTime;
+    @JsonProperty("processing_time")
+    private LocalDateTime processingTime;
+    @JsonProperty("analyses_time")
+    private LocalDateTime analysesTime;
     @JsonProperty("end_time")
     private LocalDateTime endTime;
     @JsonProperty("metal_type")

@@ -2,15 +2,16 @@ import { Client } from '@stomp/stompjs';
 
 let client = null;
 
-export const connectWebSocket = (onEvent) => {
+export const connectWebSocket = (onEvent, onConnected, onError) => {
     client = new Client({
         brokerURL: 'ws://localhost:8081/ws',
         reconnectDelay: 5000,
-        debug: () => {},
+        debug: () => { },
     });
 
     client.onConnect = () => {
         console.log('WS connected');
+        onConnected?.();
         client.subscribe('/topic/notifications', msg => {
             onEvent('notifications', JSON.parse(msg.body));
         });
@@ -23,6 +24,14 @@ export const connectWebSocket = (onEvent) => {
         client.subscribe('/topic/scada', msg => {
             onEvent('scada', JSON.parse(msg.body));
         });
+    };
+    
+    client.onStompError = () => {
+        onError?.();
+    };
+
+    client.onWebSocketError = () => {
+        onError?.();
     };
 
     client.activate();

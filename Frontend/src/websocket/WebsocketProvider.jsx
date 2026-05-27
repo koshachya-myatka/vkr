@@ -1,12 +1,20 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import Loader from '../components/general/Loader';
 import { connectWebSocket, disconnectWebSocket } from './websocket';
 
 export const WebSocketProvider = ({ children }) => {
     const queryClient = useQueryClient();
     const scadaBufferRef = useRef([]);
+    const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (!isConnected) {
+                console.error("WS connection timeout");
+            }
+        }, 10000);
+
         connectWebSocket((type, msg) => {
             switch (type) {
                 case 'notifications':
@@ -31,7 +39,17 @@ export const WebSocketProvider = ({ children }) => {
                     scadaBufferRef.current.push(msg.batchId);
                     break;
             }
-        });
+        },
+
+            () => {
+                setIsConnected(true);
+                clearTimeout(timeout);
+            },
+
+            () => {
+                setIsConnected(false);
+            }
+        );
 
         const intervalScada = setInterval(async () => {
             if (scadaBufferRef.current.length === 0) {
@@ -50,11 +68,20 @@ export const WebSocketProvider = ({ children }) => {
         }, 1000);
 
         return () => {
+            clearTimeout(timeout);
             clearInterval(intervalScada);
             disconnectWebSocket();
         };
 
-    }, [queryClient]);
+    }, [queryClient, isConnected]);
+
+    if (!isConnected) {
+        return (
+            <div className="page-loader">
+                <Loader size="large" />
+            </div>
+        );
+    }
 
     return children;
 };

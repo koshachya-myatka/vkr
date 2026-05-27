@@ -65,6 +65,7 @@ public class BatchProcess implements Runnable {
 
             // 3. Анализ
             mesDto.setProcessStatus(MesProcessStatusEnum.ANALYSIS);
+            mesDto.setAnalysesTime(LocalDateTime.now());
             sendMesDto(mesDto);
             Thread.sleep(randomBetween(60000, 90000));
             List<LimsDto> limsDtoList = LimsDtoGenerator.generate(batchId, metalType, randomBetween(1, 3));
@@ -85,7 +86,6 @@ public class BatchProcess implements Runnable {
 
     private void sendMesDto(MesDto dto) {
         if (!producerMes.sendMessage(dto)) {
-            //todo тут чето придумать?
             throw new RuntimeException("Не удалось отправить MesDto");
         }
     }
@@ -96,7 +96,6 @@ public class BatchProcess implements Runnable {
         }
         ScadaDto dto = ScadaDtoGenerator.generate(equipmentId);
         if (!producerScada.sendMessage(dto)) {
-            //todo тут чето придумать?
             throw new RuntimeException("Не удалось отправить ScadaDto");
         }
     }
@@ -104,7 +103,6 @@ public class BatchProcess implements Runnable {
     private void sendLimsDto(List<LimsDto> limsDtoList) {
         for (LimsDto dto : limsDtoList) {
             if (!producerLims.sendMessage(dto)) {
-                //todo тут чето придумать?
                 throw new RuntimeException("Не удалось отправить LimsDto");
             }
         }

@@ -138,6 +138,10 @@ public class ReportService {
                     white, white, true);
             addTableRow(batchTable, "Поступление:", format(data.getBatch().getStartTime()),
                     white, white, true);
+            addTableRow(batchTable, "Обработка:", format(data.getBatch().getProcessingTime()),
+                    white, white, true);
+            addTableRow(batchTable, "Начало анализов:", format(data.getBatch().getAnalysesTime()),
+                    white, white, true);
             addTableRow(batchTable, "Окончание анализов:", format(data.getBatch().getEndTime()),
                     white, white, true);
             addTableRow(batchTable, "Статус:", data.getBatch().getStatusName(),

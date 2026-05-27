@@ -21,9 +21,7 @@ public class KafkaProducerLims {
 
     public boolean sendMessage(LimsDto limsDto) {
         try {
-            //todo вот тут выбрать ключ, по которому будет деление по партициям
             String key = UUID.randomUUID().toString();
-
             String limsDtoJson = objectMapper.writeValueAsString(limsDto);
             kafkaTemplate.send(limsTopic, key, limsDtoJson);
         } catch (Exception e) {

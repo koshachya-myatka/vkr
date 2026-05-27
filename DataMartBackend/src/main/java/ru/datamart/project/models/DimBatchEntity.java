@@ -21,6 +21,10 @@ public class DimBatchEntity {
     private MetalTypeEnum metalType;
     @Column(name = "start_time")
     private LocalDateTime startTime;
+    @Column(name = "processing_time")
+    private LocalDateTime processingTime;
+    @Column(name = "analyses_time")
+    private LocalDateTime analysesTime;
     @Column(name = "end_time")
     private LocalDateTime endTime;
     @Column(name = "process_status")

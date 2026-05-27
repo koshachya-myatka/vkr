@@ -83,6 +83,15 @@ public class NotificationService {
 
     public NotificationEntity create(String message, NotificationSeverityEnum severity,
                                      String equipmentId, String sensorId, String signalSource) {
+        long duplicates = notificationRepository.countRecentDuplicates(signalSource,
+                equipmentId, severity.name());
+        if (duplicates > 0) {
+            log.info("""
+                    УВЕДОМЛЕНИЕ ПРОПУЩЕНО.
+                    Уже существует аналогичное уведомление за последние 5 минут.
+                    """);
+            return null;
+        }
         NotificationEntity n = new NotificationEntity();
         n.setViewed(false);
         n.setCreatedAt(LocalDateTime.now());
@@ -109,6 +118,7 @@ public class NotificationService {
         }
         NotificationEntity n = notificationRepository.findById(id)
                 .orElseThrow(() -> new CustomEntityNotFoundException("Уведомление не найдено."));
+        n.setViewed(true);
         n.setStatus(NotificationStatusEnum.valueOf(dto.getStatus()));
         n.setComment(dto.getComment());
         n.setUpdatedAt(LocalDateTime.now());

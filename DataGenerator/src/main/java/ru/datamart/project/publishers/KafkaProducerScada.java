@@ -21,9 +21,7 @@ public class KafkaProducerScada {
 
     public boolean sendMessage(ScadaDto scadaDto) {
         try {
-            //todo вот тут выбрать ключ, по которому будет деление по партициям
             String key = UUID.randomUUID().toString();
-
             String scadaDtoJson = objectMapper.writeValueAsString(scadaDto);
             kafkaTemplate.send(scadaTopic, key, scadaDtoJson);
         } catch (Exception e) {

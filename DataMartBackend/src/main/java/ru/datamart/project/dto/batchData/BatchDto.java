@@ -14,6 +14,8 @@ public class BatchDto {
     private String metalType;
     private String metalTypeName;
     private LocalDateTime startTime;
+    private LocalDateTime processingTime;
+    private LocalDateTime analysesTime;
     private LocalDateTime endTime;
     private String processStatus;
     private String statusName;

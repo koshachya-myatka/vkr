@@ -15,7 +15,7 @@ export default function NotificationItem({ item, onTake }) {
                             className="btn btn-danger"
                             onClick={() => onTake(item.id)}
                         >
-                            На проверку
+                            {item.severity === 'INFO' ? '✕' : 'На проверку'}
                         </button>
                     </div>
                     <small>

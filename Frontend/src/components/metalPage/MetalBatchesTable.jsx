@@ -18,7 +18,7 @@ export default function MetalBatchesTable({ data }) {
             <table className="table">
                 <thead>
                     <tr>
-                        <th>ID пробы</th>
+                        <th>ID партии</th>
                         <th>ID оборудования</th>
                         <th>Поступление</th>
                         <th>Окончание анализов</th>

@@ -113,4 +113,20 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
             """,
             nativeQuery = true)
     NotificationStatsDto getStats();
+
+    @Query(value = """
+            SELECT COUNT(n.id)
+            FROM fact_notifications as n
+            WHERE
+                n.signal_source = :signalSource
+                AND n.equipment_id = :equipmentId
+                AND n.severity = :severity
+                AND n.created_at >= NOW() - INTERVAL '5 minutes';
+            """,
+            nativeQuery = true)
+    long countRecentDuplicates(
+            @Param("signalSource") String signalSource,
+            @Param("equipmentId") String equipmentId,
+            @Param("severity") String severity
+    );
 }

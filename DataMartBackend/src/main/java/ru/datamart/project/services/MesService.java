@@ -47,6 +47,8 @@ public class MesService {
         }
         DimBatchEntity batch = batchService.getOrCreate(dto);
         batch.setProcessStatus(dto.getProcessStatus());
+        batch.setProcessingTime(dto.getProcessingTime());
+        batch.setAnalysesTime(dto.getAnalysesTime());
         batch.setEndTime(dto.getEndTime());
         batch.setOutputYield(dto.getOutputYield());
         batchRepo.save(batch);

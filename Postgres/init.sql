@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS dim_batch (
     batch_id TEXT PRIMARY KEY,
     metal_type TEXT,
     start_time TIMESTAMP,
+    processing_time TIMESTAMP,
+    analyses_time TIMESTAMP,
     end_time TIMESTAMP,
     process_status TEXT,
     output_yield DOUBLE PRECISION

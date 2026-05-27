@@ -21,9 +21,7 @@ public class KafkaProducerMes {
 
     public boolean sendMessage(MesDto mesDto) {
         try {
-            //todo вот тут выбрать ключ, по которому будет деление по партициям
             String key = UUID.randomUUID().toString();
-
             String mesDtoJson = objectMapper.writeValueAsString(mesDto);
             kafkaTemplate.send(mesTopic, key, mesDtoJson);
         } catch (Exception e) {

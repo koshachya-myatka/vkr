@@ -41,6 +41,8 @@ export default function BatchDataPanel({ batchData }) {
                                             <th>ID партии</th>
                                             <th>Тип металла</th>
                                             <th>Поступление</th>
+                                            <th>Обработка</th>
+                                            <th>Начало анализов</th>
                                             <th>Окончание анализов</th>
                                             <th>Статус</th>
                                         </tr>
@@ -50,6 +52,8 @@ export default function BatchDataPanel({ batchData }) {
                                             <td>{batchData.batchId}</td>
                                             <td>{batchData.metalTypeName}</td>
                                             <td>{new Date(batchData.startTime).toLocaleString()}</td>
+                                            <td>{batchData.processingTime ? new Date(batchData.processingTime).toLocaleString() : ""}</td>
+                                            <td>{batchData.analysesTime ? new Date(batchData.analysesTime).toLocaleString() : ""}</td>
                                             <td>{batchData.endTime ? new Date(batchData.endTime).toLocaleString() : ""}</td>
                                             <td><span className="badge badge-info">{batchData.statusName}</span></td></tr>
                                     </tbody>

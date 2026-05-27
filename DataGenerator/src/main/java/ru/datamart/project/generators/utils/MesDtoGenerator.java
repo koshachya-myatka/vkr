@@ -24,6 +24,7 @@ public class MesDtoGenerator {
 
     public static MesDto startProcessing(MesDto dto) {
         dto.setProcessStatus(MesProcessStatusEnum.PROCESSING);
+        dto.setProcessingTime(LocalDateTime.now());
         double temperature = randomWithoutOrWithDeviation(900D, 1100D, false);
         double pressure = randomWithoutOrWithDeviation(10D, 20D, false);
         double duration = randomWithoutOrWithDeviation(100D, 500D, false);
