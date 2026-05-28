@@ -13,6 +13,23 @@ API.interceptors.request.use(config => {
     return config;
 });
 
+API.interceptors.response.use(
+    (response) => {
+        const newToken = response.headers['x-new-token'];
+        if (newToken) {
+            localStorage.setItem('token', newToken);
+        }
+        return response;
+    },
+    (error) => {
+        if (error.response?.status === 401) {
+            localStorage.removeItem('token');
+            window.location.replace('/login');
+        }
+        return Promise.reject(error);
+    }
+);
+
 // АВТОРИЗАЦИЯ
 export const loginUser = (data) => API.post('/auth/login', data);
 export const registerUser = (data) => API.post('/auth/register', data);
