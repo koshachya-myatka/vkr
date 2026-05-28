@@ -39,103 +39,121 @@ public interface ScadaRepository extends JpaRepository<ScadaEntity, String> {
                 FROM dim_batch b
                 WHERE b.batch_id = :batchId
             ),
-            scada_for_batch AS (
-                SELECT s.*
-                FROM fact_scada s
-                WHERE s.equipment_id IN (
-                    SELECT DISTINCT m.equipment_id
-                    FROM fact_mes m
-                    WHERE m.batch_id = :batchId
-                )
-                AND s.time BETWEEN (SELECT start_time FROM batch_bounds)
-                               AND (SELECT end_time   FROM batch_bounds)
+            batch_equipment AS (
+                SELECT DISTINCT m.equipment_id
+                FROM fact_mes m
+                WHERE m.batch_id = :batchId
             ),
-            normal_bucketed AS (
-                SELECT
-                    bucketed.equipment_id,
-                    bucketed.parameter,
-                    bucketed.unit,
-                    'NORMAL'::varchar          AS status,
-                    MIN(bucketed.time)         AS time,
-                    AVG(bucketed.value)::float8 AS value
-                FROM (
-                    SELECT
-                        s.equipment_id,
-                        s.parameter,
-                        s.unit,
-                        s.time,
-                        s.value,
-                        NTILE(60) OVER (
-                            PARTITION BY s.equipment_id, s.parameter
-                            ORDER BY s.time
-                        ) AS ntile_bucket
-                    FROM scada_for_batch s
-                    WHERE s.status = 'NORMAL'
-                ) bucketed
-                GROUP BY
-                    bucketed.equipment_id,
-                    bucketed.parameter,
-                    bucketed.unit,
-                    bucketed.ntile_bucket
-            ),
-            fault_grouped AS (
+            scada_in_batch AS (
                 SELECT
                     s.equipment_id,
                     s.parameter,
-                    s.unit,
-                    s.status::varchar,
                     s.time,
-                    s.value::float8,
-                    ROW_NUMBER() OVER (
-                        PARTITION BY s.equipment_id, s.parameter
-                        ORDER BY s.time
-                    ) -
-                    ROW_NUMBER() OVER (
-                        PARTITION BY s.equipment_id, s.parameter, s.status
-                        ORDER BY s.time
+                    s.value,
+                    s.unit,
+                    s.status,
+                    bb.start_time,
+                    bb.end_time
+                FROM fact_scada s
+                JOIN batch_equipment be ON s.equipment_id = be.equipment_id
+                CROSS JOIN batch_bounds bb
+                WHERE s.time BETWEEN bb.start_time AND bb.end_time
+            ),
+            normal_data AS (
+                SELECT
+                    equipment_id,
+                    parameter,
+                    time,
+                    value,
+                    unit,
+                    status,
+                    FLOOR(
+                        EXTRACT(EPOCH FROM (time - start_time)) /
+                        NULLIF(EXTRACT(EPOCH FROM (end_time - start_time)) / 60.0, 0)
+                    ) AS bucket
+                FROM scada_in_batch
+                WHERE status = 'NORMAL'
+            ),
+            normal_compressed AS (
+                SELECT
+                    equipment_id,
+                    parameter,
+                    unit,
+                    status,
+                    CAST(ROUND(AVG(value)::numeric, 2) AS DOUBLE PRECISION) AS value,
+                    MIN(time) AS time
+                FROM normal_data
+                GROUP BY equipment_id, parameter, unit, status, bucket
+            ),
+            anomaly_data AS (
+                SELECT
+                    equipment_id,
+                    parameter,
+                    time,
+                    value,
+                    unit,
+                    status,
+                    LAG(status) OVER (
+                        PARTITION BY equipment_id, parameter
+                        ORDER BY time
+                    ) AS prev_status,
+                    LAG(time) OVER (
+                        PARTITION BY equipment_id, parameter
+                        ORDER BY time
+                    ) AS prev_time
+                FROM scada_in_batch
+                WHERE status IN ('WARNING', 'ALARM')
+            ),
+            anomaly_with_groups AS (
+                SELECT
+                    equipment_id,
+                    parameter,
+                    time,
+                    value,
+                    unit,
+                    status,
+                    SUM(
+                        CASE WHEN prev_status IS NULL
+                                  OR prev_status != status
+                                  OR EXTRACT(EPOCH FROM (time - prev_time)) > 60
+                        THEN 1 ELSE 0 END
+                    ) OVER (
+                        PARTITION BY equipment_id, parameter
+                        ORDER BY time
+                        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
                     ) AS grp
-                FROM scada_for_batch s
-                WHERE s.status IN ('WARNING', 'ALARM')
+                FROM anomaly_data
             ),
-            fault_peaks AS (
-                SELECT DISTINCT ON (equipment_id, parameter, status, grp)
-                    equipment_id,
-                    parameter,
-                    unit,
-                    status,
-                    time,
-                    value
-                FROM fault_grouped
-                ORDER BY equipment_id, parameter, status, grp, value DESC
-            ),
-            combined AS (
+            anomaly_compressed AS (
                 SELECT
                     equipment_id,
                     parameter,
                     unit,
                     status,
-                    time,
-                    ROUND(value::numeric, 4) AS value
-                FROM normal_bucketed
-                UNION ALL
-                SELECT
-                    equipment_id,
-                    parameter,
-                    unit,
-                    status,
-                    time,
-                    ROUND(value::numeric, 4) AS value
-                FROM fault_peaks
+                    CAST(ROUND(AVG(value)::numeric, 2) AS DOUBLE PRECISION) AS value,
+                    MIN(time) AS time
+                FROM anomaly_with_groups
+                GROUP BY equipment_id, parameter, unit, status, grp
             )
-            SELECT
-                equipment_id AS equipmentId,
-                parameter AS parameter,
-                unit AS unit,
-                status AS status,
-                time AS time,
-                CAST (value as DOUBLE PRECISION) AS value
-            FROM combined
-            ORDER BY parameter, time
+            SELECT equipment_id AS equipmentId,
+                   parameter,
+                   time,
+                   value,
+                   unit,
+                   status
+            FROM normal_compressed
+            
+            UNION ALL
+            
+            SELECT equipment_id AS equipmentId,
+                   parameter,
+                   time,
+                   value,
+                   unit,
+                   status
+            FROM anomaly_compressed
+            
+            ORDER BY parameter, time;
             """, nativeQuery = true)
     List<BatchScadaDto> findCompressedScadaByBatchId(@Param("batchId") String batchId);
 

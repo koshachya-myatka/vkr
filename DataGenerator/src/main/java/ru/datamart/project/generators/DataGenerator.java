@@ -42,7 +42,7 @@ public class DataGenerator {
     }
 
     private void onBatchCompleted() {
-        long delaySeconds = ThreadLocalRandom.current().nextLong(60, 241);
+        long delaySeconds = ThreadLocalRandom.current().nextLong(20, 121);
         restartScheduler.schedule(this::submitBatch, delaySeconds, TimeUnit.SECONDS);
     }
 }
