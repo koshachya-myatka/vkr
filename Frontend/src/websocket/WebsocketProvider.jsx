@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import Loader from '../components/general/Loader';
+import { MoonLoader } from 'react-spinners'
 import { connectWebSocket, disconnectWebSocket } from './websocket';
 import { optimizeRealtimePoints } from '../components/batchPage/optimizeRealtimePoints';
 
@@ -122,7 +122,12 @@ export const WebSocketProvider = ({ children }) => {
     if (!isConnected) {
         return (
             <div className="page-loader">
-                <Loader size="large" />
+                <MoonLoader
+                    color="#2563eb"
+                    loading
+                    size={85}
+                    speedMultiplier={0.85}
+                />
             </div>
         );
     }
