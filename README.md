@@ -20,11 +20,11 @@ docker compose stop
 2. Проверка соответствия пределам значений из MES
 3. Проверка состояния оборудования из SCADA
 
-Витрины по ролям:
-0. Управление (все данные, админ)
-1. Производство (MES + LIMS (без д.) + SCADA)
-2. Лаборатории (MES + LIMS, SCADA (без д.))
-3. Руководство (MES + LIMS (без д.) + SCADA (без д.))
+Витрины по ролям:  
+1. Управление (все данные, админ)
+2. Производство (MES + LIMS (без д.) + SCADA) [+ уведы]
+3. Лаборатории (MES + LIMS, SCADA (без д.))
+4. Руководство (MES + LIMS (без д.) + SCADA (без д.)) [+ уведы]
 
 ## Генератор данных
 - MES - данные о состоянии партии (статус ["Поступление", "Обработка", "Лабораторный анализ", "Брак"/"Норма"], состояние при обработке)
@@ -43,6 +43,8 @@ docker compose stop
   "batch_id": "string",
   "equipment_id": "string",
   "start_time": "datetime",
+  "processing_time": "datetime",
+  "analyses_time": "datetime",
   "end_time": "datetime",
   "metal_type": "string",
   "process_status": "string",  
@@ -55,7 +57,7 @@ docker compose stop
   "status": "string" (normal/warning/alarm)
 }
 ```
-### SCADA | Поступает по 1 параметру для оборудования в JSON | Обновление каждые 1–10 сек 
+### SCADA | Поступает по 1 параметру для оборудования в JSON | Обновление каждые 1–5 сек 
 Все записи - ID записи, ID датчика, ID оборудования, Время, Параметр, Значение параметра, Единица измерения значения, Статус
 Параметры - Температура, Давление, Скорость, Вибрация, Влажность, Напряжение, Шум
 ```
@@ -99,6 +101,8 @@ docker compose stop
     "batch_id": "MES-2026-04-21-001",
     "metal_type": "Никель (Ni)",
     "start_time": "2026-04-21T09:00:00",
+    "processing_time": "2026-04-21T09:00:00",
+    "analyses_time": "2026-04-21T09:00:00",
     "end_time": "2026-04-21T11:00:00",
     "process_status": "ACCEPTED",
     "output_yield": 95.5
@@ -157,13 +161,15 @@ docker compose stop
 ```
 docker exec -it vkr-postgres-1 psql -U postgres -d metal_data_mart
 ```
-Вьюшки для ролей: лаборатория, производство, руководство.  
+Вьюшки для ролей: лаборатория, производство, руководство, управление (админ).  
 Таблицы:
 ```
 TABLE dim_batch (
     batch_id TEXT PRIMARY KEY,
     metal_type TEXT,
     start_time TIMESTAMP,
+    processing_time TIMESTAMP,
+    analyses_time TIMESTAMP,
     end_time TIMESTAMP,
     process_status TEXT,
     output_yield DOUBLE PRECISION
@@ -196,14 +202,15 @@ TABLE fact_lims_results (
     normal BOOLEAN DEFAULT true
 );
 TABLE fact_scada (
-    record_id TEXT PRIMARY KEY,
+    record_id TEXT,
     sensor_id TEXT,
     equipment_id TEXT,    
     time TIMESTAMP,
     parameter TEXT,
     value DOUBLE PRECISION,
     unit TEXT,
-    status TEXT
+    status TEXT,
+    (record_id + time) PRIMARY KEY
 );
 TABLE fact_batch_analytics (
     record_id SERIAL PRIMARY KEY,
@@ -222,5 +229,3 @@ http://localhost:5173/admin
 http://localhost:5173/laboratory  
 http://localhost:5173/production  
 http://localhost:5173/management  
-
-## Бэкенд
