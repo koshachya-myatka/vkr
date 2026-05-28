@@ -42,6 +42,7 @@ export default function LastProductionRecordTable() {
               <tr>
                 <th>Партия</th>
                 <th>Тип металла</th>
+                <th>ID оборудования</th>
                 <th>Поступление</th>
                 <th>Окончание анализов</th>
                 <th>Статус</th>
@@ -52,6 +53,7 @@ export default function LastProductionRecordTable() {
                 <tr key={i}>
                   <td>{b.batchId}</td>
                   <td>{b.metalType}</td>
+                  <td>{b.equipmentId}</td>
                   <td>{new Date(b.startTime).toLocaleString()}</td>
                   <td>{b.endTime ? new Date(b.endTime).toLocaleString() : ""}</td>
                   <td><span className={"badge badge-" + (b.processStatus === 'ACCEPTED' ? "success"

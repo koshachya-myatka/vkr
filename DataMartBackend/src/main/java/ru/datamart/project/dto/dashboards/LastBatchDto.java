@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class LastBatchDto {
     private String batchId;
     private String metalType;
+    private String equipmentId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String processStatus;

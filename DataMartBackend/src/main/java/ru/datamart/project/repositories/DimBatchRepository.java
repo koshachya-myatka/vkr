@@ -21,7 +21,7 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
             SELECT 
                 b.batch_id as batchId,
                 b.metal_type as metalType, 
-                '' as metalTypeName,
+                '' as metalTypeName,                
                 b.start_time as startTime,
                 b.processing_time as processingTime,
                 b.analyses_time as analysesTime, 
@@ -63,12 +63,14 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
     @Query(value = """
             SELECT 
                 b.batch_id as batchId, 
-                b.metal_type as metalType, 
+                b.metal_type as metalType,
+                m.equipment_id as equipmentId, 
                 b.start_time as startTime, 
                 b.end_time as endTime, 
                 b.process_status as processStatus,
                 '' as statusName
-            FROM dim_batch as b 
+            FROM dim_batch as b
+            JOIN fact_mes as m ON b.batch_id = m.batch_id
             ORDER BY b.start_time DESC 
             LIMIT 10;
             """, nativeQuery = true)

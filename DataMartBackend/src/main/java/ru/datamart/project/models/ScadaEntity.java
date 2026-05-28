@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "fact_scada")
+@IdClass(ScadaEntityId.class)
 @Getter
 @Setter
 @ToString
@@ -20,6 +21,8 @@ public class ScadaEntity {
     private String sensorId;
     @Column(name = "equipment_id")
     private String equipmentId;
+    @Id
+    @Column(name = "time")
     private LocalDateTime time;
     private String parameter;
     private Double value;

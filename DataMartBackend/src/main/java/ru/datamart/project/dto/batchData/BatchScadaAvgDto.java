@@ -15,4 +15,5 @@ public class BatchScadaAvgDto {
     private Double minValue;
     private Double maxValue;
     private Long valuesCount;
+    private Long alarmCount;
 }

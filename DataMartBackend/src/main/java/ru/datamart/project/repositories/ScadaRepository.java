@@ -7,11 +7,12 @@ import org.springframework.stereotype.Repository;
 import ru.datamart.project.dto.batchData.BatchScadaAvgDto;
 import ru.datamart.project.dto.batchData.BatchScadaDto;
 import ru.datamart.project.models.ScadaEntity;
+import ru.datamart.project.models.ScadaEntityId;
 
 import java.util.List;
 
 @Repository
-public interface ScadaRepository extends JpaRepository<ScadaEntity, String> {
+public interface ScadaRepository extends JpaRepository<ScadaEntity, ScadaEntityId> {
     @Query(value = """
             SELECT
                 s.equipment_id as equipmentId,
@@ -165,7 +166,8 @@ public interface ScadaRepository extends JpaRepository<ScadaEntity, String> {
                 CAST (ROUND(AVG(s.value)::numeric, 2) as DOUBLE PRECISION) as avgValue,
                 CAST (ROUND(MIN(s.value)::numeric, 2) as DOUBLE PRECISION) as minValue,
                 CAST (ROUND(MAX(s.value)::numeric, 2) as DOUBLE PRECISION) as maxValue,
-                COUNT(*) as valuesCount
+                COUNT(*) as valuesCount,
+                COUNT(*) FILTER (WHERE s.status <> 'NORMAL') as alarmCount
             FROM fact_scada as s
             WHERE s.equipment_id IN (
                 SELECT DISTINCT m.equipment_id

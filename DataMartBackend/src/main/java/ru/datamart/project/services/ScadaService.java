@@ -10,6 +10,7 @@ import ru.datamart.project.dto.batchData.BatchScadaDto;
 import ru.datamart.project.dto.batchData.BatchScadaParameterDto;
 import ru.datamart.project.dto.kafkaData.ScadaDto;
 import ru.datamart.project.models.ScadaEntity;
+import ru.datamart.project.models.ScadaEntityId;
 import ru.datamart.project.repositories.ScadaRepository;
 
 import java.util.*;
@@ -82,16 +83,16 @@ public class ScadaService {
         return Optional.of(newE);
     }
 
-    public Optional<ScadaEntity> get(String id) {
+    public Optional<ScadaEntity> get(ScadaEntityId id) {
         if (id == null) {
             throw new CustomInvalidRequestException("Укажите ID записи.");
         }
         return scadaRepository.findById(id);
     }
 
-    public void delete(String id) {
+    public void delete(ScadaEntityId id) {
         if (id == null) {
-            throw new CustomInvalidRequestException("Укажите ID уведомления.");
+            throw new CustomInvalidRequestException("Укажите ID записи.");
         }
         scadaRepository.deleteById(id);
         log.info("УДАЛЕНА ЗАПИСЬ SCADA");

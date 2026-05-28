@@ -71,19 +71,24 @@ export default function BatchManagementPanel({ batchData }) {
                     ? <Loader size="small" />
                     : <>
                         {scada && scada.length > 0 ? (
-                            <div className="scada-grid">
-                                {scada.map((parameter) => (
-                                    <div
-                                        key={`${parameter.equipmentId}_${parameter.parameter}`}
-                                        className="card card-hover"
-                                    >
-                                        <ScadaParameterAvg
-                                            parameter={parameter}
-                                        />
-                                    </div>
-                                ))}
+                            <>
+                                <div className="card">
+                                    <h3>Отклонений от нормы: {scada[0].alarmCount ?? 0}</h3>
+                                </div>
+                                <div className="scada-grid">
+                                    {scada.map((parameter) => (
+                                        <div
+                                            key={`${parameter.equipmentId}_${parameter.parameter}`}
+                                            className="card card-hover"
+                                        >
+                                            <ScadaParameterAvg
+                                                parameter={parameter}
+                                            />
+                                        </div>
+                                    ))}
 
-                            </div>
+                                </div>
+                            </>
                         ) : (
                             <h4>
                                 Нет данных

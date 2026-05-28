@@ -15,7 +15,7 @@ export default function ScadaParameterAvg({ parameter }) {
         {
             label: "Кол-во измерений",
             value: parameter.valuesCount
-        }
+        }        
     ];
 
     return (
