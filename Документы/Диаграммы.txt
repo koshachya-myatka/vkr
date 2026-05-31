@@ -1,60 +1,126 @@
-@startuml
+--------
+UML ПРЕЦЕДЕНТОВ
+
+@startuml UseCase
 skinparam actorStyle Hollow
-skinparam backgroundColor #FFFFFF
-skinparam componentStyle rectangle
-skinparam shadowing false
-skinparam ArrowColor #444444
-skinparam packageStyle rectangle
-
-actor "Пользователь" as User
-
-package "Клиентская часть" {
-  component "Frontend Application" as Frontend
-  component "WebSocket Client" as WSClient
+skinparam usecase {
+  BorderColor DarkSlateGray
+  FontSize 12
+}
+skinparam title {
+  FontSize 15
+  FontStyle Bold
 }
 
-package "Серверная часть" {
-  component "Backend API" as Backend
-  component "JWT Filter" as JWT
-  component "REST Controllers" as REST
-  component "Kafka Consumers" as KafkaConsumers
-  component "Notification Service" as NotificationService
-  component "Report Service" as PDFService
+left to right direction
+
+actor "Лаборатория" as LAB
+actor "Производство" as PROD
+actor "Руководство" as MGT
+actor "Администратор" as ADMIN
+
+rectangle "Витрина качества металла" {
+  usecase "Аутентификация\nв системе" as UC_AUTH
+  usecase "Просмотр главной\nвитрины по роли" as UC_DASH
+  usecase "Просмотр партий\nтипа металла\n(поиск, фильтрация)" as UC_BATCHES
+  usecase "Просмотр детальной\nстраницы партии" as UC_DETAIL
+  usecase "Генерация\nPDF-отчёта" as UC_PDF
+  usecase "Просмотр и\nуправление\nуведомлениями" as UC_NOTIF
+  usecase "Просмотр реестра\nинцидентов" as UC_INCIDENTS
+  usecase "Закрытие\nинцидента" as UC_CLOSE
+  usecase "Управление\nпользователями" as UC_USERS
+
+  UC_CLOSE ..> UC_INCIDENTS : <<extend>>
+  UC_DASH -[hidden]-> UC_BATCHES
+  UC_DETAIL -[hidden]-> UC_PDF
 }
 
-package "Инфраструктура данных" {
-  database "PostgreSQL" as DB
-  queue "Apache Kafka" as Kafka
-  collections "Kafka Topics\nMES / SCADA / LIMS" as Topics
-}
+LAB --> UC_AUTH
+LAB -> UC_DASH
+LAB -> UC_BATCHES
+LAB -> UC_DETAIL
+LAB -> UC_PDF
 
-package "Внешние сервисы" {
-  component "MES Emulator" as MES
-  component "SCADA Emulator" as SCADA
-  component "LIMS Emulator" as LIMS
-}
+PROD --> UC_AUTH
+PROD -> UC_DASH
+PROD -> UC_BATCHES
+PROD -> UC_DETAIL
+PROD -> UC_PDF
+PROD --> UC_NOTIF
+PROD --> UC_CLOSE
 
-User -> Frontend : HTTP
-Frontend ---> Backend : REST API
-Frontend <--> WSClient : WebSocket events
-WSClient <---> NotificationService : WebSocket notifications
-Backend --> JWT : проверка JWT-токена
-Backend --> REST : обработка HTTP-запросов
-Backend ---> KafkaConsumers : получение сообщений
-Backend --> PDFService : генерация PDF-отчётов
-REST --> DB : JPA / Hibernate
-KafkaConsumers --> DB : сохранение данных
-NotificationService --> KafkaConsumers : создание уведомлений
-MES ---> Kafka : Kafka Producer
-SCADA ---> Kafka : Kafka Producer
-LIMS ---> Kafka : Kafka Producer
-Kafka --> Topics : маршрутизация сообщений
-Topics --> KafkaConsumers : Kafka Consumer
-Frontend --> Backend : запрос аналитики\nи dashboard данных
-Backend --> Frontend : JSON responses
+MGT --> UC_AUTH
+MGT -> UC_DASH
+MGT -> UC_BATCHES
+MGT -> UC_DETAIL
+MGT -> UC_PDF
+MGT --> UC_NOTIF
+MGT --> UC_CLOSE
+
+ADMIN --> UC_AUTH
+ADMIN -> UC_DASH
+ADMIN -> UC_BATCHES
+ADMIN -> UC_DETAIL
+ADMIN -> UC_PDF
+ADMIN -> UC_USERS
+
 @enduml
+-------
+UML АКТИВНОСТИ
 
-================================
+@startuml Activity_PDF
+skinparam activity {
+  BorderColor Navy
+  FontSize 12
+  ArrowColor DarkSlateGray
+}
+skinparam title {
+  FontSize 15
+  FontStyle Bold
+}
+
+title Генерация PDF-отчёта по партии металла
+
+|Пользователь|
+start
+:Открыть детальную\nстраницу партии;
+:Нажать кнопку\n«Скачать отчёт»;
+
+|Сервер\n(CommonController)|
+:Проверить\nJWT-токен и роль\nпользователя;
+if (Доступ разрешён?) then (нет)
+  :Вернуть ошибку доступа;
+  stop
+else (да)
+  :Передать запрос\nв ReportService;
+endif
+
+|Сервер\n(ReportService)|
+fork
+  :Получить данные\nMES для партии;
+fork again
+  :Получить данные\nSCADA для партии;
+fork again
+  :Получить данные\nLIMS для партии;
+fork again
+  :Получить инциденты\nпо партии;
+end fork
+
+:Установить дату создания\nотчета и автора документа;
+:Сформировать модель\nдокумента (DTO);
+:Сгенерировать PDF-файл;
+:Вернуть PDF как\nbyte[] в контроллер;
+
+|Сервер\n(CommonController)|
+:Отправить ответ\nс PDF в теле;
+
+|Пользователь|
+:Получить файл отчета\nс данными о партии;
+stop
+
+@enduml
+--------
+UML ПОСЛЕДОВАТЕЛЬНОСТИ
 
 @startuml
 skinparam actorStyle Hollow
@@ -149,4 +215,253 @@ deactivate Backend
 Frontend --> User : Загрузка отчёта
 deactivate Frontend
 
+@enduml
+---------
+UML КЛАССОВ
+
+@startuml
+skinparam class {
+  BorderColor #2F4F4F
+  FontColor #FFFFFF
+  FontSize 12
+  HeaderBackgroundColor #37474F
+  AttributeFontSize 11
+}
+skinparam enum {
+  BorderColor #2E7D32
+  FontSize 11
+  HeaderBackgroundColor #2E7D32
+}
+skinparam arrow {
+  Color #2F4F4F
+  FontSize 10
+}
+
+' ===================== ENUMS =====================
+
+enum MetalTypeEnum {
+  NI ("Никель (Ni)")
+  CU ("Медь (Cu)")
+  CO ("Кобальт (Co)")
+  AG ("Серебро (Ag)")
+  AU ("Золото (Au)")
+  PD ("Палладий (Pd)")
+  PT ("Платина (Pt)")
+  RH ("Родий (Rh)")
+  IR ("Иридий (Ir)")
+  RU ("Рутений (Ru)")
+  --
+  - name : String
+  --
+  + toString() : String
+  + fromName(name : String) : MetalTypeEnum
+}
+
+enum MesProcessStatusEnum {
+  ARRIVAL
+  PROCESSING
+  ANALYSIS
+  ACCEPTED
+  DEFECTIVE
+  --
+  + toString() : String
+}
+
+enum MesStatusEnum {
+  NORMAL
+  WARNING
+  ALARM
+  --
+  + toString() : String
+}
+
+enum LimsStatusEnum {
+  REJECTED
+  APPROVED
+  --
+  + toString() : String
+}
+
+enum ScadaStatusEnum {
+  NORMAL
+  WARNING
+  ALARM
+  --
+  + toString() : String
+}
+
+enum NotificationSeverityEnum {
+  INFO
+  WARNING
+  ALARM
+}
+
+enum NotificationStatusEnum {
+  CREATED ("СОЗДАНО")
+  IN_PROGRESS ("НА ПРОВЕРКЕ")
+  FALSE_POSITIVE ("ЛОЖНОЕ СРАБАТЫВАНИЕ")
+  RESOLVED ("ПРИЧИНА УСТРАНЕНА")
+  --
+  - name : String
+  --
+  + toString() : String
+}
+
+enum UserRoleEnum {
+  LABORATORY
+  PRODUCTION
+  MANAGEMENT
+  ADMIN
+}
+
+' ===================== ENTITIES =====================
+
+class DimBatchEntity {
+  - batchId : String  <<PK>>
+  - metalType : MetalTypeEnum
+  - startTime : LocalDateTime
+  - processingTime : LocalDateTime
+  - analysesTime : LocalDateTime
+  - endTime : LocalDateTime
+  - processStatus : MesProcessStatusEnum
+  - outputYield : Double
+}
+
+class MesEntity {
+  - recordId : String  <<PK>>
+  - equipmentId : String
+  - operatorId : String
+  - temperature : Double
+  - pressure : Double
+  - durationSec : Integer
+  - energyConsumption : Double
+  - status : MesStatusEnum
+}
+
+class LimsEntity {
+  - recordId : String  <<PK>>
+  - sampleId : String
+  - analysisMethod : String
+  - testDate : LocalDateTime
+  - status : LimsStatusEnum
+}
+
+class LimsResultEntity {
+  - id : Long  <<PK, generated>>
+  - parameterName : String
+  - value : String
+  - unit : String
+  - normal : Boolean
+}
+
+class ScadaEntity {
+  - recordId : String  <<PK>>
+  - sensorId : String
+  - equipmentId : String
+  - time : LocalDateTime  <<PK>>
+  - parameter : String
+  - value : Double
+  - unit : String
+  - status : ScadaStatusEnum
+}
+
+class NotificationEntity {
+  - id : Long  <<PK, generated>>
+  - message : String
+  - equipmentId : String
+  - sensorId : String
+  - signalSource : String
+  - severity : NotificationSeverityEnum
+  - status : NotificationStatusEnum
+  - viewed : Boolean
+  - comment : String
+  - createdAt : LocalDateTime
+  - updatedAt : LocalDateTime
+  - updatedBy : String
+}
+
+class UserEntity {
+  - userId : UUID  <<PK>>
+  - username : String
+  - password : String
+  - name : String
+  - surname : String
+  - patronymic : String
+  - email : String
+  - role : UserRoleEnum
+  - createdAt : LocalDateTime
+}
+
+' ===================== RELATIONS =====================
+
+DimBatchEntity "1" -- "1" MesEntity : содержит
+DimBatchEntity "1" -- "М  " LimsEntity : содержит
+LimsEntity "1" -- "М  " LimsResultEntity : включает
+DimBatchEntity ..> MetalTypeEnum : metalType
+DimBatchEntity ..> MesProcessStatusEnum : processStatus
+MesEntity ..> MesStatusEnum : status
+LimsEntity ..> LimsStatusEnum : status
+ScadaEntity ..> ScadaStatusEnum : status
+NotificationEntity ..> NotificationSeverityEnum : severity
+NotificationEntity ..> NotificationStatusEnum : status
+UserEntity .> UserRoleEnum : role
+
+@enduml
+---------
+АРХИТЕКТУРА
+
+@startuml
+skinparam actorStyle Hollow
+skinparam backgroundColor #FFFFFF
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam ArrowColor #444444
+skinparam packageStyle rectangle
+
+actor "Пользователь" as User
+
+package "Клиентская часть" {
+  component "Frontend Application" as Frontend
+  component "WebSocket Client" as WSClient
+}
+
+package "Серверная часть" {
+  component "Backend API" as Backend
+  component "JWT Filter" as JWT
+  component "REST Controllers" as REST
+  component "Kafka Consumers" as KafkaConsumers
+  component "Notification Service" as NotificationService
+  component "Report Service" as PDFService
+}
+
+package "Инфраструктура данных" {
+  database "PostgreSQL" as DB
+  queue "Apache Kafka" as Kafka
+  collections "Kafka Topics\nMES / SCADA / LIMS" as Topics
+}
+
+package "Внешние сервисы" {
+  component "MES Emulator" as MES
+  component "SCADA Emulator" as SCADA
+  component "LIMS Emulator" as LIMS
+}
+
+User -> Frontend : HTTP
+Frontend ---> Backend : REST API
+Frontend <--> WSClient : WebSocket events
+WSClient <---> NotificationService : WebSocket notifications
+Backend --> JWT : проверка JWT-токена
+Backend --> REST : обработка HTTP-запросов
+Backend ---> KafkaConsumers : получение сообщений
+Backend --> PDFService : генерация PDF-отчётов
+REST --> DB : JPA / Hibernate
+KafkaConsumers --> DB : сохранение данных
+NotificationService --> KafkaConsumers : создание уведомлений
+MES ---> Kafka : Kafka Producer
+SCADA ---> Kafka : Kafka Producer
+LIMS ---> Kafka : Kafka Producer
+Kafka --> Topics : маршрутизация сообщений
+Topics --> KafkaConsumers : Kafka Consumer
+Frontend --> Backend : запрос аналитики\nи dashboard данных
+Backend --> Frontend : JSON responses
 @enduml
