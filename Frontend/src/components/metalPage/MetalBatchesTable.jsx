@@ -39,11 +39,13 @@ export default function MetalBatchesTable({ data }) {
                                     {row.statusName}
                                 </span>
                             </td>
-                            <td><SimpleLink
-                                className="btn btn-primary"
-                                link={url + "/batches/" + row.batchId}
-                                text="Подробнее"
-                                style={{ textDecoration: 'none', padding: "6px" }} /></td>
+                            <td>
+                                <SimpleLink
+                                    className="btn btn-primary"
+                                    link={url + "/batches/" + row.batchId}
+                                    text="Подробнее"
+                                    style={{ textDecoration: 'none', padding: "6px" }} />
+                            </td>
                         </tr>
                     ))}
                 </tbody>

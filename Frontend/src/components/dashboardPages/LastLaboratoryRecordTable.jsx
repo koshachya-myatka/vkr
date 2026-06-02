@@ -2,10 +2,12 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../general/Loader';
+import SimpleLink from '../general/SimpleLink';
 import { getLastLims } from "../../api/api";
 
 export default function LastLaboratoryRecordTable() {
     const navigate = useNavigate();
+    const url = location.pathname;
 
     const { data: data, isLoading, isError, error } = useQuery({
         queryKey: ['dashboard-lab-last-lims'],
@@ -45,6 +47,7 @@ export default function LastLaboratoryRecordTable() {
                                 <th>Метод</th>
                                 <th>Дата</th>
                                 <th>Статус</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,6 +58,13 @@ export default function LastLaboratoryRecordTable() {
                                     <td>{r.analysisMethod}</td>
                                     <td>{new Date(r.testDate).toLocaleString()}</td>
                                     <td><span className={"badge badge-" + (r.status === 'APPROVED' ? "success" : "danger")}>{r.statusName}</span></td>
+                                    <td>
+                                        <SimpleLink
+                                            className="btn btn-primary"
+                                            link={url + "/batches/" + r.batchId}
+                                            text="Подробнее"
+                                            style={{ textDecoration: 'none', padding: "6px" }} />
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

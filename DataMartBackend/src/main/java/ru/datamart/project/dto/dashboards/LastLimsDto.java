@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class LastLimsDto {
+    private String batchId;
     private String sampleId;
     private String metalType;
     String analysisMethod;

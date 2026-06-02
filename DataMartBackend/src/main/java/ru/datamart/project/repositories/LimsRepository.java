@@ -13,7 +13,8 @@ import java.util.List;
 @Repository
 public interface LimsRepository extends JpaRepository<LimsEntity, String> {
     @Query(value = """
-            SELECT 
+            SELECT
+                l.batch_id as batchId,
                 l.sample_id as sampleId,
                 b.metal_type as metalType,
                 l.analysis_method as analysisMethod,

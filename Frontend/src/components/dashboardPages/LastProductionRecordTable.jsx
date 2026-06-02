@@ -2,10 +2,12 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../general/Loader';
+import SimpleLink from '../general/SimpleLink';
 import { getLastBatches } from "../../api/api";
 
 export default function LastProductionRecordTable() {
   const navigate = useNavigate();
+  const url = location.pathname;
 
   const { data: data, isLoading, isError, error } = useQuery({
     queryKey: ['dashboard-prod-last-batches'],
@@ -46,6 +48,7 @@ export default function LastProductionRecordTable() {
                 <th>Поступление</th>
                 <th>Окончание анализов</th>
                 <th>Статус</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -56,8 +59,17 @@ export default function LastProductionRecordTable() {
                   <td>{b.equipmentId}</td>
                   <td>{new Date(b.startTime).toLocaleString()}</td>
                   <td>{b.endTime ? new Date(b.endTime).toLocaleString() : ""}</td>
-                  <td><span className={"badge badge-" + (b.processStatus === 'ACCEPTED' ? "success"
-                    : (b.processStatus === "DEFECTIVE" ? "danger" : "info"))}>{b.statusName}</span></td>
+                  <td>
+                    <span className={"badge badge-" + (b.processStatus === 'ACCEPTED' ? "success"
+                      : (b.processStatus === "DEFECTIVE" ? "danger" : "info"))}>{b.statusName}</span>
+                  </td>
+                  <td>
+                    <SimpleLink
+                      className="btn btn-primary"
+                      link={url + "/batches/" + b.batchId}
+                      text="Подробнее"
+                      style={{ textDecoration: 'none', padding: "6px" }} />
+                  </td>
                 </tr>
               ))}
             </tbody>
