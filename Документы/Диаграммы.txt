@@ -71,7 +71,7 @@ UML АКТИВНОСТИ
 @startuml Activity_PDF
 skinparam activity {
   BorderColor Navy
-  FontSize 12
+  FontSize 18
   ArrowColor DarkSlateGray
 }
 skinparam title {
@@ -96,15 +96,7 @@ else (да)
 endif
 
 |Сервер\n(ReportService)|
-fork
-  :Получить данные\nMES для партии;
-fork again
-  :Получить данные\nSCADA для партии;
-fork again
-  :Получить данные\nLIMS для партии;
-fork again
-  :Получить инциденты\nпо партии;
-end fork
+:Получить данные\n для партии из БД;
 
 :Установить дату создания\nотчета и автора документа;
 :Сформировать модель\nдокумента (DTO);
@@ -124,10 +116,15 @@ UML ПОСЛЕДОВАТЕЛЬНОСТИ
 
 @startuml
 skinparam actorStyle Hollow
-
 title Просмотр информации о партии металла и формирование отчёта
-
 actor "Пользователь" as User
+skinparam defaultFontSize 22
+skinparam title {
+  fontSize 18
+}
+skinparam sequence {
+  ParticipantFontSize 20
+}
 
 participant "Frontend" as Frontend
 participant "Backend" as Backend
@@ -143,7 +140,7 @@ activate Frontend
 Frontend -> Backend : POST /api/auth/login
 activate Backend
 
-Backend -> JWT : Проверка пользователя
+Backend -> JWT : Проверка\nпользователя
 activate JWT
 
 JWT --> Backend : JWT-токен
@@ -160,10 +157,10 @@ deactivate Frontend
 User -> Frontend : Просмотр списка партий
 activate Frontend
 
-Frontend -> Backend : GET /api/batches
+Frontend -> Backend : POST /api/batches\n(filter)
 activate Backend
 
-Backend -> DB : Получить список партий
+Backend -> DB : Получить\nсписок партий
 activate DB
 
 DB --> Backend : Список партий
@@ -189,10 +186,10 @@ activate DB
 DB --> Backend : Детальная информация
 deactivate DB
 
-Backend --> Frontend : JSON с данными партии
+Backend --> Frontend : JSON\nс данными партии
 deactivate Backend
 
-Frontend --> User : Отображение графиков,\nстатусов и показателей
+Frontend --> User : Отображение деталей
 deactivate Frontend
 
 == Формирование отчёта ==
@@ -212,7 +209,7 @@ deactivate PDF
 Backend --> Frontend : PDF-файл
 deactivate Backend
 
-Frontend --> User : Загрузка отчёта
+Frontend --> User : Просмотр отчёта
 deactivate Frontend
 
 @enduml
@@ -220,21 +217,18 @@ deactivate Frontend
 UML КЛАССОВ
 
 @startuml
+skinparam defaultFontSize 20
 skinparam class {
   BorderColor #2F4F4F
   FontColor #FFFFFF
-  FontSize 12
   HeaderBackgroundColor #37474F
-  AttributeFontSize 11
 }
 skinparam enum {
   BorderColor #2E7D32
-  FontSize 11
   HeaderBackgroundColor #2E7D32
 }
 skinparam arrow {
   Color #2F4F4F
-  FontSize 10
 }
 
 ' ===================== ENUMS =====================
@@ -412,56 +406,22 @@ UserEntity .> UserRoleEnum : role
 
 @startuml
 skinparam actorStyle Hollow
-skinparam backgroundColor #FFFFFF
 skinparam componentStyle rectangle
-skinparam shadowing false
-skinparam ArrowColor #444444
-skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam defaultFontSize 20
 
 actor "Пользователь" as User
+component "Клиентское приложение" as Frontend
+component "Серверное приложение" as Backend
+database "База данных" as DB
+queue "Брокер сообщений" as Broker
+component "Сервис-эмулятор" as Emulator
 
-package "Клиентская часть" {
-  component "Frontend Application" as Frontend
-  component "WebSocket Client" as WSClient
-}
-
-package "Серверная часть" {
-  component "Backend API" as Backend
-  component "JWT Filter" as JWT
-  component "REST Controllers" as REST
-  component "Kafka Consumers" as KafkaConsumers
-  component "Notification Service" as NotificationService
-  component "Report Service" as PDFService
-}
-
-package "Инфраструктура данных" {
-  database "PostgreSQL" as DB
-  queue "Apache Kafka" as Kafka
-  collections "Kafka Topics\nMES / SCADA / LIMS" as Topics
-}
-
-package "Внешние сервисы" {
-  component "MES Emulator" as MES
-  component "SCADA Emulator" as SCADA
-  component "LIMS Emulator" as LIMS
-}
-
-User -> Frontend : HTTP
-Frontend ---> Backend : REST API
-Frontend <--> WSClient : WebSocket events
-WSClient <---> NotificationService : WebSocket notifications
-Backend --> JWT : проверка JWT-токена
-Backend --> REST : обработка HTTP-запросов
-Backend ---> KafkaConsumers : получение сообщений
-Backend --> PDFService : генерация PDF-отчётов
-REST --> DB : JPA / Hibernate
-KafkaConsumers --> DB : сохранение данных
-NotificationService --> KafkaConsumers : создание уведомлений
-MES ---> Kafka : Kafka Producer
-SCADA ---> Kafka : Kafka Producer
-LIMS ---> Kafka : Kafka Producer
-Kafka --> Topics : маршрутизация сообщений
-Topics --> KafkaConsumers : Kafka Consumer
-Frontend --> Backend : запрос аналитики\nи dashboard данных
-Backend --> Frontend : JSON responses
+User -> Frontend
+Frontend --> Backend
+Backend --> Frontend 
+Emulator --> Broker
+Broker --> Backend
+Backend --> DB
+Backend <-- DB
 @enduml
