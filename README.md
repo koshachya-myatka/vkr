@@ -209,11 +209,29 @@ TABLE fact_scada (
     status TEXT,
     (record_id + time) PRIMARY KEY
 );
-TABLE fact_batch_analytics (
-    record_id SERIAL PRIMARY KEY,
-    batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
-    alarm_count INT,
-    deviation_count INT,
+TABLE fact_notifications (
+    id SERIAL PRIMARY KEY,
+    message TEXT,
+    equipment_id TEXT,
+    sensor_id TEXT,
+    signal_source TEXT,   
+    severity TEXT,
+    status TEXT,
+    comment TEXT,
+    viewed BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT now(),
+    updated_at TIMESTAMP,
+    updated_by TEXT
+);
+TABLE users (
+    user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    name TEXT,
+    surname TEXT,
+    patronymic TEXT,
+    email TEXT,
+    role TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
 ```
