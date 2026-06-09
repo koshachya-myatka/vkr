@@ -35,26 +35,24 @@ docker compose stop
     - equipment_id + time → MES + SCADA
 
 ### MES | Поступают все параметры для партии в JSON | Обновление каждые 1-5 мин
-Все записи - ID записи, ID партии, ID оборудования, Дата/время производства, Тип металла, Статус партии, ID оператора, Выход годного (%)
-Опционально - Температура, Давление, Время обработки, Энергопотребление
+Все записи - ID записи, ID заказа, ID партии, ID оборудования, ID оператора, Дата/время производства, Тип металла, Статус партии,  Масса шихты, Масса продукта, Выход годного (%)
 ```
 {
   "record_id": "string",
+  "order_id": "string",
   "batch_id": "string",
   "equipment_id": "string",
+  "operator_id": "string",
   "start_time": "datetime",
   "processing_time": "datetime",
   "analyses_time": "datetime",
   "end_time": "datetime",
   "metal_type": "string",
   "process_status": "string",  
-  "operator_id": "string",
+  "charge_mass": "float",
+  "output_mass": "float",
   "output_yield": "float",
-  "temperature": "float",
-  "pressure": "float",
-  "duration_sec": "int",
-  "energy_consumption": "float",
-  "status": "string" (normal/warning/alarm)
+  "duration_min": "int"
 }
 ```
 ### SCADA | Поступает по 1 параметру для оборудования в JSON | Обновление каждые 1–5 сек 
@@ -107,14 +105,14 @@ docker compose stop
     "process_status": "ACCEPTED",
     "output_yield": 95.5
   },
-  "mes": {
+  "mes": {   
+    "order_id": "ORDER-123",
     "equipment_id": "EQ-123",
-    "operator_id": "OP-114",
-    "temperature": 1450.00,
-    "pressure": 1.2,
-    "duration_sec": 7200,
-    "energy_consumption": 500.00,
-    "status": "NORMAL"
+    "operator_id": "OP-114",        
+    "charge_mass": "85.5",
+    "output_mass": "78.2",
+    "output_yield": "91",
+    "duration_min": "195"
   },
   "lims": [
     {
@@ -176,14 +174,13 @@ TABLE dim_batch (
 );
 TABLE fact_mes (
     record_id TEXT PRIMARY KEY,
+    order_id TEXT,
     batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
     equipment_id TEXT,
     operator_id TEXT,
-    temperature DOUBLE PRECISION,
-    pressure DOUBLE PRECISION,
-    duration_sec INT,
-    energy_consumption DOUBLE PRECISION,
-    status TEXT
+    charge_mass DOUBLE PRECISION,
+    output_mass DOUBLE PRECISION,
+    duration_min INT
 );
 TABLE fact_lims (
     record_id TEXT PRIMARY KEY,

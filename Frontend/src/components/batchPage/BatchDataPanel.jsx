@@ -81,27 +81,26 @@ export default function BatchDataPanel({ batchData }) {
                             <div className="table-wrapper">
                                 <table className="table">
                                     <thead>
-                                        <tr><th>ID обородувания</th>
+                                        <tr>
+                                            <th>ID произв. заказа</th>
+                                            <th>ID обородувания</th>
                                             <th>ID оператора</th>
-                                            <th>Температура</th>
-                                            <th>Давление</th>
-                                            <th>Время обработки (сек)</th>
-                                            <th>Энергопотребление</th>
-                                            <th>Статус</th></tr>
+                                            <th>Масса шихты, т</th>
+                                            <th>Масса продукта, т</th>
+                                            <th>Выход годного, %</th>
+                                            <th>Время обработки, мин</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                        <tr><td>{mes.equipmentId ? mes.equipmentId : "—"}</td>
+                                        <tr>
+                                            <td>{mes.orderId ? mes.orderId : "—"}</td>
+                                            <td>{mes.equipmentId ? mes.equipmentId : "—"}</td>
                                             <td>{mes.operatorId ? mes.operatorId : "—"}</td>
-                                            <td>{mes.temperature ? mes.temperature.toFixed(2) : "—"}</td>
-                                            <td>{mes.pressure ? mes.pressure.toFixed(2) : "—"}</td>
-                                            <td>{mes.durationSec ? mes.durationSec : "—"}</td>
-                                            <td>{mes.energyConsumption ? mes.energyConsumption.toFixed(2) : "—"}</td>
-                                            <td>
-                                                <span className={"badge badge-" + (mes.status === 'NORMAL' ? "success"
-                                                    : (mes.status === "ALARM" ? "danger" : "warning"))}>
-                                                    {mes.statusName}
-                                                </span>
-                                            </td></tr>
+                                            <td>{mes.chargeMass ? mes.chargeMass.toFixed(2) : "—"}</td>
+                                            <td>{mes.outputMass ? mes.outputMass.toFixed(2) : "—"}</td>
+                                            <td>{batchData.outputYield ? batchData.outputYield.toFixed(2) : "—"}</td>
+                                            <td>{mes.durationMin ? mes.durationMin : "—"}</td>                                            
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

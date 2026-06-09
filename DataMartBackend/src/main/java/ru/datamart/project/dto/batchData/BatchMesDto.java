@@ -8,12 +8,10 @@ import lombok.*;
 @Setter
 @ToString
 public class BatchMesDto {
+    private String orderId;
     private String equipmentId;
     private String operatorId;
-    private Double temperature;
-    private Double pressure;
-    private Integer durationSec;
-    private Double energyConsumption;
-    private String status;
-    private String statusName;
+    private Double chargeMass;
+    private Double outputMass;
+    private Integer durationMin;
 }

@@ -28,14 +28,13 @@ CREATE TABLE IF NOT EXISTS dim_batch (
 
 CREATE TABLE IF NOT EXISTS fact_mes (
     record_id TEXT PRIMARY KEY,
+    order_id TEXT,
     batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
     equipment_id TEXT,
     operator_id TEXT,
-    temperature DOUBLE PRECISION,
-    pressure DOUBLE PRECISION,
-    duration_sec INT,
-    energy_consumption DOUBLE PRECISION,
-    status TEXT
+    charge_mass DOUBLE PRECISION,
+    output_mass DOUBLE PRECISION,
+    duration_min INT
 );
 
 CREATE TABLE IF NOT EXISTS fact_lims (

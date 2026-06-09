@@ -9,7 +9,6 @@ import ru.datamart.project.dto.batchData.BatchMesDto;
 import ru.datamart.project.dto.kafkaData.MesDto;
 import ru.datamart.project.models.DimBatchEntity;
 import ru.datamart.project.models.MesEntity;
-import ru.datamart.project.models.MesStatusEnum;
 import ru.datamart.project.repositories.DimBatchRepository;
 import ru.datamart.project.repositories.MesRepository;
 
@@ -31,14 +30,7 @@ public class MesService {
         if (optional.isEmpty()) {
             throw new CustomEntityNotFoundException("Данные MES для партии не были найдены.");
         }
-        BatchMesDto dto = optional.get();
-        if (dto.getStatus() != null) {
-            MesStatusEnum status = MesStatusEnum.valueOf(dto.getStatus());
-            dto.setStatusName(status.toString());
-        } else {
-            dto.setStatusName("—");
-        }
-        return dto;
+        return optional.get();
     }
 
     public Optional<MesEntity> save(MesDto dto) {
@@ -56,14 +48,13 @@ public class MesService {
 
         MesEntity e = new MesEntity();
         e.setRecordId(dto.getRecordId());
+        e.setOrderId(dto.getOrderId());
         e.setBatch(batch);
         e.setEquipmentId(dto.getEquipmentId());
         e.setOperatorId(dto.getOperatorId());
-        e.setTemperature(dto.getTemperature());
-        e.setPressure(dto.getPressure());
-        e.setDurationSec(dto.getDurationSec());
-        e.setEnergyConsumption(dto.getEnergyConsumption());
-        e.setStatus(dto.getStatus());
+        e.setChargeMass(dto.getChargeMass());
+        e.setOutputMass(dto.getOutputMass());
+        e.setDurationMin(dto.getDurationMin());
         MesEntity newE = mesRepo.save(e);
         log.info("СОЗДАНА ИЛИ ОБНОВЛЕНА ЗАПИСЬ MES");
         return Optional.of(newE);

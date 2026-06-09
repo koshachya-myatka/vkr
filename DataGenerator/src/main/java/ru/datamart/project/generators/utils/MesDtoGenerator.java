@@ -2,78 +2,48 @@ package ru.datamart.project.generators.utils;
 
 import ru.datamart.project.dto.MesDto;
 import ru.datamart.project.models.MesProcessStatusEnum;
-import ru.datamart.project.models.MesStatusEnum;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Consumer;
 
 public class MesDtoGenerator {
     public static MesDto generate(String batchId, String equipmentId, String metalType) {
         MesDto dto = new MesDto();
         dto.setRecordId("MES-" + UUID.randomUUID());
+        dto.setOrderId("ORDER-" + UUID.randomUUID());
         dto.setBatchId(batchId);
         dto.setEquipmentId(equipmentId);
+        dto.setOperatorId("OP-" + ThreadLocalRandom.current().nextInt(1, 300));
         dto.setStartTime(LocalDateTime.now());
         dto.setMetalType(metalType);
         dto.setProcessStatus(MesProcessStatusEnum.ARRIVAL);
-        dto.setOperatorId("OP-" + ThreadLocalRandom.current().nextInt(1, 300));
         return dto;
     }
 
-    public static MesDto startProcessing(MesDto dto, boolean isDefective) {
+    public static MesDto startProcessing(MesDto dto) {
         dto.setProcessStatus(MesProcessStatusEnum.PROCESSING);
         dto.setProcessingTime(LocalDateTime.now());
-        int defectParam1 = isDefective ? ThreadLocalRandom.current().nextInt(3) : -1;
-        int defectParam2 = isDefective ? ThreadLocalRandom.current().nextInt(3) : -1;
-        double temperature = generateValue(900D, 1100D, defectParam1 == 0 || defectParam2 == 0);
-        double pressure = generateValue(10D, 20D, defectParam1 == 1 || defectParam2 == 1);
-        double duration = generateValue(100D, 500D, false);
-        double energy = generateValue(100D, 500D, defectParam1 == 2 || defectParam2 == 2);
-        dto.setTemperature(temperature);
-        dto.setPressure(pressure);
-        dto.setDurationSec((int) duration);
-        dto.setEnergyConsumption(energy);
-        MesStatusEnum status = calculateStatus(temperature, pressure, energy);
-        dto.setStatus(status);
+        double chargeMass = generateValue(1D, 100D);
+        dto.setChargeMass(chargeMass);
         return dto;
     }
 
-    public static void scheduleFixParameters(MesDto dto, Consumer<MesDto> sender) {
-        new Thread(() -> {
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException("Не удалось запустить исправление параметров MES", e);
-            }
-            ThreadLocalRandom rnd = ThreadLocalRandom.current();
-            double temperature = rnd.nextDouble(900, 1100);
-            double pressure = rnd.nextDouble(10, 20);
-            double energy = rnd.nextDouble(100, 500);
-            dto.setTemperature(temperature);
-            dto.setPressure(pressure);
-            dto.setEnergyConsumption(energy);
-            dto.setStatus(calculateStatus(temperature, pressure, energy));
-            sender.accept(dto);
-        }).start();
+    public static MesDto startAnalyses(MesDto dto, boolean isDefective) {
+        dto.setProcessStatus(MesProcessStatusEnum.ANALYSIS);
+        dto.setAnalysesTime(LocalDateTime.now());
+        double chargeMass = dto.getChargeMass();
+        double minValue = isDefective ? chargeMass * 0.5 : chargeMass * 0.75;
+        double outputMass = generateValue(minValue, chargeMass * 0.95);
+        double outputYield = outputMass / chargeMass * 100;
+        double duration = generateValue(100D, 650D);
+        dto.setDurationMin((int) duration);
+        dto.setOutputMass(outputMass);
+        dto.setOutputYield(outputYield);
+        return dto;
     }
 
-    private static double generateValue(double min, double max, boolean forceDeviation) {
-        ThreadLocalRandom rnd = ThreadLocalRandom.current();
-        if (forceDeviation) {
-            return max + rnd.nextDouble((max - min) * 0.01, (max - min) * 0.15);
-        }
-        return rnd.nextDouble(min, max);
-    }
-
-    private static MesStatusEnum calculateStatus(double temperature, double pressure, double energy) {
-        int deviations = 0;
-        if (temperature > 1100 || temperature < 900) deviations++;
-        if (pressure > 20 || pressure < 10) deviations++;
-        if (energy > 500 || energy < 100) deviations++;
-        if (deviations == 0) return MesStatusEnum.NORMAL;
-        if (deviations == 1) return MesStatusEnum.WARNING;
-        return MesStatusEnum.ALARM;
+    private static double generateValue(double min, double max) {
+        return ThreadLocalRandom.current().nextDouble(min, max);
     }
 }

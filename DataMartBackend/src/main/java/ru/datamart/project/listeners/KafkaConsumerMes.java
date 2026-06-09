@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import ru.datamart.project.dto.kafkaData.MesDto;
 import ru.datamart.project.models.MesEntity;
 import ru.datamart.project.models.MesProcessStatusEnum;
-import ru.datamart.project.models.MesStatusEnum;
 import ru.datamart.project.models.NotificationSeverityEnum;
 import ru.datamart.project.services.MesService;
 import ru.datamart.project.services.NotificationService;
@@ -49,16 +48,6 @@ public class KafkaConsumerMes {
                             mes.getEquipmentId(),
                             mes.getBatch().getBatchId()
                     );
-                }
-
-                MesStatusEnum mesStatus = mes.getStatus();
-                if (mesStatus != null && !mesStatus.equals(MesStatusEnum.NORMAL)) {
-                    String message = "Показатели при обработке партии вышли за пределы нормы!";
-                    NotificationSeverityEnum severity =
-                            mesStatus.equals(MesStatusEnum.WARNING) ?
-                                    NotificationSeverityEnum.WARNING : NotificationSeverityEnum.ALARM;
-                    notificationService.create(message, severity,
-                            mes.getEquipmentId(), null,"MES");
                 }
 
             } else {

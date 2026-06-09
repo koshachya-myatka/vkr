@@ -3,7 +3,6 @@ package ru.datamart.project.dto.kafkaData;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import ru.datamart.project.models.MesProcessStatusEnum;
-import ru.datamart.project.models.MesStatusEnum;
 
 import java.time.LocalDateTime;
 
@@ -15,10 +14,14 @@ import java.time.LocalDateTime;
 public class MesDto {
     @JsonProperty("record_id")
     private String recordId;
+    @JsonProperty("order_id")
+    private String orderId;
     @JsonProperty("batch_id")
     private String batchId;
     @JsonProperty("equipment_id")
     private String equipmentId;
+    @JsonProperty("operator_id")
+    private String operatorId;
     @JsonProperty("start_time")
     private LocalDateTime startTime;
     @JsonProperty("processing_time")
@@ -31,15 +34,12 @@ public class MesDto {
     private String metalType;
     @JsonProperty("process_status")
     private MesProcessStatusEnum processStatus;
-    @JsonProperty("operator_id")
-    private String operatorId;
+    @JsonProperty("charge_mass")
+    private Double chargeMass;
+    @JsonProperty("output_mass")
+    private Double outputMass;
     @JsonProperty("output_yield")
     private Double outputYield;
-    private Double temperature;
-    private Double pressure;
-    @JsonProperty("duration_sec")
-    private Integer durationSec;
-    @JsonProperty("energy_consumption")
-    private Double energyConsumption;
-    private MesStatusEnum status;
+    @JsonProperty("duration_min")
+    private Integer durationMin;
 }

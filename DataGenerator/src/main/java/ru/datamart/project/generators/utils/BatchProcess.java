@@ -4,7 +4,6 @@ import ru.datamart.project.dto.LimsDto;
 import ru.datamart.project.dto.MesDto;
 import ru.datamart.project.dto.ScadaDto;
 import ru.datamart.project.models.MesProcessStatusEnum;
-import ru.datamart.project.models.MesStatusEnum;
 import ru.datamart.project.publishers.KafkaProducerLims;
 import ru.datamart.project.publishers.KafkaProducerMes;
 import ru.datamart.project.publishers.KafkaProducerScada;
@@ -51,19 +50,15 @@ public class BatchProcess implements Runnable {
             Thread.sleep(randomBetween(10000, 20000));
 
             // 2. Обработка
-            objectMapper.updateValue(mesDto, MesDtoGenerator.startProcessing(mesDto, isDefective));
+            objectMapper.updateValue(mesDto, MesDtoGenerator.startProcessing(mesDto));
             sendMesDto(mesDto);
             List<ScheduledExecutorService> scadaExecutors = startScadaSenders();
-            if (!mesDto.getStatus().equals(MesStatusEnum.NORMAL)) {
-                MesDtoGenerator.scheduleFixParameters(mesDto, this::sendMesDto);
-            }
             Thread.sleep(randomBetween(60000, 300000));
             processing.compareAndSet(true, false);
             scadaExecutors.forEach(ScheduledExecutorService::shutdownNow);
 
             // 3. Анализ
-            mesDto.setProcessStatus(MesProcessStatusEnum.ANALYSIS);
-            mesDto.setAnalysesTime(LocalDateTime.now());
+            objectMapper.updateValue(mesDto, MesDtoGenerator.startAnalyses(mesDto, isDefective));
             sendMesDto(mesDto);
             Thread.sleep(randomBetween(60000, 90000));
             List<LimsDto> limsDtoList = LimsDtoGenerator.generate(
@@ -73,9 +68,6 @@ public class BatchProcess implements Runnable {
 
             // 4. Финальный статус
             mesDto.setProcessStatus(isDefective ? MesProcessStatusEnum.DEFECTIVE : MesProcessStatusEnum.ACCEPTED);
-            ThreadLocalRandom rnd = ThreadLocalRandom.current();
-            Double outputYield = isDefective ? rnd.nextDouble(90, 98) : rnd.nextDouble(98, 100);
-            mesDto.setOutputYield(outputYield);
             mesDto.setEndTime(LocalDateTime.now());
             sendMesDto(mesDto);
         } catch (InterruptedException e) {

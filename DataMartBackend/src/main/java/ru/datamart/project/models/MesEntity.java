@@ -14,6 +14,8 @@ public class MesEntity {
     @Id
     @Column(name = "record_id")
     private String recordId;
+    @Column(name = "order_id")
+    private String orderId;
     @OneToOne
     @JoinColumn(name = "batch_id", nullable = false)
     private DimBatchEntity batch;
@@ -21,12 +23,10 @@ public class MesEntity {
     private String equipmentId;
     @Column(name = "operator_id")
     private String operatorId;
-    private Double temperature;
-    private Double pressure;
-    @Column(name = "duration_sec")
-    private Integer durationSec;
-    @Column(name = "energy_consumption")
-    private Double energyConsumption;
-    @Enumerated(EnumType.STRING)
-    private MesStatusEnum status;
+    @Column(name = "charge_mass")
+    private Double chargeMass;
+    @Column(name = "output_mass")
+    private Double outputMass;
+    @Column(name = "duration_min")
+    private Integer durationMin;
 }

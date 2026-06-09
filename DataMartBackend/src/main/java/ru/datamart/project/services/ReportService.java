@@ -155,21 +155,18 @@ public class ReportService {
             if (data.getMes() != null) {
                 PdfPTable mesTable = createStyledTable(2);
                 mesTable.setWidths(new float[]{3, 5});
+                addTableRow(mesTable, "Производственный заказ:", data.getMes().getOrderId(), white, white, true);
                 addTableRow(mesTable, "Оборудование:", data.getMes().getEquipmentId(), white, white, true);
                 addTableRow(mesTable, "Оператор:", data.getMes().getOperatorId(), white, white, true);
-                addTableRow(mesTable, "Температура:",
-                        data.getMes().getTemperature() != null ? df.format(data.getMes().getTemperature()) + " °C" : "—",
+                addTableRow(mesTable, "Масса шихты:",
+                        data.getMes().getChargeMass() != null ? df.format(data.getMes().getChargeMass()) + " т" : "—",
                         white, white, true);
-                addTableRow(mesTable, "Давление:",
-                        data.getMes().getPressure() != null ? df.format(data.getMes().getPressure()) + " Па" : "—",
+                addTableRow(mesTable, "Масса продукта:",
+                        data.getMes().getOutputMass() != null ? df.format(data.getMes().getOutputMass()) + " т" : "—",
                         white, white, true);
-                addTableRow(mesTable, "Длительность:",
-                        data.getMes().getDurationSec() != null ? data.getMes().getDurationSec() + " сек" : "—",
+                addTableRow(mesTable, "Время обработки:",
+                        data.getMes().getDurationMin() != null ? data.getMes().getDurationMin() + " мин" : "—",
                         white, white, true);
-                addTableRow(mesTable, "Энергопотребление:",
-                        data.getMes().getEnergyConsumption() != null ? df.format(data.getMes().getEnergyConsumption()) + " кВт·ч" : "—",
-                        white, white, true);
-                addTableRow(mesTable, "Статус:", data.getMes().getStatusName(), white, white, true);
                 document.add(mesTable);
             } else {
                 addEmptyDataMessage(document);

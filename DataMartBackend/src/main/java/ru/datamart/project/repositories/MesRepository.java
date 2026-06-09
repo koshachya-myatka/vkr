@@ -12,15 +12,13 @@ import java.util.Optional;
 @Repository
 public interface MesRepository extends JpaRepository<MesEntity, String> {
     @Query(value = """
-                SELECT 
+                SELECT
+                m.order_id as orderId,
                 m.equipment_id as equipmentId,
                 m.operator_id as operatorId,  
-                m.temperature,
-                m.pressure,
-                m.duration_sec as durationSec,
-                m.energy_consumption as energyConsumption,
-                m.status,
-                '' as statusName
+                m.charge_mass as chargeMass,
+                m.output_mass as outputMass,
+                m.duration_min as durationMin                
                 FROM fact_mes as m
                 WHERE m.batch_id = :batchId;
             """, nativeQuery = true)
