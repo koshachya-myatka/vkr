@@ -55,7 +55,11 @@ export default function BatchDataPanel({ batchData }) {
                                             <td>{batchData.processingTime ? new Date(batchData.processingTime).toLocaleString() : ""}</td>
                                             <td>{batchData.analysesTime ? new Date(batchData.analysesTime).toLocaleString() : ""}</td>
                                             <td>{batchData.endTime ? new Date(batchData.endTime).toLocaleString() : ""}</td>
-                                            <td><span className="badge badge-info">{batchData.statusName}</span></td></tr>
+                                            <td><span className={"badge badge-" + (batchData.processStatus === 'ACCEPTED' ? "success"
+                                                : (batchData.processStatus === "DEFECTIVE" ? "danger" : "info"))}>
+                                                {batchData.statusName}
+                                            </span></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -99,7 +103,7 @@ export default function BatchDataPanel({ batchData }) {
                                             <td>{mes.chargeMass ? mes.chargeMass.toFixed(2) : "—"}</td>
                                             <td>{mes.outputMass ? mes.outputMass.toFixed(2) : "—"}</td>
                                             <td>{batchData.outputYield ? batchData.outputYield.toFixed(2) : "—"}</td>
-                                            <td>{mes.durationMin ? mes.durationMin : "—"}</td>                                            
+                                            <td>{mes.durationMin ? mes.durationMin : "—"}</td>
                                         </tr>
                                     </tbody>
                                 </table>

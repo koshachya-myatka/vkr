@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS fact_notifications (
 
 CREATE TABLE IF NOT EXISTS dim_batch (
     batch_id TEXT PRIMARY KEY,
-    metal_type TEXT,
+    metal_type TEXT NOT NULL,
     start_time TIMESTAMP,
     processing_time TIMESTAMP,
     analyses_time TIMESTAMP,
@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS dim_batch (
 
 CREATE TABLE IF NOT EXISTS fact_mes (
     record_id TEXT PRIMARY KEY,
-    order_id TEXT,
+    order_id TEXT NOT NULL,
     batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
-    equipment_id TEXT,
+    equipment_id TEXT NOT NULL,
     operator_id TEXT,
     charge_mass DOUBLE PRECISION,
     output_mass DOUBLE PRECISION,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS fact_mes (
 CREATE TABLE IF NOT EXISTS fact_lims (
     record_id TEXT PRIMARY KEY,
     batch_id TEXT NOT NULL REFERENCES dim_batch(batch_id),
-    sample_id TEXT,
+    sample_id TEXT NOT NULL,
     analysis_method TEXT,
     test_date TIMESTAMP,
     status TEXT
@@ -57,8 +57,8 @@ CREATE TABLE IF NOT EXISTS fact_lims_results (
 
 CREATE TABLE IF NOT EXISTS fact_scada (
     record_id TEXT NOT NULL,
-    sensor_id TEXT,
-    equipment_id TEXT,    
+    sensor_id TEXT NOT NULL,
+    equipment_id TEXT NOT NULL,    
     time TIMESTAMP NOT NULL,
     parameter TEXT,
     value DOUBLE PRECISION,

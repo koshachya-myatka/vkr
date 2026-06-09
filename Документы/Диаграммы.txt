@@ -71,11 +71,11 @@ UML АКТИВНОСТИ
 @startuml Activity_PDF
 skinparam activity {
   BorderColor Navy
-  FontSize 18
+  FontSize 24
   ArrowColor DarkSlateGray
 }
 skinparam title {
-  FontSize 15
+  FontSize 18
   FontStyle Bold
 }
 
@@ -87,7 +87,7 @@ start
 :Нажать кнопку\n«Создать отчёт»;
 
 |Сервер\n(CommonController)|
-:Проверить\nJWT-токен и роль\nпользователя;
+:Проверить JWT-токен и роль пользователя;
 if (Доступ разрешён?) then (нет)
   :Вернуть ошибку доступа;
   stop
@@ -99,15 +99,14 @@ endif
 :Получить данные\n для партии из БД;
 
 :Установить дату создания\nотчета и автора документа;
-:Сформировать модель\nдокумента (DTO);
-:Сгенерировать PDF-файл;
-:Вернуть PDF как\nbyte[] в контроллер;
+:Сгенерировать PDF-файл\n на основе DTO документа;
+:Вернуть PDF как byte[];
 
 |Сервер\n(CommonController)|
-:Отправить ответ\nс PDF в теле;
+:Отправить ответ с отчетом;
 
 |Пользователь|
-:Получить файл отчета\nс данными о партии;
+:Получить файл отчета;
 stop
 
 @enduml
@@ -118,12 +117,12 @@ UML ПОСЛЕДОВАТЕЛЬНОСТИ
 skinparam actorStyle Hollow
 title Просмотр информации о партии металла и формирование отчёта
 actor "Пользователь" as User
-skinparam defaultFontSize 22
+skinparam defaultFontSize 24
 skinparam title {
   fontSize 18
 }
 skinparam sequence {
-  ParticipantFontSize 20
+  ParticipantFontSize 24
 }
 
 participant "Frontend" as Frontend
@@ -214,191 +213,97 @@ deactivate Frontend
 
 @enduml
 ---------
-UML КЛАССОВ
+ER-ДИАГРАММА БД
 
 @startuml
-skinparam defaultFontSize 20
-skinparam class {
-  BorderColor #2F4F4F
-  FontColor #FFFFFF
-  HeaderBackgroundColor #37474F
-}
-skinparam enum {
-  BorderColor #2E7D32
-  HeaderBackgroundColor #2E7D32
-}
-skinparam arrow {
-  Color #2F4F4F
+hide circle
+skinparam linetype ortho
+skinparam entity {
+    BackgroundColor White
+    BorderColor Black
 }
 
-' ===================== ENUMS =====================
-
-enum MetalTypeEnum {
-  NI ("Никель (Ni)")
-  CU ("Медь (Cu)")
-  CO ("Кобальт (Co)")
-  AG ("Серебро (Ag)")
-  AU ("Золото (Au)")
-  PD ("Палладий (Pd)")
-  PT ("Платина (Pt)")
-  RH ("Родий (Rh)")
-  IR ("Иридий (Ir)")
-  RU ("Рутений (Ru)")
-  --
-  - name : String
-  --
-  + toString() : String
-  + fromName(name : String) : MetalTypeEnum
+entity "dim_batch" as dim_batch {
+    batch_id : TEXT <<PK>>
+    metal_type : TEXT
+    start_time : TIMESTAMP
+    processing_time : TIMESTAMP
+    analyses_time : TIMESTAMP
+    end_time : TIMESTAMP
+    process_status : TEXT
+    output_yield : DOUBLE PRECISION
 }
 
-enum MesProcessStatusEnum {
-  ARRIVAL
-  PROCESSING
-  ANALYSIS
-  ACCEPTED
-  DEFECTIVE
-  --
-  + toString() : String
+entity "fact_mes" as fact_mes {
+    record_id : TEXT <<PK>>
+    order_id : TEXT
+    batch_id : TEXT <<FK>>
+    equipment_id : TEXT
+    operator_id : TEXT
+    charge_mass : DOUBLE PRECISION
+    output_mass : DOUBLE PRECISION
+    duration_min : INT
 }
 
-enum MesStatusEnum {
-  NORMAL
-  WARNING
-  ALARM
-  --
-  + toString() : String
+entity "fact_lims" as fact_lims {
+    record_id : TEXT <<PK>>
+    batch_id : TEXT <<FK>>
+    sample_id : TEXT
+    analysis_method : TEXT
+    test_date : TIMESTAMP
+    status : TEXT
 }
 
-enum LimsStatusEnum {
-  REJECTED
-  APPROVED
-  --
-  + toString() : String
+entity "fact_lims_results" as fact_lims_results {
+    id : SERIAL <<PK>>    
+    record_id : TEXT <<FK>>
+    parameter_name : TEXT
+    value : TEXT
+    unit : TEXT
+    normal : BOOLEAN
 }
 
-enum ScadaStatusEnum {
-  NORMAL
-  WARNING
-  ALARM
-  --
-  + toString() : String
+entity "fact_scada" as fact_scada {
+    record_id : TEXT <<PK>>
+    time : TIMESTAMP <<PK>>
+    sensor_id : TEXT
+    equipment_id : TEXT
+    parameter : TEXT
+    value : DOUBLE PRECISION
+    unit : TEXT
+    status : TEXT
 }
 
-enum NotificationSeverityEnum {
-  INFO
-  WARNING
-  ALARM
+entity "fact_notifications" as fact_notifications {
+    id : SERIAL <<PK>>   
+    message : TEXT
+    equipment_id : TEXT
+    sensor_id : TEXT
+    signal_source : TEXT
+    severity : TEXT
+    status : TEXT
+    comment : TEXT
+    viewed : BOOLEAN
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+    updated_by : TEXT
 }
 
-enum NotificationStatusEnum {
-  CREATED ("СОЗДАНО")
-  IN_PROGRESS ("НА ПРОВЕРКЕ")
-  FALSE_POSITIVE ("ЛОЖНОЕ СРАБАТЫВАНИЕ")
-  RESOLVED ("ПРИЧИНА УСТРАНЕНА")
-  --
-  - name : String
-  --
-  + toString() : String
+entity "users" as users {
+    user_id : UUID <<PK>>
+    username : TEXT
+    password : TEXT
+    name : TEXT
+    surname : TEXT
+    patronymic : TEXT
+    email : TEXT
+    role : TEXT
+    created_at : TIMESTAMP
 }
 
-enum UserRoleEnum {
-  LABORATORY
-  PRODUCTION
-  MANAGEMENT
-  ADMIN
-}
-
-' ===================== ENTITIES =====================
-
-class DimBatchEntity {
-  - batchId : String  <<PK>>
-  - metalType : MetalTypeEnum
-  - startTime : LocalDateTime
-  - processingTime : LocalDateTime
-  - analysesTime : LocalDateTime
-  - endTime : LocalDateTime
-  - processStatus : MesProcessStatusEnum
-  - outputYield : Double
-}
-
-class MesEntity {
-  - recordId : String  <<PK>>
-  - equipmentId : String
-  - operatorId : String
-  - temperature : Double
-  - pressure : Double
-  - durationSec : Integer
-  - energyConsumption : Double
-  - status : MesStatusEnum
-}
-
-class LimsEntity {
-  - recordId : String  <<PK>>
-  - sampleId : String
-  - analysisMethod : String
-  - testDate : LocalDateTime
-  - status : LimsStatusEnum
-}
-
-class LimsResultEntity {
-  - id : Long  <<PK, generated>>
-  - parameterName : String
-  - value : String
-  - unit : String
-  - normal : Boolean
-}
-
-class ScadaEntity {
-  - recordId : String  <<PK>>
-  - sensorId : String
-  - equipmentId : String
-  - time : LocalDateTime  <<PK>>
-  - parameter : String
-  - value : Double
-  - unit : String
-  - status : ScadaStatusEnum
-}
-
-class NotificationEntity {
-  - id : Long  <<PK, generated>>
-  - message : String
-  - equipmentId : String
-  - sensorId : String
-  - signalSource : String
-  - severity : NotificationSeverityEnum
-  - status : NotificationStatusEnum
-  - viewed : Boolean
-  - comment : String
-  - createdAt : LocalDateTime
-  - updatedAt : LocalDateTime
-  - updatedBy : String
-}
-
-class UserEntity {
-  - userId : UUID  <<PK>>
-  - username : String
-  - password : String
-  - name : String
-  - surname : String
-  - patronymic : String
-  - email : String
-  - role : UserRoleEnum
-  - createdAt : LocalDateTime
-}
-
-' ===================== RELATIONS =====================
-
-DimBatchEntity "1" -- "1" MesEntity : содержит
-DimBatchEntity "1" -- "М  " LimsEntity : содержит
-LimsEntity "1" -- "М  " LimsResultEntity : включает
-DimBatchEntity ..> MetalTypeEnum : metalType
-DimBatchEntity ..> MesProcessStatusEnum : processStatus
-MesEntity ..> MesStatusEnum : status
-LimsEntity ..> LimsStatusEnum : status
-ScadaEntity ..> ScadaStatusEnum : status
-NotificationEntity ..> NotificationSeverityEnum : severity
-NotificationEntity ..> NotificationStatusEnum : status
-UserEntity .> UserRoleEnum : role
+dim_batch ||--o{ fact_mes : "1:1 "
+dim_batch ||--o{ fact_lims : "1:N "
+fact_lims ||--o{ fact_lims_results : "1:N "
 
 @enduml
 ---------
