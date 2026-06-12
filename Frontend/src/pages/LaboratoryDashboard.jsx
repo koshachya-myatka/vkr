@@ -6,7 +6,7 @@ import LastLaboratoryRecordTable from "../components/dashboardPages/LastLaborato
 export default function LaboratoryDashboard() {
     return (
         <>
-            <title>Главная - Лаборатория</title>
+            <title>Лаборатория</title>
 
             <Header />
 

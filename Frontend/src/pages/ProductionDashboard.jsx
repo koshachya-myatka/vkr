@@ -6,7 +6,7 @@ import LastProductionRecordTable from "../components/dashboardPages/LastProducti
 export default function ProductionDashboard() {
   return (
     <>
-      <title>Главная - Производство</title>
+      <title>Производство</title>
 
       <Header />
 

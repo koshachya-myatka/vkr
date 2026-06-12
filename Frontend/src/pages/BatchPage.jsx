@@ -39,7 +39,7 @@ export default function BatchPage() {
 
     return (
         <>
-            <title>Партия - {batchId}</title>
+            <title>Партия</title>
 
             <Header />
 

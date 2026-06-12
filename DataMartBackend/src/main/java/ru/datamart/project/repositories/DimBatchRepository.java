@@ -72,7 +72,7 @@ public interface DimBatchRepository extends JpaRepository<DimBatchEntity, String
             FROM dim_batch as b
             JOIN fact_mes as m ON b.batch_id = m.batch_id
             ORDER BY b.start_time DESC 
-            LIMIT 10;
+            LIMIT 30;
             """, nativeQuery = true)
     List<LastBatchDto> getLastBatches();
 

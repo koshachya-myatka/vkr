@@ -66,7 +66,7 @@ export default function MetalPage() {
 
     return (
         <>
-            <title>Металл - {metalType}</title>
+            <title>Металл</title>
 
             <Header />
 

@@ -78,6 +78,8 @@ export default function NotificationsPage() {
 
     return (
         <>
+            <title>Сбои</title>
+
             <Header />
 
             <main className="page-container">

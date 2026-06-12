@@ -8,30 +8,34 @@ export default function ErrorPage({ message: propMessage }) {
         'Что-то пошло не так. Уже работаем над этим.';
 
     return (
-        <div className="error-page">
-            <div className="error-card">
-                <span className="material-symbols-outlined error-icon">
-                    error
-                </span>
-                <div className="error-title">
-                    Ошибка
+        <>
+            <title>Ошибка</title>
+            
+            <div className="error-page">
+                <div className="error-card">
+                    <span className="material-symbols-outlined error-icon">
+                        error
+                    </span>
+                    <div className="error-title">
+                        Ошибка
+                    </div>
+
+                    <p className="error-text">{message}</p>
+
+                    <Link
+                        to="/"
+                        className="btn btn-primary"
+                        style={{
+                            textDecoration: 'none',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        Вернуться на главную
+                    </Link>
                 </div>
-
-                <p className="error-text">{message}</p>
-
-                <Link
-                    to="/"
-                    className="btn btn-primary"
-                    style={{
-                        textDecoration: 'none',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    Вернуться на главную
-                </Link>
             </div>
-        </div>
+        </>
     );
 }

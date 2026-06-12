@@ -6,7 +6,7 @@ import LastMetalStatisticsGrid from "../components/dashboardPages/LastMetalStati
 export default function ManagementDashboard() {
     return (
         <>
-            <title>Главная - Руководство</title>
+            <title>Руководство</title>
 
             <Header />
 

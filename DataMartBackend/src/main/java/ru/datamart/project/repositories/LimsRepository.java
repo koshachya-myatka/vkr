@@ -23,7 +23,7 @@ public interface LimsRepository extends JpaRepository<LimsEntity, String> {
                 '' as statusName
             FROM fact_lims as l JOIN dim_batch as b ON l.batch_id=b.batch_id
             ORDER BY l.test_date DESC
-            LIMIT 10;
+            LIMIT 30;
             """, nativeQuery = true)
     List<LastLimsDto> getLastLimsRecords();
 
