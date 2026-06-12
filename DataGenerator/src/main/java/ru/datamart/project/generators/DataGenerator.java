@@ -18,11 +18,11 @@ public class DataGenerator {
     private final KafkaProducerScada producerScada;
     private final KafkaProducerLims producerLims;
 
-    private final ExecutorService batchExecutor = Executors.newFixedThreadPool(10);
-    private final ScheduledExecutorService restartScheduler = Executors.newScheduledThreadPool(10);
+    private final ExecutorService batchExecutor = Executors.newFixedThreadPool(100);
+    private final ScheduledExecutorService restartScheduler = Executors.newScheduledThreadPool(100);
 
     public void generate() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             submitBatch();
         }
     }
