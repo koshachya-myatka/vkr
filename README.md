@@ -4,6 +4,20 @@ docker compose up --build -d
 docker compose down -v
 docker compose start  
 docker compose stop
+
+Данные для входа:
+- Роль - администратор  
+  Логин: admin  
+  Пароль: 123  
+- Роль - руководство  
+  Логин: manager  
+  Пароль: 123  
+- Роль - лаборатория  
+  Логин: lab  
+  Пароль: 123  
+- Роль - производство  
+  Логин: prod  
+  Пароль: 123  
 ```
 
 # Описание системы
