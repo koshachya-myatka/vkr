@@ -87,7 +87,7 @@ export default function BatchDataPanel({ batchData }) {
                                     <thead>
                                         <tr>
                                             <th>ID произв. заказа</th>
-                                            <th>ID обородувания</th>
+                                            <th>ID оборудования</th>
                                             <th>ID оператора</th>
                                             <th>Масса шихты, т</th>
                                             <th>Масса продукта, т</th>
